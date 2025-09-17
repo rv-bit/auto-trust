@@ -4,8 +4,8 @@ import { FormEventHandler } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "@/Components/ui/button";
-import InputFocus from "@/Components/ui/input-anim";
+import { Button } from "@/components/ui/button";
+import InputFocus from "@/components/ui/input-anim";
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className }: { mustVerifyEmail: boolean; status?: string; className?: string }) {
 	const user = usePage().props.auth.user;

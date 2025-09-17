@@ -6,12 +6,12 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { APP_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-import ShoppingCartDrawer from "@/Components/drawer-cart";
-import Footer from "@/Components/navigation-footer";
+import ShoppingCartDrawer from "@/components/drawer-cart";
+import Footer from "@/components/navigation-footer";
 
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/Components/ui/drawer";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
-import { NavigationMenuLink } from "@/Components/ui/navigation-menu";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { NavigationMenuLink } from "@/components/ui/navigation-menu";
 
 import { ChevronRight, Menu } from "lucide-react";
 

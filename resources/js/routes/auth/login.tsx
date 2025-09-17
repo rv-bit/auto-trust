@@ -1,9 +1,9 @@
 import { Head, Link, useForm } from "@inertiajs/react";
 import React, { FormEventHandler } from "react";
 
-import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
-import InputFocus from "@/Components/ui/input-anim";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import InputFocus from "@/components/ui/input-anim";
 import GuestLayout from "@/layouts/guest-layout";
 
 interface LoginFormProps {

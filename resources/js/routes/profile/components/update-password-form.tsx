@@ -4,8 +4,8 @@ import React, { FormEventHandler } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "@/Components/ui/button";
-import InputFocus from "@/Components/ui/input-anim";
+import { Button } from "@/components/ui/button";
+import InputFocus from "@/components/ui/input-anim";
 
 export default function UpdatePasswordForm({ className }: { className?: string }) {
 	const passwordInput = React.useRef<HTMLInputElement>(null);

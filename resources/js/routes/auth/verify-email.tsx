@@ -3,7 +3,7 @@ import { FormEventHandler } from "react";
 
 import GuestLayout from "@/layouts/guest-layout";
 
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function VerifyEmail({ status }: { status?: string }) {
 	const { post, processing } = useForm({});

@@ -7,7 +7,7 @@ import ReactDOMServer from "react-dom/server";
 import { RouteName } from "ziggy-js";
 import { route } from "../../vendor/tightenco/ziggy/src/js";
 
-import { Toaster } from "@/Components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient();
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";

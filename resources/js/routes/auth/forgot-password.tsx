@@ -3,8 +3,8 @@ import { FormEventHandler } from "react";
 
 import GuestLayout from "@/layouts/guest-layout";
 
-import { Button } from "@/Components/ui/button";
-import InputFocus from "@/Components/ui/input-anim";
+import { Button } from "@/components/ui/button";
+import InputFocus from "@/components/ui/input-anim";
 
 export default function ForgotPassword({ status }: { status?: string }) {
 	const { data, setData, post, processing, errors } = useForm({

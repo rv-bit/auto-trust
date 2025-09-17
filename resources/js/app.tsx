@@ -7,7 +7,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 
-import { Toaster } from "@/Components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient();
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";

@@ -3,10 +3,10 @@ import React, { FormEventHandler } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "@/Components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import InputFocus from "@/Components/ui/input-anim";
+import InputFocus from "@/components/ui/input-anim";
 
 export default function DeleteUserForm({ className }: { className?: string }) {
 	const [confirmingUserDeletion, setConfirmingUserDeletion] = React.useState(false);

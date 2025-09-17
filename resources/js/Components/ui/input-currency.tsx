@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 import { Input } from "./input";
 
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { PRICE_CURRENCIES, PriceCurrency, PriceCurrencyEnum } from "@/lib/constants";
 import { Check, ChevronsUpDown } from "lucide-react";
