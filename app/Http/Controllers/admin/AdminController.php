@@ -13,6 +13,6 @@ class AdminController extends Controller
     public function index(Request $request): Response
     {
 
-        return Inertia::render('profile/admin/dashboard', []);
+        return Inertia::render('admin/page', []);
     }
 }
