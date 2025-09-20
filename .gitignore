@@ -30,3 +30,6 @@ yarn-error.log
 
 # others
 .DS_Store
+
+# Pem files
+*.pem
