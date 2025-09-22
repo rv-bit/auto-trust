@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
 import React from "react";
 
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 import { APP_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
