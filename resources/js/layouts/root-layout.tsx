@@ -6,7 +6,6 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { APP_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-import ShoppingCartDrawer from "@/components/drawer-cart";
 import Footer from "@/components/navigation-footer";
 
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
@@ -157,8 +156,6 @@ export default function RootLayout({ footer, className, children }: React.PropsW
 								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
-
-						<ShoppingCartDrawer user={user} />
 					</div>
 				</section>
 			</nav>
