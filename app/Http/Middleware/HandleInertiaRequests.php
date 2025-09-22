@@ -44,6 +44,10 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'cookies' => [
+                'theme_state' => $request->cookie('auto-trust-theme:state'),
+                'sidebar_state' => $request->cookie('auto-trust-sidebar:state'),
+            ],
         ];
     }
 }
