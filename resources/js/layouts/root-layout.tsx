@@ -3,14 +3,12 @@ import React from "react";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
-import { APP_NAME } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { APP_NAME } from "@/resources/app-config";
 
 import Footer from "@/components/navigation-footer";
 
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { NavigationMenuLink } from "@/components/ui/navigation-menu";
 
 import { ChevronRight, Menu } from "lucide-react";
 
@@ -177,23 +175,3 @@ export default function RootLayout({ footer, className, children }: React.PropsW
 		</React.Fragment>
 	);
 }
-
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(({ className, title, children, ...props }, ref) => {
-	return (
-		<li>
-			<NavigationMenuLink asChild>
-				<a
-					ref={ref}
-					className={cn(
-						"hover:text-accent-foreground focus:bg-accent group focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors duration-200 ease-linear outline-none select-none hover:bg-gray-100",
-						className,
-					)}
-					{...props}
-				>
-					<div className="text-sm leading-none font-medium group-hover:underline">{title}</div>
-					<p className="text-muted-foreground line-clamp-2 text-sm leading-snug">{children}</p>
-				</a>
-			</NavigationMenuLink>
-		</li>
-	);
-});

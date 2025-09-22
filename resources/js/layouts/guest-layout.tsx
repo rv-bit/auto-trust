@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import { PropsWithChildren } from "react";
 
-import { APP_NAME } from "@/lib/constants";
+import { APP_NAME } from "@/resources/app-config";
 
 export default function Guest({ children }: PropsWithChildren) {
 	return (
