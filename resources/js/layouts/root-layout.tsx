@@ -14,8 +14,6 @@ import { ChevronRight, Menu } from "lucide-react";
 
 export default function RootLayout({ footer, className, children }: React.PropsWithChildren<{ footer?: boolean; className?: string }>) {
 	const user = usePage().props.auth?.user;
-	const most_common_data = usePage().props.most_common_data;
-
 	const isMobile = useMediaQuery("(max-width: 640px)");
 
 	const actions: {
