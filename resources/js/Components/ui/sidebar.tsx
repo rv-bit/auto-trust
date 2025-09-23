@@ -56,13 +56,15 @@ function SidebarProvider({
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }) {
-	const { sidebar_state: sidebarCached } = usePage().props.cookie;
+	console.log(usePage().props);
+
+	// const { sidebar_state: sidebarCached } = usePage().props.cookie;
 	const isMobile = useMediaQuery(`(max-width: 767px)`);
 	const [openMobile, setOpenMobile] = React.useState(false);
 
 	// This is the internal state of the sidebar.
 	// We use openProp and setOpenProp for control from outside the component.
-	const [_open, _setOpen] = React.useState(sidebarCached ?? defaultOpen);
+	const [_open, _setOpen] = React.useState(defaultOpen);
 	const open = openProp ?? _open;
 	const setOpen = React.useCallback(
 		(value: boolean | ((value: boolean) => boolean)) => {

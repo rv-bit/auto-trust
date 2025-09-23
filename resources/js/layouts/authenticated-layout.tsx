@@ -5,6 +5,9 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 import NavLink from "@/components/navigation-link";
 
+import { AppSidebar } from "@/components/sidebar/main";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
 const tabs = [
 	{ name: "Dashboard", href: "profile.dashboard" },
 	{ name: "Profile Manage", href: "profile.edit" },
@@ -35,7 +38,10 @@ export default function AuthenticatedLayout({ children }: PropsWithChildren<{}>)
 				</div>
 			</nav>
 
-			{children}
+			<SidebarProvider>
+				<AppSidebar />
+				<SidebarInset>{children}</SidebarInset>
+			</SidebarProvider>
 		</React.Fragment>
 	);
 }
