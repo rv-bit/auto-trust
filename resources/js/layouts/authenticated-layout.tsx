@@ -1,7 +1,6 @@
-import { usePage } from "@inertiajs/react";
 import { PropsWithChildren } from "react";
 
-import NavLink from "@/components/navigation-link";
+import { User } from "@/types";
 
 import { AppSidebar } from "@/components/sidebar/main";
 import { SidebarInset, SidebarProvider, useSidebar } from "@/components/ui/sidebar";
@@ -14,8 +13,7 @@ const tabs = [
 	{ name: "Admin Dashboard", href: "admin.dashboard", roles: ["admin"] },
 ];
 
-const PrivateHeader = () => {
-	const user = usePage().props.auth.user;
+const PrivateHeader = ({ ...props }: PropsWithChildren<{ user: User }>) => {
 	const { toggleSidebar, open, isMobile } = useSidebar();
 
 	return (
@@ -27,10 +25,10 @@ const PrivateHeader = () => {
 					</div>
 				)}
 
-				<div className="w-full max-w-7xl">
+				{/* <div className="w-full max-w-7xl">
 					<div className="max-sm:no-scrollbar flex min-h-14 w-full items-center justify-start space-x-4 max-sm:max-w-full max-sm:overflow-x-auto max-sm:overflow-y-hidden md:m-2">
 						{tabs.map((tab) => {
-							if (tab.roles && !tab.roles.some((role) => user.roles.includes(role))) {
+							if (tab.roles && !tab.roles.some((role) => props.user.roles.includes(role))) {
 								return null;
 							}
 
@@ -41,19 +39,23 @@ const PrivateHeader = () => {
 							);
 						})}
 					</div>
-				</div>
+				</div> */}
 			</header>
 		</nav>
 	);
 };
 
-export default function AuthenticatedLayout({ children }: PropsWithChildren<{}>) {
+export default function AuthenticatedLayout({
+	...props
+}: PropsWithChildren<{
+	user: User;
+}>) {
 	return (
 		<SidebarProvider>
 			<AppSidebar />
 			<SidebarInset>
-				<PrivateHeader />
-				{children}
+				<PrivateHeader user={props.user} />
+				{props.children}
 			</SidebarInset>
 		</SidebarProvider>
 	);
