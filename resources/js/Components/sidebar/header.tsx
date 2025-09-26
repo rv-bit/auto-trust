@@ -79,7 +79,6 @@ export default function Header() {
 			<SidebarMenuItem className="flex min-h-10 w-full items-center justify-between gap-2">
 				<SidebarMenuButton asChild className="h-fit w-fit gap-1.5 py-1.5 pr-3 pl-1.5 active:bg-transparent">
 					<NavLink active={route().current("/")} href={"/"} className="[&>svg]:size-5.5">
-						{/* <Axion width={50} height={50} /> */}
 						<h2 className="font-bricolage text-lg font-[600] tracking-[-0.085rem] text-black/85">{APP_NAME}</h2>
 					</NavLink>
 				</SidebarMenuButton>
