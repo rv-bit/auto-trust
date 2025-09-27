@@ -3,6 +3,8 @@ import React from "react";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
+import { Methods } from "@/types";
+
 import { APP_NAME } from "@/resources/app-config";
 
 import Footer from "@/components/navigation-footer";
@@ -19,7 +21,7 @@ export default function RootLayout({ footer, className, children }: React.PropsW
 	const actions: {
 		title: string;
 		isHidden?: boolean;
-		method?: "get" | "post";
+		method?: Methods;
 		href?: string;
 		component?: React.FC;
 	}[] = React.useMemo(
@@ -28,12 +30,6 @@ export default function RootLayout({ footer, className, children }: React.PropsW
 				title: "Manage Account",
 				isHidden: user === null,
 				href: "profile.dashboard",
-			},
-			{
-				title: "Log Out",
-				isHidden: user === null,
-				method: "post",
-				href: "logout",
 			},
 			{
 				title: "Sign In",
