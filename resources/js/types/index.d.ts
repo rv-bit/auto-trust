@@ -18,8 +18,8 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 	auth: {
 		user: User;
 	};
-	cookie: {
+	cookies: {
 		theme_state: string;
-		sidebar_state: boolean;
+		sidebar_state: string | boolean;
 	};
 };

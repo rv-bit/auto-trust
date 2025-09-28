@@ -56,7 +56,8 @@ function SidebarProvider({
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }) {
-	console.log(usePage().props);
+	const { cookies } = usePage().props;
+	const serverSidebarState = cookies?.sidebar_state;
 
 	// const { sidebar_state: sidebarCached } = usePage().props.cookie;
 	const isMobile = useMediaQuery(`(max-width: 767px)`);
@@ -64,19 +65,33 @@ function SidebarProvider({
 
 	// This is the internal state of the sidebar.
 	// We use openProp and setOpenProp for control from outside the component.
-	const [_open, _setOpen] = React.useState(defaultOpen);
+	const [_open, _setOpen] = React.useState(() => {
+		if (openProp !== undefined) return defaultOpen;
+
+		// Use server-side cookie value if available
+		if (serverSidebarState !== null && serverSidebarState !== undefined) {
+			// Handle both string and boolean values
+			return serverSidebarState === true || serverSidebarState === "true";
+		}
+
+		return defaultOpen;
+	});
+
 	const open = openProp ?? _open;
 	const setOpen = React.useCallback(
 		(value: boolean | ((value: boolean) => boolean)) => {
 			const openState = typeof value === "function" ? value(open) : value;
+
 			if (setOpenProp) {
 				setOpenProp(openState);
 			} else {
 				_setOpen(openState);
 			}
 
-			// This sets the cookie to keep the sidebar state.
-			document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+			if (typeof document !== "undefined") {
+				const domain = window.location.hostname;
+				document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; SameSite=Lax; domain=${domain}`;
+			}
 		},
 		[setOpenProp, open],
 	);
