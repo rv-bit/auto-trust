@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 return [
 
     /*
@@ -14,6 +16,19 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cookie Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the prefix of the session cookie name. This is
+    | useful if you need to run multiple applications on the same domain
+    | and want to avoid collisions. You may change this prefix as needed.
+    |
+    */
+
+    'cookie_prefix' => Str::slug(env('APP_NAME', 'laravel'), '_') ?: 'laravel',
 
     /*
     |--------------------------------------------------------------------------
