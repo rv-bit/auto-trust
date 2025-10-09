@@ -5,6 +5,7 @@ use App\Enum\RolesEnum;
 
 use App\Http\Controllers\root\RootController;
 
+use App\Http\Controllers\chat\ChatController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\DashboardController;
 use App\Http\Controllers\admin\AdminController;
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(
         Route::get('/payment/success', [CheckoutController::class, "success"])->name('payment.success');
     }
 );
+
+// Chat
+Route::get('/chat', [ChatController::class, 'index'])->name('index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('profile.dashboard');

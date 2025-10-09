@@ -14,7 +14,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 import { ChevronRight, Menu } from "lucide-react";
 
-export default function RootLayout({ footer, className, children }: React.PropsWithChildren<{ footer?: boolean; className?: string }>) {
+export default function RootLayout({ footer, ...props }: React.PropsWithChildren<{ footer?: boolean; className?: string }>) {
 	const user = usePage().props.auth?.user;
 	const isMobile = useMediaQuery("(max-width: 640px)");
 
@@ -154,15 +154,14 @@ export default function RootLayout({ footer, className, children }: React.PropsW
 
 			<main
 				style={{
-					minHeight: footer ? "calc(100svh - var(--topbar-height) - 0.25rem" : undefined,
-					height: !footer ? "100svh" : undefined,
 					width: "100%",
 					flex: "1 1 0%",
 					paddingTop: "var(--topbar-height)",
+					paddingBottom: "10rem",
 					overflowX: "visible",
 				}}
 			>
-				{children}
+				{props.children}
 			</main>
 
 			{footer && <Footer />}

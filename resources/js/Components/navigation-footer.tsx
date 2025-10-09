@@ -20,14 +20,6 @@ const metadata = [
 		],
 	},
 	{
-		title: "Cakes",
-		children: [
-			{ title: "Wedding Cakes", route: "/wedding-cakes" },
-			{ title: "Birthday Cakes", route: "/birthday-cakes" },
-			{ title: "Custom Cakes", route: "/custom-cakes" },
-		],
-	},
-	{
 		title: "Company",
 		children: [
 			{ title: "Our Story", route: "/our-story" },
@@ -58,27 +50,22 @@ export default function Footer() {
 	if (isTablet) {
 		return (
 			<footer
-				style={{
-					height: "auto",
-					width: "100%",
-					flex: "1 1 0%",
-				}}
-				className="border-border mt-10 border-t bg-[#151515]"
+				className="flex-1 w-full h-auto border-border mt-10 border-t bg-transparent"
 			>
 				<div className="mx-auto flex max-w-7xl p-10 px-5 pb-5">
 					<span className="flex w-full flex-col items-start gap-10">
 						<Accordion type="single" collapsible className="w-full">
 							{metadata.map((item, index) => (
-								<AccordionItem key={index} value={item.title} className="border-border/25 hover:text-white">
+								<AccordionItem key={index} value={item.title} className="border-border/25 hover ">
 									<AccordionTrigger className="pb-2">
-										<h1 className="text-2xl font-semibold tracking-tight text-white">{item.title}</h1>
+										<h1 className="text-2xl font-semibold tracking-tight ">{item.title}</h1>
 									</AccordionTrigger>
 
 									<AccordionContent>
 										<ul className="flex flex-col gap-1">
 											{item.children.map((child, index) => (
 												<li key={index}>
-													<Link href={child.route} className="text-md tracking-tight text-white/60">
+													<Link href={child.route} className="text-md tracking-tight">
 														{child.title}
 													</Link>
 												</li>
@@ -88,14 +75,14 @@ export default function Footer() {
 								</AccordionItem>
 							))}
 
-							<AccordionItem value="Join our news letter" className="border-border/25 hover:text-white">
+							<AccordionItem value="Join our news letter" className="border-border/25 hover ">
 								<AccordionTrigger className="pb-2">
-									<h1 className="text-2xl font-semibold tracking-tight text-white">Join our news letter</h1>
+									<h1 className="text-2xl font-semibold tracking-tight ">Join our news letter</h1>
 								</AccordionTrigger>
 
 								<AccordionContent>
 									<span className="flex flex-col gap-2">
-										<p className="text-sm text-white/60">Get the latest news and updates from us.</p>
+										<p className="text-sm">Get the latest news and updates from us.</p>
 
 										<InputFocus
 											id="email"
@@ -103,8 +90,7 @@ export default function Footer() {
 											name="Email"
 											value={newsLetterData}
 											onChange={(e) => setNewsLetterData(e.target.value)}
-											className="rounded-none border-white/60 px-3 py-7.5 pb-5 text-white"
-											labelClassName="text-white"
+											className="rounded-none border-whit px-3 py-7.5 pb-5 "
 										/>
 
 										<Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
@@ -141,22 +127,18 @@ export default function Footer() {
 
 	return (
 		<footer
-			style={{
-				height: "auto",
-				width: "100%",
-			}}
-			className="border-border mt-10 border-t bg-[#151515]"
+			className="w-full h-auto border-border mt-10 border-t bg-transparent text-black"
 		>
 			<div className="mx-auto flex max-w-7xl flex-col p-10 pb-5">
 				<span className="flex items-start justify-center gap-2">
 					{metadata.map((item, index) => (
 						<div key={index} className="flex w-full max-w-50 flex-col gap-1 transition-all delay-75 duration-150 ease-in-out max-xl:max-w-40">
-							<h1 className="text-2xl font-semibold tracking-tight text-white">{item.title}</h1>
+							<h1 className="text-2xl font-semibold tracking-tight ">{item.title}</h1>
 
 							<ul className="flex flex-col gap-1">
 								{item.children.map((child, index) => (
 									<li key={index}>
-										<Link href={child.route} className="text-sm tracking-tight text-white/60 hover:underline">
+										<Link href={child.route} className="text-sm tracking-tight hover:underline">
 											{child.title}
 										</Link>
 									</li>
@@ -166,8 +148,8 @@ export default function Footer() {
 					))}
 
 					<div className="flex flex-col gap-1">
-						<h1 className="text-left text-2xl font-semibold tracking-tight text-white">Join our news letter</h1>
-						<p className="text-left text-sm text-white/60">Get the latest news and updates from us.</p>
+						<h1 className="text-left text-2xl font-semibold tracking-tight ">Join our news letter</h1>
+						<p className="text-left text-sm">Get the latest news and updates from us.</p>
 
 						<span className="flex flex-col gap-2">
 							<InputFocus
@@ -176,8 +158,7 @@ export default function Footer() {
 								name="Email"
 								value={newsLetterData}
 								onChange={(e) => setNewsLetterData(e.target.value)}
-								className="rounded-none border-white/60 px-3 py-7.5 pb-5 text-white"
-								labelClassName="text-white"
+								className="rounded-none border-whit px-3 py-7.5 pb-5 "
 							/>
 
 							<Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
