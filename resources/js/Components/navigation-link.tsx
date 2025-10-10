@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
-import { InertiaLinkProps, Link } from "@inertiajs/react";
+import { type InertiaLinkProps, Link } from "@inertiajs/react";
 
 export default function NavLink({ active = false, className, children, ...props }: InertiaLinkProps & { active: boolean; className?: string }) {
 	return (
 		<Link
 			{...props}
+			data-testid='link'
 			className={cn(
 				"inline-flex items-center border-b-2 text-sm leading-5 font-medium transition duration-150 ease-in-out focus:outline-hidden",
 				{
