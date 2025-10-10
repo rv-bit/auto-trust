@@ -46,7 +46,7 @@ export default function RootLayout({ footer, ...props }: React.PropsWithChildren
 	);
 
 	return (
-		<React.Fragment>
+		<div className="flex h-screen w-full flex-col">
 			<nav
 				style={{
 					height: "var(--topbar-height)",
@@ -154,17 +154,16 @@ export default function RootLayout({ footer, ...props }: React.PropsWithChildren
 
 			<main
 				style={{
+					minHeight: "100%",
 					width: "100%",
 					flex: "1 1 0%",
 					paddingTop: "var(--topbar-height)",
-					paddingBottom: "10rem",
-					overflowX: "visible",
 				}}
 			>
 				{props.children}
 			</main>
 
 			{footer && <Footer />}
-		</React.Fragment>
+		</div>
 	);
 }
