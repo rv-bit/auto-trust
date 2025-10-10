@@ -1,12 +1,13 @@
 import { usePage } from "@inertiajs/react";
 
 import { cn } from "@/lib/utils";
-import { User } from "@/types";
+import type { User } from "@/types";
 
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
 import NavLink from "../navigation-link";
-import { Action } from "./main";
+
+import type { Action } from "./main";
 
 export function Actions({ ...props }: { user: User; items: Action []}) {
 	const location = usePage().url;

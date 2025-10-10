@@ -2,12 +2,12 @@ import { usePage } from "@inertiajs/react";
 
 import { cn } from "@/lib/utils";
 
-import { User } from "@/types";
+import type { User } from "@/types";
 
 import NavLink from "@/components/navigation-link";
 import { SidebarGroup, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
-import { ChatData } from "../types";
+import type { ChatData } from "../types";
 
 export default function SidebarActions({ ...props }: { user: User; data: ChatData[] }) {
 	const location = usePage().url;

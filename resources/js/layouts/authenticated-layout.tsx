@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
-import { User } from "@/types";
+import type { User } from "@/types";
 
 import { AppSidebar } from "@/components/sidebar/main";
 import { SidebarInset, SidebarProvider, useSidebar } from "@/components/ui/sidebar";

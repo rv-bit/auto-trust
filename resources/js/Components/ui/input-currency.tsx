@@ -2,12 +2,13 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 
+import { PRICE_CURRENCIES, type PriceCurrency, PriceCurrencyEnum } from "@/types/prices";
+
 import { Input } from "./input";
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { PRICE_CURRENCIES, PriceCurrency, PriceCurrencyEnum } from "@/types/prices";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "./button";
 

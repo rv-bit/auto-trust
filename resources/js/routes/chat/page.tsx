@@ -8,7 +8,9 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarInset, Si
 import { default as UserSidebar } from "@/components/sidebar/footer-user";
 import Header from "@/components/sidebar/header";
 
-import { Data } from "./types";
+import SidebarActions from "./components/sidebar-actions";
+
+import type { Data } from "./types";
 
 function SidebarMenu({ ...props }: { user: User; chats: Data[] }) {
 	return (
@@ -16,9 +18,7 @@ function SidebarMenu({ ...props }: { user: User; chats: Data[] }) {
 			<SidebarHeader>
 				<Header />
 			</SidebarHeader>
-			<SidebarContent>
-				<SidebarActions user={props.user} items={props.chats} />
-			</SidebarContent>
+			<SidebarContent>{/* <SidebarActions user={props.user} data={props.chats} /> */}</SidebarContent>
 			<SidebarFooter>
 				<UserSidebar user={props.user} />
 			</SidebarFooter>
@@ -33,7 +33,9 @@ export default function Page({ ...props }) {
 	return (
 		<SidebarProvider>
 			<SidebarMenu user={user} chats={chats} />
-			<SidebarInset>{props.children}</SidebarInset>
+			<SidebarInset>
+				<h1 data-testid="title">Test</h1>
+			</SidebarInset>
 		</SidebarProvider>
 	);
 }

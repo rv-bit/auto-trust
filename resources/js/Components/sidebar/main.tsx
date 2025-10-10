@@ -1,8 +1,8 @@
 import { usePage } from "@inertiajs/react";
 import * as React from "react";
 
-import { IIconPropsExtended } from "@/types/icons";
-import { Methods } from "@/types";
+import type { IIconPropsExtended } from "@/types/icons";
+import type { Methods } from "@/types";
 
 import { Actions } from "@/components/sidebar/actions";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";

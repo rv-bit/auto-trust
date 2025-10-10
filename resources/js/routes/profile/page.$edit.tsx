@@ -1,6 +1,6 @@
 import { Head, usePage } from "@inertiajs/react";
 
-import { PageProps } from "@/types";
+import type { PageProps } from "@/types";
 
 import AuthenticatedLayout from "@/layouts/authenticated-layout";
 

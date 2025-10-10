@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconProps, InternalIcon } from "@/types/icons";
+import type { IconProps, InternalIcon } from "@/types/icons";
 
 export const Copy: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 14 16" {...props}>
