@@ -34,8 +34,8 @@ export const QuickActions = React.forwardRef<HTMLDivElement>((props, ref) => {
 				<SidebarMenuButton
 					data-sidebar="create-chat"
 					data-slot="create-chat"
-					aria-label="Start New Chat"
-					tooltip={{ size: "sm", content: "Start New Chat", side: "bottom" }}
+					aria-label="Quick Actions"
+					tooltip={{ size: "sm", content: "Quick Actions", side: "bottom" }}
 					isTooltipHidden={false}
 					className="hover:bg-sidebar-accent flex size-full w-8 items-center justify-center py-2 text-white opacity-100 transition-opacity duration-200 ease-in-out [&>svg]:size-auto"
 				>
@@ -56,16 +56,6 @@ export const QuickActions = React.forwardRef<HTMLDivElement>((props, ref) => {
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="start" side="bottom" className="border-none bg-white">
-						<DropdownMenuItem asChild className="hover:bg-sidebar-accent/50 cursor-pointer bg-transparent select-auto hover:text-black focus:bg-transparent">
-							<Button
-								aria-label="Create new conversation"
-								title="Create new conversation"
-								isTooltipHidden={true}
-								className="focus:bg-sidebar-accent/50 active:bg-sidebar-accent/50 relative flex items-center justify-start py-2 text-black opacity-100 shadow-none transition-opacity duration-200 ease-in-out focus:text-black focus-visible:ring-0 active:text-black data-[active=true]:bg-transparent data-[active=true]:text-black [&>svg]:size-auto"
-							>
-								Create new conversation
-							</Button>
-						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>

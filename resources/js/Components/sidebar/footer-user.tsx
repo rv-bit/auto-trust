@@ -58,8 +58,8 @@ export default function User({ ...props }: FooterUserProps) {
 						<DropdownMenuSeparator />
 
 						{defaultActions.map((action, index) => (
-							<DropdownMenuGroup key={index}>
-								<DropdownMenuItem onClick={action.onHandleClick} asChild={!!action.href}>
+							<DropdownMenuGroup key={index} className="h-auto w-full">
+								<DropdownMenuItem onClick={action.onHandleClick} asChild={!!action.href} className="h-auto w-full hover:cursor-pointer">
 									{action.href ? (
 										<Link href={action.href} method={action.method} className="flex items-center">
 											{action.href && action.icon && <action.icon className="mr-2 size-4" />}
