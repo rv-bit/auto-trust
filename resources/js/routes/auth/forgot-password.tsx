@@ -1,5 +1,5 @@
 import { Head, useForm } from "@inertiajs/react";
-import { FormEventHandler } from "react";
+import { type FormEventHandler } from "react";
 
 import GuestLayout from "@/layouts/guest-layout";
 
@@ -28,7 +28,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
 				</div>
 
 				<div className="flex h-auto w-full flex-col items-start justify-start gap-1">
-					<InputFocus id="email" type="email" name="Password" value={data.email} onChange={(e) => setData("email", e.target.value)} className="rounded-sm px-3 py-7.5 pb-5" />
+					<InputFocus id="email" type="email" name="Email" value={data.email} onChange={(e) => setData("email", e.target.value)} className="rounded-sm px-3 py-7.5 pb-5" />
 
 					{errors.email && (
 						<p className="peer-aria-invalid:text-destructive mt-2 text-xs" role="alert" aria-live="polite">
