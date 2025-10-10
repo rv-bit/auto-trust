@@ -2,7 +2,7 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 
-import { PRICE_CURRENCIES, type PriceCurrency, PriceCurrencyEnum } from "@/types/prices";
+import { PRICE_CURRENCIES, type PriceCurrency, PriceCurrencyEnum } from "@/types/stripe";
 
 import { Input } from "./input";
 
