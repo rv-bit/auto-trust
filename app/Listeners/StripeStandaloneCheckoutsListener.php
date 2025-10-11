@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Events\WebhookReceived;
 
-class StripeEventListener
+class StripeStandaloneCheckoutsListener
 {
     public function handle(WebhookReceived $event): void
     {
+        return;
+
         if ($event->payload['type'] === 'checkout.session.completed') {
             $session = $event->payload['data']['object']; // Get the checkout session object
             $sessionId = $session['id']; // Extract the session ID
