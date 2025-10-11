@@ -1,15 +1,13 @@
 import React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 import { PRICE_CURRENCIES, type PriceCurrency, PriceCurrencyEnum } from "@/types/stripe";
 
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./command";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Input } from "./input";
-
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
-import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "./button";
 
 const currencyOptions = PRICE_CURRENCIES;

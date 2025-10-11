@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'cookie_prefix' => Str::slug(env('APP_NAME', 'laravel'), '_') ?: 'laravel',
+    'cookie_prefix' => Str::slug(env('APP_NAME', 'laravel')) ?: 'laravel',
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------

@@ -2,24 +2,26 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Resources\user\AuthUserResource;
-
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
-use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template that is loaded on the first page visit.
+     * The root template that's loaded on the first page visit.
+     *
+     * @see https://inertiajs.com/server-side-setup#root-template
      *
      * @var string
      */
     protected $rootView = 'app';
 
     /**
-     * Determine the current asset version.
+     * Determines the current asset version.
+     *
+     * @see https://inertiajs.com/asset-versioning
      */
     public function version(Request $request): ?string
     {
@@ -29,6 +31,8 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
+     * @see https://inertiajs.com/shared-data
+     *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
@@ -37,30 +41,16 @@ class HandleInertiaRequests extends Middleware
 
         // Use raw cookies 
         $sidebar_state = $_COOKIE["{$COOKIE_PREFIX}-sidebar_state"] ?? null;
-        $theme_state = $_COOKIE["{$COOKIE_PREFIX}-theme_state"] ?? null;
-
         // Handle boolean conversion
         $sidebar_state = $sidebar_state === 'true' ? true : ($sidebar_state === 'false' ? false : $sidebar_state);
-        $theme_state = $theme_state === 'true' ? true : ($theme_state === 'false' ? false : $theme_state);
 
-        return array_merge(
-            parent::share($request),
-            [
-                'flash' => [
-                    'message' => fn() => $request->session()->get('message')
-                ],
-                'auth' => [
-                    'user' => $request->user() ? new AuthUserResource($request->user()) : null,
-                ],
-                'ziggy' => fn() => [
-                    ...(new Ziggy)->toArray(),
-                    'location' => $request->url(),
-                ],
-                'cookies' => [
-                    'sidebar_state' => $sidebar_state,
-                    'theme_state' => $theme_state,
-                ],
-            ]
-        );
+        return [
+            ...parent::share($request),
+            'name' => config('app.name'),
+            'auth' => [
+                'user' => $request->user(),
+            ],
+            'sidebarOpen' => $sidebar_state,
+        ];
     }
 }
