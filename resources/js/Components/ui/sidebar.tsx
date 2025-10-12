@@ -491,53 +491,54 @@ const sidebarMenuButtonVariants = cva(
 )
 
 function SidebarMenuButton({
-  asChild = false,
-  isActive = false,
-  variant = "default",
-  size = "default",
-  tooltip,
-  className,
-  ...props
+	asChild = false,
+	isActive = false,
+	variant = "default",
+	size = "default",
+	tooltip,
+  isTooltipHidden,
+	className,
+	...props
 }: React.ComponentProps<"button"> & {
-  asChild?: boolean
-  isActive?: boolean
-  tooltip?: string | React.ComponentProps<typeof TooltipContent>
+	asChild?: boolean;
+	isActive?: boolean;
+	tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+	isTooltipHidden?: boolean;
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
-  const Comp = asChild ? Slot : "button"
-  const { isMobile, state } = useSidebar()
+		const Comp = asChild ? Slot : "button";
+		const { isMobile, state } = useSidebar();
 
-  const button = (
-    <Comp
-      data-slot="sidebar-menu-button"
-      data-sidebar="menu-button"
-      data-size={size}
-      data-active={isActive}
-      className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
-      {...props}
-    />
-  )
+		const button = (
+			<Comp
+				data-slot="sidebar-menu-button"
+				data-sidebar="menu-button"
+				data-size={size}
+				data-active={isActive}
+				className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+				{...props}
+			/>
+		);
 
-  if (!tooltip) {
-    return button
-  }
+		if (!tooltip) {
+			return button;
+		}
 
-  if (typeof tooltip === "string") {
-    tooltip = {
-      children: tooltip,
-    }
-  }
+		if (typeof tooltip === "string") {
+			tooltip = {
+				children: tooltip,
+			};
+		}
 
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== "collapsed" || isMobile}
-        {...tooltip}
-      />
-    </Tooltip>
-  )
+		const isHidden = typeof isTooltipHidden === "boolean" ? isTooltipHidden : state !== "collapsed" || isMobile;
+
+		return (
+			<Tooltip delayDuration={0}>
+				<TooltipTrigger asChild>{button}</TooltipTrigger>
+				<TooltipContent side="right" align="center" hidden={isHidden} {...tooltip}>
+					{tooltip.content || tooltip.children}
+				</TooltipContent>
+			</Tooltip>
+		);
 }
 
 function SidebarMenuAction({
