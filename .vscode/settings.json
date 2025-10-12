@@ -1,5 +1,5 @@
 {
 	"php.validate.executablePath": "/opt/homebrew/etc/php/8.4",
 	"postman.settings.dotenv-detection-notification-visibility": false,
-	"cSpell.words": ["autotrust"]
+	"cSpell.words": ["autotrust", "wayfinder"]
 }
