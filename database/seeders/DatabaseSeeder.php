@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
         Message::factory(1000)->create();
-        $messages = Message::whereNull('receiver_id')->orderBy('created_at')->get();
+        $messages = Message::whereNotNull('receiver_id')->orderBy('created_at')->get();
         $conversations = $messages->groupBy(function ($message) {
             return collect([$message->sender_id, $message->receiver_id])->sort()->implode('_');
         })->map(function ($groupedMessages) {
