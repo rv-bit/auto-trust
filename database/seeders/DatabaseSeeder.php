@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Message;
-use App\Models\Conversation;
+
+use App\Models\Chat\Message;
+use App\Models\Chat\Conversation;
 
 // use App\Enum\Roles;
 
