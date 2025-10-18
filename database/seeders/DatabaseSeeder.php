@@ -7,9 +7,12 @@ use App\Models\User;
 use App\Models\Chat\Message;
 use App\Models\Chat\Conversation;
 
-// use App\Enum\Roles;
+use App\Enum\RolesEnum;
+use App\Enum\PermissionsEnum;
 
 use Carbon\Carbon;
+
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 use Illuminate\Database\Seeder;
@@ -22,7 +25,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $adminRole = Role::create(['name' => Roles::Admin->value]);
+        $customerRole = Role::create(['name' => RolesEnum::Customer->value]);
+        $adminRole = Role::create(['name' => RolesEnum::Admin->value]);
+
+        $manageVehiclesPermission = Permission::create([
+            'name' => PermissionsEnum::ManageVehicles->value,
+        ]);
+        $manageUsersPermission = Permission::create([
+            'name' => PermissionsEnum::ManageUsers->value,
+        ]);
+
+        $adminRole->syncPermissions([
+            $manageUsersPermission,
+            $manageVehiclesPermission
+        ]);
 
         User::firstOrCreate(
             ['email' => 'test@example.com'],
@@ -38,7 +54,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'is_admin' => true,
             'password' => bcrypt('password'),
-        ]);
+        ])->assignRole(RolesEnum::Admin);
 
         User::factory(10)->create();
 
