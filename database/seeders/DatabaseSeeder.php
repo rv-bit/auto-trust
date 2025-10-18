@@ -58,5 +58,14 @@ class DatabaseSeeder extends Seeder
         })->values();
 
         Conversation::insertOrIgnore($conversations->toArray());
+
+        // Seed vehicle makes and models
+        $this->call([
+            VehicleMakeSeeder::class,
+            VehicleModelSeeder::class,
+        ]);
+
+        // Create sample vehicles
+        $this->call(VehicleSeeder::class);
     }
 }
