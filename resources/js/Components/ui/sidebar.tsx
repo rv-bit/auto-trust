@@ -1,10 +1,14 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { PanelLeftIcon } from "lucide-react"
+
+import type { State, SidebarContext } from "@/types/ui/sidebar";
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
+
+import { SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME } from "@/resources/cookie-config"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -23,22 +27,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-import { SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME } from "@/resources/cookie-config"
+import { PanelLeftIcon } from "lucide-react"
 
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
-
-type SidebarContext = {
-  state: "expanded" | "collapsed"
-  open: boolean
-  setOpen: (open: boolean) => void
-  openMobile: boolean
-  setOpenMobile: (open: boolean) => void
-  isMobile: boolean
-  toggleSidebar: () => void
-}
 
 const SidebarContext = React.createContext<SidebarContext | null>(null)
 
@@ -495,8 +489,10 @@ function SidebarMenuButton({
 	isActive = false,
 	variant = "default",
 	size = "default",
+	sidebarState,
 	tooltip,
-  isTooltipHidden,
+	isTooltipHidden,
+  isMobile,
 	className,
 	...props
 }: React.ComponentProps<"button"> & {
@@ -504,41 +500,36 @@ function SidebarMenuButton({
 	isActive?: boolean;
 	tooltip?: string | React.ComponentProps<typeof TooltipContent>;
 	isTooltipHidden?: boolean;
+
+	sidebarState: State;
+  isMobile: boolean,
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
-		const Comp = asChild ? Slot : "button";
-		const { isMobile, state } = useSidebar();
+	const Comp = asChild ? Slot : "button";
 
-		const button = (
-			<Comp
-				data-slot="sidebar-menu-button"
-				data-sidebar="menu-button"
-				data-size={size}
-				data-active={isActive}
-				className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
-				{...props}
-			/>
-		);
+	const button = (
+		<Comp data-slot="sidebar-menu-button" data-sidebar="menu-button" data-size={size} data-active={isActive} className={cn(sidebarMenuButtonVariants({ variant, size }), className)} {...props} />
+	);
 
-		if (!tooltip) {
-			return button;
-		}
+	if (!tooltip) {
+		return button;
+	}
 
-		if (typeof tooltip === "string") {
-			tooltip = {
-				children: tooltip,
-			};
-		}
+	if (typeof tooltip === "string") {
+		tooltip = {
+			children: tooltip,
+		};
+	}
 
-		const isHidden = typeof isTooltipHidden === "boolean" ? isTooltipHidden : state !== "collapsed" || isMobile;
+	const isHidden = typeof isTooltipHidden === "boolean" ? isTooltipHidden : sidebarState !== "collapsed" || isMobile;
 
-		return (
-			<Tooltip delayDuration={0}>
-				<TooltipTrigger asChild>{button}</TooltipTrigger>
-				<TooltipContent side="right" align="center" hidden={isHidden} {...tooltip}>
-					{tooltip.content || tooltip.children}
-				</TooltipContent>
-			</Tooltip>
-		);
+	return (
+		<Tooltip delayDuration={0}>
+			<TooltipTrigger asChild>{button}</TooltipTrigger>
+			<TooltipContent side="right" align="center" hidden={isHidden} {...tooltip}>
+				{tooltip.content || tooltip.children}
+			</TooltipContent>
+		</Tooltip>
+	);
 }
 
 function SidebarMenuAction({

@@ -1,19 +1,17 @@
+// import { Link } from "@inertiajs/react";
 import React from "react";
-import { Link } from "@inertiajs/react";
 
 import { dashboard } from "@/routes";
 import { type NavItem } from "@/types";
 
-import { NavFooter } from "@/components/navigation/nav-footer";
-import { NavMain } from "@/components/navigation/nav-main";
-import { NavUser } from "@/components/navigation/nav-user";
-
-import { useSidebar, Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-
+import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { QuickActions } from "@/components/ui/sidebar-trigger";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 
 import { LayoutGrid } from "lucide-react";
-import AppLogo from "./app-logo";
+import { NavFooter } from "../navigation/nav-footer";
+import { NavMain } from "../navigation/nav-main";
+import { NavUser } from "../navigation/nav-user";
 
 const mainNavItems: NavItem[] = [
 	{
@@ -26,7 +24,7 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
-    const { state, isMobile } = useSidebar();
+	const { state, isMobile } = useSidebar();
 
 	return (
 		<Sidebar collapsible="offcanvas" variant="inset">
@@ -34,9 +32,9 @@ export function AppSidebar() {
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton sidebarState={state} isMobile={isMobile} size="lg" asChild>
-							<Link href={"/"} prefetch>
+							{/* <Link href={"/"} prefetch>
 								<AppLogo />
-							</Link>
+							</Link> */}
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
-import React from 'react';
+import React, { forwardRef } from 'react';
 
+import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 import {
@@ -53,197 +54,149 @@ const metadata = [
     },
 ];
 
-export default function Footer() {
-    const isTablet = useMediaQuery('(max-width: 990px)');
+export const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"footer">>(({ ...props }, ref) => {
+	const isTablet = useMediaQuery("(max-width: 990px)");
 
-    const [newsLetterData, setNewsLetterData] = React.useState<string>();
+	const [newsLetterData, setNewsLetterData] = React.useState<string>();
 
-    if (isTablet) {
-        return (
-            <footer className="mt-10 h-auto w-full flex-1 border-t border-border bg-transparent">
-                <div className="mx-auto flex max-w-7xl p-10 px-5 pb-5">
-                    <span className="flex w-full flex-col items-start gap-10">
-                        <Accordion type="single" collapsible className="w-full">
-                            {metadata.map((item, index) => (
-                                <AccordionItem
-                                    key={index}
-                                    value={item.title}
-                                    className="hover border-border/25"
-                                >
-                                    <AccordionTrigger className="pb-2">
-                                        <h1 className="text-2xl font-semibold tracking-tight">
-                                            {item.title}
-                                        </h1>
-                                    </AccordionTrigger>
+	if (isTablet) {
+		return (
+			<footer className={cn(" mt-10 h-auto w-full flex-1", props.className)}>
+				<div className="mx-auto flex w-full max-w-7xl p-10 px-5 pb-5">
+					<span className="flex w-full flex-col items-start gap-10">
+						<Accordion type="single" collapsible className="w-full">
+							{metadata.map((item, index) => (
+								<AccordionItem key={index} value={item.title} className="hover border-border/25">
+									<AccordionTrigger className="pb-2">
+										<h1 className="text-2xl font-semibold tracking-tight">{item.title}</h1>
+									</AccordionTrigger>
 
-                                    <AccordionContent>
-                                        <ul className="flex flex-col gap-1">
-                                            {item.children.map(
-                                                (child, index) => (
-                                                    <li key={index}>
-                                                        <Link
-                                                            href={child.route}
-                                                            className="text-md tracking-tight"
-                                                        >
-                                                            {child.title}
-                                                        </Link>
-                                                    </li>
-                                                ),
-                                            )}
-                                        </ul>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))}
+									<AccordionContent>
+										<ul className="flex flex-col gap-1">
+											{item.children.map((child, index) => (
+												<li key={index}>
+													<Link href={child.route} className="text-md tracking-tight">
+														{child.title}
+													</Link>
+												</li>
+											))}
+										</ul>
+									</AccordionContent>
+								</AccordionItem>
+							))}
 
-                            <AccordionItem
-                                value="Join our news letter"
-                                className="hover border-border/25"
-                            >
-                                <AccordionTrigger className="pb-2">
-                                    <h1 className="text-2xl font-semibold tracking-tight">
-                                        Join our news letter
-                                    </h1>
-                                </AccordionTrigger>
+							<AccordionItem value="Join our news letter" className="hover border-border/25">
+								<AccordionTrigger className="pb-2">
+									<h1 className="text-2xl font-semibold tracking-tight">Join our news letter</h1>
+								</AccordionTrigger>
 
-                                <AccordionContent>
-                                    <span className="flex flex-col gap-2">
-                                        <p className="text-sm">
-                                            Get the latest news and updates from
-                                            us.
-                                        </p>
+								<AccordionContent>
+									<span className="flex flex-col gap-2">
+										<p className="text-sm">Get the latest news and updates from us.</p>
 
-                                        <InputFocus
-                                            id="email"
-                                            type="email"
-                                            name="Email"
-                                            value={newsLetterData}
-                                            onChange={(e) =>
-                                                setNewsLetterData(
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="border-whit rounded-none px-3 py-7.5 pb-5"
-                                        />
+										<InputFocus
+											id="email"
+											type="email"
+											name="Email"
+											value={newsLetterData}
+											onChange={(e) => setNewsLetterData(e.target.value)}
+											className="border-whit rounded-none px-3 py-7.5 pb-5"
+										/>
 
-                                        <Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
-                                            <div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-gradient-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
-                                            <span className="font-bold text-black uppercase">
-                                                Submit
-                                            </span>
-                                        </Button>
-                                    </span>
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>
+										<Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
+											<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-gradient-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
+											<span className="font-bold text-black uppercase">Submit</span>
+										</Button>
+									</span>
+								</AccordionContent>
+							</AccordionItem>
+						</Accordion>
 
-                        <span className="justify flex flex-col items-start gap-4">
-                            <span className="flex items-center justify-end gap-2">
-                                <a
-                                    aria-label="Facebook"
-                                    href="https://www.facebook.com/profile.php?id=100087050144571"
-                                    target="_blank"
-                                >
-                                    {/* <FacebookIcon className="size-8" /> */}
-                                </a>
-                                {/* <YoutubeIcon className="size-8" /> */}
-                                {/* <InstagramIcon className="size-8" /> */}
-                            </span>
+						<span className="justify flex flex-col items-start gap-4">
+							<span className="flex items-center justify-end gap-2">
+								<a aria-label="Facebook" href="https://www.facebook.com/profile.php?id=100087050144571" target="_blank">
+									{/* <FacebookIcon className="size-8" /> */}
+								</a>
+								{/* <YoutubeIcon className="size-8" /> */}
+								{/* <InstagramIcon className="size-8" /> */}
+							</span>
 
-                            <div className="flex flex-wrap items-center justify-start gap-2">
-                                {/* <VisaIcon className="text-rajah-400 size-12" />
+							<div className="flex flex-wrap items-center justify-start gap-2">
+								{/* <VisaIcon className="text-rajah-400 size-12" />
                                 <MasterIcon className="text-rajah-400 size-12" />
                                 <AmexIcon className="text-rajah-400 size-12" />
                                 <AppleIcon className="text-rajah-400 size-12" />
                                 <PaypalIcon className="text-rajah-400 size-12" /> */}
-                            </div>
-                        </span>
-                    </span>
-                </div>
-            </footer>
-        );
-    }
+							</div>
+						</span>
+					</span>
+				</div>
+			</footer>
+		);
+	}
 
-    return (
-        <footer className="mt-10 h-auto w-full border-t border-border bg-transparent text-black">
-            <div className="mx-auto flex max-w-7xl flex-col p-10 pb-5">
-                <span className="flex items-start justify-center gap-2">
-                    {metadata.map((item, index) => (
-                        <div
-                            key={index}
-                            className="flex w-full max-w-50 flex-col gap-1 transition-all delay-75 duration-150 ease-in-out max-xl:max-w-40"
-                        >
-                            <h1 className="text-2xl font-semibold tracking-tight">
-                                {item.title}
-                            </h1>
+	return (
+		<footer className={cn("mt-10 h-auto w-full flex-1", props.className)}>
+			<div className="mx-auto flex max-w-7xl w-full flex-col p-10 pb-5">
+				<span className="flex items-start justify-center gap-2">
+					{metadata.map((item, index) => (
+						<div key={index} className="flex w-full max-w-50 flex-col gap-1 transition-all delay-75 duration-150 ease-in-out max-xl:max-w-40">
+							<h1 className="text-2xl font-semibold tracking-tight">{item.title}</h1>
 
-                            <ul className="flex flex-col gap-1">
-                                {item.children.map((child, index) => (
-                                    <li key={index}>
-                                        <Link
-                                            href={child.route}
-                                            className="text-sm tracking-tight hover:underline"
-                                        >
-                                            {child.title}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+							<ul className="flex flex-col gap-1">
+								{item.children.map((child, index) => (
+									<li key={index}>
+										<Link href={child.route} className="text-sm tracking-tight hover:underline">
+											{child.title}
+										</Link>
+									</li>
+								))}
+							</ul>
+						</div>
+					))}
 
-                    <div className="flex flex-col gap-1">
-                        <h1 className="text-left text-2xl font-semibold tracking-tight">
-                            Join our news letter
-                        </h1>
-                        <p className="text-left text-sm">
-                            Get the latest news and updates from us.
-                        </p>
+					<div className="flex flex-col gap-1">
+						<h1 className="text-left text-2xl font-semibold tracking-tight">Join our news letter</h1>
+						<p className="text-left text-sm">Get the latest news and updates from us.</p>
 
-                        <span className="flex flex-col gap-2">
-                            <InputFocus
-                                id="email"
-                                type="email"
-                                name="Email"
-                                value={newsLetterData}
-                                onChange={(e) =>
-                                    setNewsLetterData(e.target.value)
-                                }
-                                className="border-whit rounded-none px-3 py-7.5 pb-5"
-                            />
+						<span className="flex flex-col gap-2">
+							<InputFocus
+								id="email"
+								type="email"
+								name="Email"
+								value={newsLetterData}
+								onChange={(e) => setNewsLetterData(e.target.value)}
+								className="border-whit rounded-none px-3 py-7.5 pb-5"
+							/>
 
-                            <Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
-                                <div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-gradient-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
-                                <span className="font-bold text-black uppercase">
-                                    Submit
-                                </span>
-                            </Button>
-                        </span>
-                    </div>
-                </span>
+							<Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
+								<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-gradient-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
+								<span className="font-bold text-black uppercase">Submit</span>
+							</Button>
+						</span>
+					</div>
+				</span>
 
-                <hr className="my-5 border-border/25" />
+				<hr className="border-border/25 my-5" />
 
-                <span className="flex items-center justify-between gap-2">
-                    <div className="flex flex-wrap items-center justify-start gap-2">
-                        {/* <VisaIcon className="text-rajah-400 size-12" />
+				<span className="flex items-center justify-between gap-2">
+					<div className="flex flex-wrap items-center justify-start gap-2">
+						{/* <VisaIcon className="text-rajah-400 size-12" />
                         <MasterIcon className="text-rajah-400 size-12" />
                         <AmexIcon className="text-rajah-400 size-12" />
                         <AppleIcon className="text-rajah-400 size-12" />
                         <PaypalIcon className="text-rajah-400 size-12" /> */}
-                    </div>
+					</div>
 
-                    <span className="flex items-center justify-end gap-2">
-                        <a
-                            href="https://www.facebook.com/profile.php?id=100087050144571"
-                            target="_blank"
-                        >
-                            {/* <FacebookIcon className="size-8" /> */}
-                        </a>
-                        {/* <YoutubeIcon className="size-8" /> */}
-                        {/* <InstagramIcon className="size-8" /> */}
-                    </span>
-                </span>
-            </div>
-        </footer>
-    );
-}
+					<span className="flex items-center justify-end gap-2">
+						<a href="https://www.facebook.com/profile.php?id=100087050144571" target="_blank">
+							{/* <FacebookIcon className="size-8" /> */}
+						</a>
+						{/* <YoutubeIcon className="size-8" /> */}
+						{/* <InstagramIcon className="size-8" /> */}
+					</span>
+				</span>
+			</div>
+		</footer>
+	);
+});
