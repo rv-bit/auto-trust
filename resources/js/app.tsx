@@ -8,35 +8,43 @@ import { initializeTheme } from './hooks/use-appearance';
 import Axios from 'axios';
 import { client } from 'laravel-precognition-react';
 
-import { configureEcho } from '@laravel/echo-react';
+import { configureEcho } from "@laravel/echo-react";
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
-createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
-    resolve: (name) =>
-        resolvePageComponent(
-            `./pages/${name}.tsx`,
-            import.meta.glob('./pages/**/*.tsx'),
-        ),
-    setup({ el, App, props }) {
-        const root = createRoot(el);
+const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
-        root.render(<App {...props} />);
-    },
-    progress: {
-        color: '#4B5563',
-    },
+window.Pusher = Pusher;
+window.Echo = new Echo({
+	broadcaster: "reverb",
+	key: import.meta.env.VITE_REVERB_APP_KEY, // optional, depending on config
+	wsHost: import.meta.env.VITE_REVERB_HOST,
+	wsPort: import.meta.env.VITE_REVERB_PORT,
+	forceTLS: false,
+	enabledTransports: ["ws", "wss"],
+});
+
+configureEcho({
+	broadcaster: "reverb",
 });
 
 window.axios = Axios.create();
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 window.axios.defaults.withCredentials = true;
-
 client.use(window.axios);
 
-configureEcho({
-    broadcaster: 'reverb',
+createInertiaApp({
+	title: (title) => (title ? `${title} - ${appName}` : appName),
+	resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob("./pages/**/*.tsx")),
+	setup({ el, App, props }) {
+		const root = createRoot(el);
+
+		root.render(<App {...props} />);
+	},
+	progress: {
+		color: "#4B5563",
+	},
 });
 
 // This will set light / dark mode on load...
