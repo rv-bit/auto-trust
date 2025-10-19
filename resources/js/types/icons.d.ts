@@ -1,43 +1,47 @@
-import React from 'react';
+import { type LucideProps } from "lucide-react";
+import React, { type ComponentType } from "react";
 
 export const SIDE = {
-    right: 'rotate-0',
-    down: 'rotate-90',
-    left: 'rotate-180',
-    up: 'rotate-270',
+	right: "rotate-0",
+	down: "rotate-90",
+	left: "rotate-180",
+	up: "rotate-270",
 };
 
 // For normal Icons
 export type IconProps = React.SVGProps<SVGSVGElement>;
-export type InternalIcon = React.ForwardRefExoticComponent<
-    Omit<IconProps, 'ref'> & React.RefAttributes<SVGSVGElement>
->;
+export type InternalIcon = React.ForwardRefExoticComponent<Omit<IconProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
 export interface IconWithSideProps extends IconProps {
-    side?: keyof typeof SIDE;
+	side?: keyof typeof SIDE;
+}
+
+// For laravel Icons / Lucide
+export interface IconLucideProps extends Omit<LucideProps, "ref"> {
+	iconNode: ComponentType<LucideProps>;
 }
 
 // For Gradient Style Icons
 export interface IIconProps {
-    className?: string;
-    hasGradient?: boolean;
-    stops?: Array<{
-        offset?: number;
-        color: string;
-        opacity?: number;
-    }>;
-    rotateGradient?: number;
+	className?: string;
+	hasGradient?: boolean;
+	stops?: Array<{
+		offset?: number;
+		color: string;
+		opacity?: number;
+	}>;
+	rotateGradient?: number;
 }
 
 export interface IIconPropsExtended extends IIconParentProps {
-    pathProps?: {
-        fill: string;
-        fillOpacity: number;
-    };
+	pathProps?: {
+		fill: string;
+		fillOpacity: number;
+	};
 }
 
 interface IIconParentProps extends IIconProps {
-    sourceSvgWidth?: number;
-    sourceSvgHeight?: number;
-    children?: React.ReactNode;
+	sourceSvgWidth?: number;
+	sourceSvgHeight?: number;
+	children?: React.ReactNode;
 }
