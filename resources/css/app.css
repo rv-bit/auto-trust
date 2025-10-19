@@ -1,7 +1,7 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
 
 @plugin '@tailwindcss/forms';
-@plugin 'tailwindcss-animate';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -61,6 +61,8 @@
     --radius-sm: calc(var(--radius) - 4px);
 
     --color-off-background: var(--off-background);
+    --color-navigation-bar: var(--navigation-bar);
+
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
@@ -128,6 +130,8 @@
     .landing {
         /* Reset all light theme variables so components inside landing use them */
         --off-background: oklch(100% 0.00011 271.152);
+        --navigation-bar: oklch(0.2645 0 0);
+
         --foreground: oklch(0.145 0 0);
         --card: oklch(1 0 0);
         --card-foreground: oklch(0.145 0 0);
@@ -153,6 +157,7 @@
         --header-h: 3.5rem;
 
         --off-background: oklch(100% 0.00011 271.152);
+        --navigation-bar: oklch(0.2645 0 0);
 
         --background: oklch(1 0 0);
         --foreground: oklch(0.145 0 0);
