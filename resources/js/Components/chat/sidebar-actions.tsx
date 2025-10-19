@@ -1,17 +1,20 @@
-// import { Link } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import React from "react";
 
 import { dashboard } from "@/routes";
 import { type NavItem } from "@/types";
 
+import { NavFooter } from "@/components/navigation/nav-footer";
+import { NavMain } from "@/components/navigation/nav-main";
+import { NavUser } from "@/components/navigation/nav-user";
+
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { QuickActions } from "@/components/ui/sidebar-trigger";
+
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 
 import { LayoutGrid } from "lucide-react";
-import { NavFooter } from "../navigation/nav-footer";
-import { NavMain } from "../navigation/nav-main";
-import { NavUser } from "../navigation/nav-user";
+import AppLogo from "@/components/application/app-logo";
 
 const mainNavItems: NavItem[] = [
 	{
@@ -32,9 +35,9 @@ export function AppSidebar() {
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton sidebarState={state} isMobile={isMobile} size="lg" asChild>
-							{/* <Link href={"/"} prefetch>
+							<Link href={"/"} prefetch>
 								<AppLogo />
-							</Link> */}
+							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>
