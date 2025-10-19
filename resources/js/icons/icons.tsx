@@ -1,14 +1,20 @@
 import React from "react";
 
-import type { IconProps, InternalIcon } from "@/types/icons";
+import type { IconProps, InternalIcon, IconLucideProps } from "@/types/icons";
 
-export const Copy: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props) => (
+import { cn } from "@/lib/utils";
+
+export function Icon({ iconNode: IconComponent, className, ...props }: IconLucideProps) {
+	return <IconComponent className={cn("h-4 w-4", className)} {...props} />;
+}
+
+export const Copy: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 14 16" {...props}>
 		<path d="M2.404 15.322h5.701c1.26 0 1.887-.662 1.887-1.927V12.38h1.154c1.254 0 1.91-.662 1.91-1.928V5.555c0-.774-.158-1.266-.626-1.74L9.512.837C9.066.387 8.545.21 7.865.21H5.463c-1.254 0-1.91.662-1.91 1.928v1.084H2.404c-1.254 0-1.91.668-1.91 1.933v8.239c0 1.265.656 1.927 1.91 1.927zm7.588-6.62c0-.792-.1-1.161-.592-1.665L6.225 3.814c-.452-.462-.844-.58-1.5-.591V2.215c0-.533.28-.832.843-.832h2.38v2.883c0 .726.386 1.113 1.107 1.113h2.83v4.998c0 .539-.276.832-.844.832H9.992V8.701zm-.79-4.29c-.206 0-.288-.088-.288-.287V1.594l2.771 2.818H9.201zM2.503 14.15c-.563 0-.844-.293-.844-.832V5.232c0-.539.281-.837.85-.837h1.91v3.187c0 .85.416 1.26 1.26 1.26h3.14v4.476c0 .54-.28.832-.843.832H2.504zM5.79 7.816c-.24 0-.346-.105-.346-.345V4.547l3.223 3.27H5.791z" />
 	</svg>
 ));
 
-export const Message: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props) => (
+export const Message: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 25 24" {...props}>
 		<path
 			d="M22.468 10V13C22.468 17 20.468 19 16.468 19H15.968C15.658 19 15.358 19.15 15.168 19.4L13.668 21.4C13.008 22.28 11.928 22.28 11.268 21.4L9.76802 19.4C9.60802 19.18 9.23802 19 8.96802 19H8.46802C4.46802 19 2.46802 18 2.46802 13V8C2.46802 4 4.46802 2 8.46802 2H14.468"
@@ -32,7 +38,7 @@ export const Message: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>(
 	</svg>
 ));
 
-export const House: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props) => (
+export const House: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 170 180" {...props}>
 		<path
 			fillRule="evenodd"
@@ -49,7 +55,7 @@ export const House: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((p
 	</svg>
 ));
 
-export const BackArrow: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props) => (
+export const BackArrow: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 220 225" {...props}>
 		<rect y="0.00012207" rx="25" className={props.className} />
 		<path d="M149.333 113.5L21 113.5" stroke="black" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" />
@@ -58,7 +64,7 @@ export const BackArrow: InternalIcon = React.forwardRef<SVGSVGElement, IconProps
 	</svg>
 ));
 
-export const SidebarTriggerIcon: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props) => (
+export const SidebarTriggerIcon: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 220 225" {...props}>
 		<path
 			d="M149.333 113.5L20.9999 113.5M93.9999 169.5L149 113.25L93.9999 57"
@@ -79,7 +85,7 @@ export const SidebarTriggerIcon: InternalIcon = React.forwardRef<SVGSVGElement, 
 	</svg>
 ));
 
-export const PencilSquare: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props) => (
+export const PencilSquare: InternalIcon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 	<svg role="graphics-symbol" viewBox="0 0 24 24" {...props}>
 		<g id="bgCarrier" strokeWidth="0"></g>
 		<g id="tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
