@@ -1,15 +1,22 @@
+import { Link, router } from '@inertiajs/react';
+
+import { logout } from '@/routes';
+import { edit } from '@/routes/profile';
+
+import type { User } from '@/types';
+
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+
 import { UserInfo } from '@/components/settings/user-info';
+import AppearanceToggleTab from "@/components/settings/appearance-tabs";
+
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
-import { logout } from '@/routes';
-import { edit } from '@/routes/profile';
-import { type User } from '@/types';
-import { Link, router } from '@inertiajs/react';
+
 import { LogOut, Settings } from 'lucide-react';
 
 interface UserMenuContentProps {
@@ -33,13 +40,17 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+                <AppearanceToggleTab className='w-full items-center justify-center bg-transparent dark:bg-transparent' />
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
                     <Link
-                        className="block w-full"
-                        href={edit()}
-                        as="button"
                         prefetch
+                        href={edit()}
+                        as="a"
                         onClick={cleanup}
+                        className="block w-full"
                     >
                         <Settings className="mr-2" />
                         Settings
@@ -49,11 +60,11 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
                 <Link
-                    className="block w-full"
-                    href={logout()}
-                    as="button"
-                    onClick={handleLogout}
                     data-test="logout-button"
+                    href={logout()}
+                    as="a"
+                    onClick={handleLogout}
+                    className="block w-full"
                 >
                     <LogOut className="mr-2" />
                     Log out

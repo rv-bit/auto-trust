@@ -5,6 +5,7 @@ import type { State } from "@/types/ui/sidebar";
 
 import { UserInfo } from '@/components/settings/user-info';
 import { UserMenuContent } from '@/components/settings/user-menu-content';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,7 +15,6 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    useSidebar,
 } from '@/components/ui/sidebar';
 
 import { ChevronsUpDown } from 'lucide-react';
