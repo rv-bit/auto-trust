@@ -27,17 +27,20 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
-	const { state, isMobile } = useSidebar();
+	const {  state, isMobile } = useSidebar();
 
 	return (
 		<Sidebar collapsible="offcanvas" variant="inset">
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton sidebarState={state} isMobile={isMobile} size="lg" asChild>
-							<Link href={"/"} prefetch>
-								<AppLogo />
-							</Link>
+						<SidebarMenuButton asChild sidebarState={state} isMobile={isMobile} size="lg" className="active:bg-transparent">
+							<div className="flex h-auto w-full justify-between">
+								<Link prefetch href={"/"} className="active:bg-sidebar-accent flex w-full items-center justify-start gap-2 h-full">
+									<AppLogo />
+								</Link>
+								{isMobile && <TriggerSidebar />}
+							</div>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>
