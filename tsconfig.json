@@ -1,25 +1,21 @@
 {
-    "compilerOptions": {
-        "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-        "module": "ESNext" /* Specify what module code is generated. */,
-        "moduleResolution": "bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
-        "allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
-        "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
-        "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
-        "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+	"compilerOptions": {
+		"target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+		"module": "ESNext" /* Specify what module code is generated. */,
+		"moduleResolution": "bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
+		"allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
+		"isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
+		"esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+		"forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
 
-        "strict": true /* Enable all strict type-checking options. */,
-        "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
-        "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+		"strict": true /* Enable all strict type-checking options. */,
+		"noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
+		"skipLibCheck": true /* Skip type checking all .d.ts files. */,
 
-        "paths": {
-            "@/*": ["./resources/js/*"]
-        },
-        "jsx": "react-jsx"
-    },
-    "include": [
-        "resources/js/**/*.ts",
-        "resources/js/**/*.d.ts",
-        "resources/js/**/*.tsx"
-    ]
+		"paths": {
+			"@/*": ["./resources/js/*"]
+		},
+		"jsx": "react-jsx"
+	},
+	"include": ["resources/js/**/*.ts", "resources/js/**/*.d.ts", "resources/js/**/*.tsx"]
 }
