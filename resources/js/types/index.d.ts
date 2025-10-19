@@ -1,25 +1,28 @@
-import { InertiaLinkProps } from '@inertiajs/react';
-import { LucideIcon } from 'lucide-react';
+import type { FC } from "react";
+
+import type { InertiaLinkProps } from "@inertiajs/react";
+import type { LucideIcon } from "lucide-react";
 
 export interface Auth {
-    user: User;
+	user: User;
 }
 
 export interface BreadcrumbItem {
-    title: string;
-    href: string;
+	title: string;
+	href: string;
 }
 
 export interface NavGroup {
-    title: string;
-    items: NavItem[];
+	title: string;
+	items: NavItem[];
 }
 
 export interface NavItem {
-    title: string;
-    href: NonNullable<InertiaLinkProps['href']>;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
+	title: string;
+	href?: NonNullable<InertiaLinkProps["href"]>;
+	icon?: LucideIcon | null;
+	isActive?: boolean;
+	Component?: FC;
 }
 
 export interface SharedData {
@@ -32,13 +35,13 @@ export interface SharedData {
 }
 
 export interface User {
-    id: number;
-    name: string;
-    email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    two_factor_enabled?: boolean;
-    created_at: string;
-    updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
+	id: number;
+	name: string;
+	email: string;
+	avatar?: string;
+	email_verified_at: string | null;
+	two_factor_enabled?: boolean;
+	created_at: string;
+	updated_at: string;
+	[key: string]: unknown; // This allows for additional properties...
 }
