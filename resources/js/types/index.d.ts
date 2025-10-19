@@ -23,11 +23,12 @@ export interface NavItem {
 }
 
 export interface SharedData {
-    name: string;
-    quote: { message: string; author: string };
-    auth: Auth;
-    sidebarOpen: boolean;
-    [key: string]: unknown;
+	name: string;
+	auth: Auth;
+	sidebarOpen: boolean;
+	chatSidebarOpen: boolean;
+
+	[key: string]: unknown;
 }
 
 export interface User {

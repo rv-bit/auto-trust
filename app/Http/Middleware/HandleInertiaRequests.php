@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 use Inertia\Middleware;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -39,10 +41,11 @@ class HandleInertiaRequests extends Middleware
     {
         $COOKIE_PREFIX = config('app.cookie_prefix');
 
-        // Use raw cookies 
         $sidebar_state = $_COOKIE["{$COOKIE_PREFIX}-sidebar_state"] ?? null;
-        // Handle boolean conversion
         $sidebar_state = $sidebar_state === 'true' ? true : ($sidebar_state === 'false' ? false : $sidebar_state);
+
+        $chat_sidebar_state = $_COOKIE["{$COOKIE_PREFIX}-chat_sidebar_state"] ?? null;
+        $chat_sidebar_state = $chat_sidebar_state === 'true' ? true : ($chat_sidebar_state === 'false' ? false : $chat_sidebar_state);
 
         return [
             ...parent::share($request),
@@ -51,6 +54,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => $sidebar_state,
+            'chatSidebarOpen' => $chat_sidebar_state,
         ];
     }
 }
