@@ -2,13 +2,15 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Chat\Conversation;
+
 use Inertia\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class HandleInertiaRequests extends Middleware
+class HandleChatsRequests extends Middleware
 {
     /**
      * The root template that's loaded on the first page visit.
@@ -38,22 +40,10 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $COOKIE_PREFIX = config('app.cookie_prefix');
-
-        $sidebar_state = $_COOKIE["{$COOKIE_PREFIX}-sidebar_state"] ?? null;
-        $sidebar_state = $sidebar_state === 'true' ? true : ($sidebar_state === 'false' ? false : $sidebar_state);
-
-        $chat_sidebar_state = $_COOKIE["{$COOKIE_PREFIX}-chat_sidebar_state"] ?? null;
-        $chat_sidebar_state = $chat_sidebar_state === 'true' ? true : ($chat_sidebar_state === 'false' ? false : $chat_sidebar_state);
-
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'sidebarOpen' => $sidebar_state,
-            'chatSidebarOpen' => $chat_sidebar_state,
+
+            'conversations' => Auth::id() ? Conversation::getAllConversations(Auth::user()) : [],
         ];
     }
 }
