@@ -30,7 +30,7 @@ export function NavMain({ items = [], state, isMobile }: ContentProps) {
 							asChild
 							sidebarState={state}
 							isMobile={isMobile}
-							isActive={page.url.startsWith(typeof item.href === "string" ? item.href : item.href.url)}
+							isActive={page.url.startsWith(typeof item.href === "string" ? item.href : (item.href?.url ?? ""))}
 							tooltip={{ children: item.title }}
 						>
 							<Link href={item.href} prefetch>
