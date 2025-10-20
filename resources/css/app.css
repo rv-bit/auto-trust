@@ -1,12 +1,18 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
 
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
 @plugin '@tailwindcss/forms';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+	--font-sans-pro: "Source Sans 3", sans-serif,
+}
 
 @layer base {
     *,
