@@ -5,13 +5,13 @@ namespace App\Enum;
 enum RolesEnum: string
 {
     case Admin = 'admin';
-    case Customer = 'customer';
+    case User = 'user';
 
     public static function labels(): array
     {
         return [
             self::Admin->value => 'Admin',
-            self::Customer->value => 'Customer',
+            self::User->value => 'User',
         ];
     }
 
@@ -19,7 +19,7 @@ enum RolesEnum: string
     {
         return match ($this) {
             self::Admin => 'Admin',
-            self::Customer => 'Customer',
+            self::User => 'User',
         };
     }
 }
