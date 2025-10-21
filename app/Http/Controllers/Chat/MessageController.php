@@ -82,8 +82,14 @@ class MessageController extends Controller
             return response()->json(['message'=> 'Forbidden'],403);
         }
 
+        $lastMessage = null;
+        $conversation = Conversation::where('last_message_id', $message-id)->first();
+        
         $message->delete();
+        
+        $conversation = Conversation::find($conversation->id)
+        $lastMessage = $conversation->lastMessage;
 
-        return response()->json(['message'=> ''],200);
+        return response()->json(['message'=> $lastMessage ? new MessageResource($lastMessage): null],200);
     }
 }
