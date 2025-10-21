@@ -83,12 +83,14 @@ class MessageController extends Controller
         }
 
         $lastMessage = null;
-        $conversation = Conversation::where('last_message_id', $message-id)->first();
+        $conversation = Conversation::where('last_message_id', $message->id)->first();
         
         $message->delete();
         
-        $conversation = Conversation::find($conversation->id)
-        $lastMessage = $conversation->lastMessage;
+        $conversation = Conversation::find($conversation->id);
+        if ($conversation) {
+            $lastMessage = $conversation->las;
+        }
 
         return response()->json(['message'=> $lastMessage ? new MessageResource($lastMessage): null],200);
     }

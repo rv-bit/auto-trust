@@ -5,16 +5,18 @@ namespace App\Observers;
 use App\Models\Chat\Message;
 use App\Models\Chat\Conversation;
 
+use Illuminate\Support\Facades\Storage;
+
 class MessageObserver
 {
     public function deleting(Message $message) {
         $message->attachments->each(function ($attachment) {
             $dir = dirname($attachment->path);
-            Storage::disc('public')->deleteDirectory($dir)
-        })
+            Storage::disc('public')->deleteDirectory($dir);
+        });
 
         $message->attachments()->delete();
-        $conversation = Conversation::where('last_message_id', $message-id)->first();
+        $conversation = Conversation::where('last_message_id', $message->id)->first();
 
         if ($conversation) {
             $prevMessage = Message::where(function ($query) use ($message) {
@@ -23,13 +25,13 @@ class MessageObserver
                     ->orWhere('sender_id', $message->receiver_id)
                     ->where('receiver_id', $message->sender_id);
             })
-                ->where('id', '!=', $message-id)
+                ->where('id', '!=', $message->id)
                 ->latest()
                 ->limit(1)
                 ->first();
 
             if ($prevMessage) {
-                $conversation->last_message_id = $prevMessage-id;
+                $conversation->last_message_id = $prevMessage->id;
                 $conversation->save();
             }
         }
