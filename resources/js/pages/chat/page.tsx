@@ -3,6 +3,8 @@ import { usePage } from "@inertiajs/react";
 import type { SharedData } from "@/types";
 import type { Conversations } from "@/types/routes/chat";
 
+import { EventBusProvider } from "@/providers/EventBus";
+
 import ChatLayout from "@/layouts/chat/main-layout";
 
 export default function Chat() {
@@ -12,14 +14,16 @@ export default function Chat() {
 	const selectedConversation = page.props.selectedConversation;
 
 	return (
-		<ChatLayout>
-			<div className="flex h-full w-full justify-center px-2">
-				{!selectedConversation && (
-					<div className="flex items-center justify-center">
-						<p className="text-center text-xl font-medium">No conversation yet selected</p>
-					</div>
-				)}
-			</div>
-		</ChatLayout>
+		<EventBusProvider>
+			<ChatLayout>
+				<div className="flex h-full w-full justify-center px-2">
+					{!selectedConversation && (
+						<div className="flex items-center justify-center">
+							<p className="text-center text-xl font-medium">No conversation yet selected</p>
+						</div>
+					)}
+				</div>
+			</ChatLayout>
+		</EventBusProvider>
 	);
 }
