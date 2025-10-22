@@ -14,8 +14,10 @@ export default function MessageContainer({ messages }) {
 	const selectedConversation = page.props.selectedConversation;
 
     const messageCtrRef = useRef<HTMLDivElement | null>(null);
-    const [localMessages, setLocalMessages] = useState([]);
+    const loadChatsIntersectRef = useRef<HTMLDivElement | null>(null);
 
+    const [localMessages, setLocalMessages] = useState([]);
+    
     useEffect(() => {
         const timeout = setTimeout(() => {
             messageCtrRef.current.scrollTop = messageCtrRef.current.scrollHeight;
@@ -51,6 +53,7 @@ export default function MessageContainer({ messages }) {
             <MessageHeader />
             <div ref={messageCtrRef} className="flex-1 overflow-y-auto p-5">
                 <div className="flex-1 flex flex-col">
+                    <div ref={loadChatsIntersectRef}></div>
                     {localMessages.map(message) => {
                         return (
                             <div key={message.id} className={cn("chat chat-start", {
