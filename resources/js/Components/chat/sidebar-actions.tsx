@@ -1,11 +1,12 @@
 import { Link, usePage } from "@inertiajs/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { chat, dashboard } from "@/routes";
-import { user as chat_user } from "@/routes/chat"
+import { user as chat_user_route } from "@/routes/chat"
 
 import type { NavItem, PartialExcept, SharedData } from "@/types";
 import type { Conversation, Conversations, UserResource } from "@/types/routes/chat";
+
+import { cn } from "@/lib/utils";
 
 import { useInitials } from "@/hooks/use-initials";
 
@@ -17,9 +18,6 @@ import { QuickActions } from "@/components/ui/sidebar-trigger";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
-
-import AppLogo from "@/components/application/app-logo";
-import { cn } from "@/lib/utils";
 
 const footerNavItems: NavItem[] = [];
 
@@ -34,11 +32,32 @@ export function AppSidebar() {
 	const conversations = page.props.conversations;
 	const selectedConversation = page.props.selectedConversation;
 
-	const [sortedConversations, setSortedConversations] = useState<Conversation[]>([]);
 	const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
 	const [onlineUsers, setOnlineUsers] = useState<Record<number, UserResource>>({});
 
 	const isUserOnline = useCallback((userId: number) => {return onlineUsers[userId]}, [onlineUsers]);
+
+	const sortedConversations = useMemo<Conversation[]>(() => {
+		return localConversations.sort((a: Conversation, b: Conversation) => {
+				if (a.blocked_at && b.blocked_at) {
+					return a.blocked_at > b.blocked_at ? 1 : -1;
+				} else if (a.blocked_at) {
+					return 1;
+				} else if (b.blocked_at) {
+					return -1;
+				}
+
+				if (a.last_message_date && b.last_message_date) {
+					return b.last_message_date.localeCompare(a.last_message_date);
+				} else if (a.last_message_date) {
+					return -1;
+				} else if (b.last_message_date) {
+					return 1;
+				} else {
+					return 0;
+				}
+			})
+	}, [localConversations])
 
 	const chatConversations: ChatConversation[] = useMemo(
 		() =>
@@ -50,7 +69,7 @@ export function AppSidebar() {
 				last_message_date: value.last_message_date,
 
 				title: value.name,
-				href: chat_user({id: value.id}),
+				href: chat_user_route({id: value.id}),
 			})),
 		[sortedConversations],
 	);
@@ -93,49 +112,12 @@ export function AppSidebar() {
 	}, []);
 
 	useEffect(() => {
-		setSortedConversations(
-			localConversations.sort((a: Conversation, b: Conversation) => {
-				if (a.blocked_at && b.blocked_at) {
-					return a.blocked_at > b.blocked_at ? 1 : -1;
-				} else if (a.blocked_at) {
-					return 1;
-				} else if (b.blocked_at) {
-					return -1;
-				}
-
-				if (a.last_message_date && b.last_message_date) {
-					return b.last_message_date.localeCompare(a.last_message_date);
-				} else if (a.last_message_date) {
-					return -1;
-				} else if (b.last_message_date) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}),
-		);
-	}, [localConversations]);
-
-	useEffect(() => {
 		setLocalConversations(conversations);
 	}, [conversations]);
 
 	return (
 		<Sidebar collapsible="offcanvas" variant="inset">
-			<SidebarHeader>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton asChild sidebarState={state} isMobile={isMobile} size="lg" className="active:bg-transparent">
-							<div className="flex h-auto w-full justify-between">
-								<Link prefetch href={"/"} className="active:bg-sidebar-accent flex h-full w-full items-center justify-start gap-2">
-									<AppLogo />
-								</Link>
-								{isMobile && <TriggerSidebar />}
-							</div>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
-			</SidebarHeader>
+			<SidebarHeaderActions />
 
 			<SidebarContent>
 				<SidebarGroup className="px-2 py-0">
