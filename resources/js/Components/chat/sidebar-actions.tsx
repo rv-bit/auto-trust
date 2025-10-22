@@ -1,22 +1,22 @@
 import { Link, usePage } from "@inertiajs/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { user as chat_user_route } from "@/routes/chat"
+import { user as chat_user_route } from "@/routes/chat";
 
 import type { NavItem, PartialExcept, SharedData } from "@/types";
 import type { Conversation, Conversations, UserResource } from "@/types/routes/chat";
 
-import { cn } from "@/lib/utils";
 import { formatMessageDateLong } from "@/lib/helpers";
+import { cn } from "@/lib/utils";
 
 import { useInitials } from "@/hooks/use-initials";
 
 import { NavFooter } from "@/components/navigation/nav-footer";
 import { NavUser } from "@/components/navigation/nav-user";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenuButton } from "@/components/ui/sidebar";
 import { QuickActions } from "@/components/ui/sidebar-trigger";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 
