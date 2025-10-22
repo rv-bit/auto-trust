@@ -1,11 +1,11 @@
 import { usePage } from "@inertiajs/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { SharedData } from "@/types";
 import type { Conversations, Message, MessagesProps } from "@/types/routes/chat";
 
-import { cn } from "@/lib/utils";
 import { formatMessageDateLong } from "@/lib/helpers";
+import { cn } from "@/lib/utils";
 
 import MessageActions from "./message-actions";
 
@@ -14,7 +14,7 @@ export default function MessageContainer() {
 
 	const currentUser = page.props.auth.user;
 	const selectedConversation = page.props.selectedConversation;
-    const messages = page.props.messages as MessagesProps;
+	const messages = page.props.messages as MessagesProps;
 
 	const messageCtrRef = useRef<HTMLDivElement | null>(null);
 	const loadChatsIntersectRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +35,7 @@ export default function MessageContainer() {
 	useEffect(() => {
 		setLocalMessages(messages ? messages.data.reverse() : []);
 
-        return () => {}
+		return () => {};
 	}, [messages]);
 
 	if (!selectedConversation) {
@@ -55,12 +55,12 @@ export default function MessageContainer() {
 	}
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex h-full w-full flex-col">
 			<div ref={messageCtrRef} className="flex-1 overflow-y-auto p-5">
 				<div className="flex flex-1 flex-col">
 					<div ref={loadChatsIntersectRef}></div>
 					{localMessages.map((message) => {
-                        console.log(message.sender_id === currentUser.id, currentUser.id);
+						console.log(message.sender_id === currentUser.id, currentUser.id);
 						return (
 							<div
 								key={message.id}
@@ -74,7 +74,7 @@ export default function MessageContainer() {
 									<time className="text-xs opacity-50">{formatMessageDateLong(message.created_at)}</time>
 								</div>
 								<div
-									className={cn("chat-bubble relative rounded-xl rounded-bl-none text-white bg-zinc-700", {
+									className={cn("chat-bubble relative rounded-xl rounded-bl-none bg-zinc-700 text-white", {
 										"rounded-br-none bg-blue-700": message.sender_id === currentUser.id,
 									})}
 								>
@@ -89,6 +89,6 @@ export default function MessageContainer() {
 				</div>
 			</div>
 			<MessageActions />
-        </div>
+		</div>
 	);
 }
