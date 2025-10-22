@@ -18,7 +18,13 @@ export default function MessageActions() {
 					<span className="font-bold text-black uppercase">Submit</span>
 				</Button>
 
-				<MessageInput value={newMessage} onChange={(e: React.ChangeEventHandler<HTMLTextAreaElement> | undefined) => setNewMessage(e.target.value)} onSend={() => {console.log('sent')}} />
+				<MessageInput
+					value={newMessage}
+					onChange={(e: React.ChangeEventHandler<HTMLTextAreaElement> | undefined) => setNewMessage(e.target.value)}
+					onSend={() => {
+						console.log("sent");
+					}}
+				/>
 			</div>
 		</div>
 	);
