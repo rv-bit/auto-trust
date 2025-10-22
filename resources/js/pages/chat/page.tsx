@@ -5,23 +5,16 @@ import type { Conversations } from "@/types/routes/chat";
 
 import { EventBusProvider } from "@/providers/EventBus";
 
+import MessageContainer from "@/components/chat/messages/messages-container";
+
 import ChatLayout from "@/layouts/chat/main-layout";
 
 export default function Chat() {
-	const page = usePage<SharedData & Conversations>();
-
-	const conversations = page.props.conversations;
-	const selectedConversation = page.props.selectedConversation;
-
 	return (
 		<EventBusProvider>
 			<ChatLayout>
 				<div className="flex h-full w-full justify-center px-2">
-					{!selectedConversation && (
-						<div className="flex items-center justify-center">
-							<p className="text-center text-xl font-medium">No conversation yet selected</p>
-						</div>
-					)}
+					<MessageContainer />
 				</div>
 			</ChatLayout>
 		</EventBusProvider>
