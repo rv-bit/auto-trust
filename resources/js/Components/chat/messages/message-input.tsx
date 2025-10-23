@@ -1,19 +1,28 @@
-import React from "@inertiajs/react";
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { Textarea } from "@/components/ui/textarea";
 
-export default function MessageInput({ value, disabled, onSend, onChange }: { value: string; disabled: boolean; onSend: () => void; onChange: (e: React.MouseEvent) => void }) {
+export default function MessageInput({
+	value,
+	disabled,
+	onSend,
+	onChange,
+}: {
+	value: string;
+	disabled: boolean;
+	onSend: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+	onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}) {
 	const input = useRef<HTMLTextAreaElement | null>(null);
 
-	const onHandleSubmit = (e: React.KeyboardEventHandler<HTMLTextAreaElement>) => {
+	const onHandleSubmit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
-			onSend();
+			onSend(e);
 		}
 	};
 
-	const onHandleOnChangeEvent = (e: React.ChangeEventHandler<HTMLTextAreaElement> | undefined) => {
+	const onHandleOnChangeEvent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setTimeout(() => {
 			adjustHeight();
 		}, 10);
@@ -46,7 +55,7 @@ export default function MessageInput({ value, disabled, onSend, onChange }: { va
 			rows={1}
 			placeholder="Type a message"
 			onKeyDown={onHandleSubmit}
-			onChange={(e: React.MouseEvent) => onHandleOnChangeEvent(e)}
+			onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onHandleOnChangeEvent(e)}
 			className="max-h-40 w-full resize-none overflow-y-auto rounded-r-none"
 		/>
 	);

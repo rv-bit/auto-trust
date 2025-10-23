@@ -27,7 +27,7 @@ import { SidebarHeaderActions } from "./sidebar-header-actions";
 const footerNavItems: NavItem[] = [];
 
 type ChatConversation = NavItem & PartialExcept<Conversation, "id" | "avatar" | "name" | "last_message" | "last_message_date">;
-type Users = Record<number, UserResource>
+type Users = Record<number, UserResource>;
 
 export function AppSidebar() {
 	const page = usePage<SharedData & Conversations>();
@@ -50,19 +50,31 @@ export function AppSidebar() {
 	);
 
 	const messageCreated = useCallback((message: Message) => {
-		setLocalConversations((oldUsers: Conversations) => {
-			return oldUsers.map((u) => {
-				if (message.receiver_id && (u.id === message.sender_id || u.id === message.receiver_id)) {
-					u.last_message = message.message;
-					u.last_message_date = message.created_at;
-					return u;
+		setLocalConversations((oldUsers: Conversation[]) => {
+			// Create a new array to track if any changes were made
+			let hasChanges = false;
+			const updated = oldUsers.map((u) => {
+				// Check if this conversation is involved in the message
+				if (!!message.receiver_id && (u.id === parseInt(message.sender_id) || u.id === parseInt(message.receiver_id))) {
+					hasChanges = true;
+					return {
+						...u,
+						last_message: message.message,
+						last_message_date: message.created_at,
+					};
 				}
-			})
-		})
+
+				return u;
+			});
+
+			// Only return new array if there were actual changes
+			return hasChanges ? updated : oldUsers;
+		});
 	}, []);
 
 	const sortedConversations = useMemo<Conversation[]>(() => {
-		return localConversations.sort((a: Conversation, b: Conversation) => {
+		return [...localConversations].sort((a: Conversation, b: Conversation) => {
+			// Handle blocked conversations
 			if (a.blocked_at && b.blocked_at) {
 				return a.blocked_at > b.blocked_at ? 1 : -1;
 			} else if (a.blocked_at) {
@@ -71,6 +83,7 @@ export function AppSidebar() {
 				return -1;
 			}
 
+			// Sort by last message date
 			if (a.last_message_date && b.last_message_date) {
 				return b.last_message_date.localeCompare(a.last_message_date);
 			} else if (a.last_message_date) {
@@ -99,12 +112,12 @@ export function AppSidebar() {
 	);
 
 	useEffect(() => {
-		const offCreated = on("message.created", messageCreated)
+		const offCreated = on("message.created", messageCreated);
 
 		return () => {
 			offCreated();
-		}
-	}, [on])
+		};
+	}, [on, messageCreated]);
 
 	useEffect(() => {
 		const Echo = window.Echo;
@@ -118,14 +131,14 @@ export function AppSidebar() {
 			})
 			.joining((user: UserResource) => {
 				setOnlineUsers((prevOnlineUsers) => {
-					const updatedUsers = { ...prevOnlineUsers } as UserResource[];
+					const updatedUsers = { ...prevOnlineUsers };
 					updatedUsers[user.id] = user;
 					return updatedUsers;
 				});
 			})
 			.leaving((user: UserResource) => {
 				setOnlineUsers((prevOnlineUsers) => {
-					const updatedUsers = { ...prevOnlineUsers } as UserResource[];
+					const updatedUsers = { ...prevOnlineUsers };
 					delete updatedUsers[user.id];
 					return updatedUsers;
 				});
@@ -144,8 +157,27 @@ export function AppSidebar() {
 	}, []);
 
 	useEffect(() => {
-		setLocalConversations(conversations);
-	}, [conversations]);
+		// Only update local conversations if:
+		// 1. Initial mount (localConversations is empty)
+		// 2. Number of conversations changed
+		// 3. Different conversations exist (by ID)
+
+		if (localConversations.length === 0) {
+			setLocalConversations(conversations);
+			return;
+		}
+
+		const currentIds = new Set(localConversations.map((c) => c.id));
+		const newIds = new Set(conversations.map((c) => c.id));
+
+		// Check if conversations were added or removed
+		const hasNewConversation = conversations.some((c) => !currentIds.has(c.id));
+		const hasRemovedConversation = localConversations.some((c) => !newIds.has(c.id));
+
+		if (hasNewConversation || hasRemovedConversation) {
+			setLocalConversations(conversations);
+		}
+	}, [conversations, localConversations]);
 
 	return (
 		<Sidebar collapsible="offcanvas" variant="inset">
@@ -157,7 +189,7 @@ export function AppSidebar() {
 					<SidebarMenu>
 						{chatConversations.map((conversation) => {
 							return (
-								<SidebarMenuItem key={conversation.title}>
+								<SidebarMenuItem key={conversation.id}>
 									<SidebarMenuButton
 										asChild
 										sidebarState={state}
@@ -167,7 +199,7 @@ export function AppSidebar() {
 										className="group/menu-button dark:data-[active=true]:from-sidebar-primary dark:data-[active=true]:to-sidebar-primary/70 flex h-12 items-center gap-2 rounded-md font-medium data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.15),inset_0_1px_0_0_rgb(255_255_255/.20)] data-[active=true]:hover:bg-transparent"
 									>
 										<Link href={conversation.href} prefetch>
-											<div className="flex w-full items-center justify-between">
+											<div className="flex w-full items-start justify-between">
 												<div className="flex w-fit items-center justify-start gap-2">
 													<div className="relative">
 														<div
@@ -182,25 +214,15 @@ export function AppSidebar() {
 															</AvatarFallback>
 														</Avatar>
 													</div>
-													<div
-														className={cn("flex items-start justify-start", {
-															"flex-col": !!conversation.last_message === false,
-														})}
-													>
+													<div className="flex flex-col items-start justify-start">
 														<h1 className="font-sans-pro truncate text-sm font-semibold">{conversation.name}</h1>
-														<p
-															className={cn("hidden truncate text-xs", {
-																block: !!conversation.last_message === false,
-															})}
-														>
-															Please click to start a conversation
-														</p>
+														<p className="block truncate text-xs">{conversation.last_message || "No messages yet"}</p>
 													</div>
 												</div>
 
 												{conversation.last_message && (
 													<div className="flex w-fit flex-col items-center justify-end">
-														<p>{formatMessageDateShort(conversation.last_message_date)}</p>
+														<p className="text-xs">{formatMessageDateShort(conversation.last_message_date)}</p>
 													</div>
 												)}
 											</div>
