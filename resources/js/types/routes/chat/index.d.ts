@@ -5,9 +5,9 @@ export type UserResource = {
 	avatar: string;
 	is_admin: boolean;
 	last_message: string;
-	last_message_Date: string;
-	created_at: string | Date;
-	updated_at: string | Date;
+	last_message_date: string;
+	created_at: string;
+	updated_at: string;
 };
 
 export type Conversation = {
@@ -19,8 +19,8 @@ export type Conversation = {
 	blocked_at: number;
 	last_message: string;
 	last_message_date: string;
-	created_at: string | Date;
-	updated_at: string | Date;
+	created_at: string;
+	updated_at: string;
 };
 
 export interface Conversations {
@@ -35,19 +35,19 @@ export type MessageAttachment = {
 	mime: string;
 	size: string;
 	url: string;
-	created_at: string | Date;
-	updated_at: string | Date;
+	created_at: string;
+	updated_at: string;
 };
 
 export type Message = {
 	id: number;
 	message: string;
-	sender_id: number;
-	receiver_id: number;
+	sender_id: string;
+	receiver_id: string;
 	sender: UserResource;
 	attachments: MessageAttachment[] | [];
-	created_at: string | Date;
-	updated_at: string | Date;
+	created_at: string;
+	updated_at: string;
 };
 
 export interface MessagesProps {
