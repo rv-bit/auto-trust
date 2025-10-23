@@ -1,17 +1,12 @@
-import { Link } from '@inertiajs/react';
-import React, { forwardRef } from 'react';
+import { Link } from "@inertiajs/react";
+import React, { forwardRef } from "react";
 
-import { cn } from '@/lib/utils';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { cn } from "@/lib/utils";
 
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import InputFocus from '@/components/ui/input-anim';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import InputFocus from "@/components/ui/input-anim";
 
 // import {
 //     AmexIcon,
@@ -23,45 +18,45 @@ import InputFocus from '@/components/ui/input-anim';
 // import { FacebookIcon, InstagramIcon, YoutubeIcon } from './icons/socials';
 
 const metadata = [
-    {
-        title: 'Explore',
-        children: [
-            { title: 'About Us', route: '/about' },
-            { title: 'Contact Us', route: '/contact' },
-            { title: 'Careers', route: '/careers' },
-        ],
-    },
-    {
-        title: 'Company',
-        children: [
-            { title: 'Our Story', route: '/our-story' },
-            { title: 'Blog', route: '/blog' },
-            { title: 'Press', route: '/press' },
-        ],
-    },
-    {
-        title: 'Customer',
-        children: [
-            { title: 'Contact Information', route: '/contact-information' },
-            { title: 'My Account', route: '/login' },
-            { title: 'FAQ', route: '/faq' },
-            { title: 'Privacy Policy', route: '/privacy-policy' },
-            { title: 'Terms of Service', route: '/terms-of-service' },
-            { title: 'Cookie Policy', route: '/cookie-policy' },
-            { title: 'Shipping', route: '/shipping' },
-            { title: 'Returns', route: '/returns' },
-        ],
-    },
+	{
+		title: "Explore",
+		children: [
+			{ title: "About Us", route: "/about" },
+			{ title: "Contact Us", route: "/contact" },
+			{ title: "Careers", route: "/careers" },
+		],
+	},
+	{
+		title: "Company",
+		children: [
+			{ title: "Our Story", route: "/our-story" },
+			{ title: "Blog", route: "/blog" },
+			{ title: "Press", route: "/press" },
+		],
+	},
+	{
+		title: "Customer",
+		children: [
+			{ title: "Contact Information", route: "/contact-information" },
+			{ title: "My Account", route: "/login" },
+			{ title: "FAQ", route: "/faq" },
+			{ title: "Privacy Policy", route: "/privacy-policy" },
+			{ title: "Terms of Service", route: "/terms-of-service" },
+			{ title: "Cookie Policy", route: "/cookie-policy" },
+			{ title: "Shipping", route: "/shipping" },
+			{ title: "Returns", route: "/returns" },
+		],
+	},
 ];
 
-export const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"footer">>(({ ...props }, ref) => {
+const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"footer">>(({ ...props }, ref) => {
 	const isTablet = useMediaQuery("(max-width: 990px)");
 
 	const [newsLetterData, setNewsLetterData] = React.useState<string>();
 
 	if (isTablet) {
 		return (
-			<footer className={cn(" mt-10 h-auto w-full flex-1", props.className)}>
+			<footer className={cn("mt-10 h-auto w-full flex-1", props.className)}>
 				<div className="mx-auto flex w-full max-w-7xl p-10 px-5 pb-5">
 					<span className="flex w-full flex-col items-start gap-10">
 						<Accordion type="single" collapsible className="w-full">
@@ -104,7 +99,7 @@ export const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 										/>
 
 										<Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
-											<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-gradient-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
+											<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-linear-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
 											<span className="font-bold text-black uppercase">Submit</span>
 										</Button>
 									</span>
@@ -137,7 +132,7 @@ export const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 
 	return (
 		<footer className={cn("mt-10 h-auto w-full flex-1", props.className)}>
-			<div className="mx-auto flex max-w-7xl w-full flex-col p-10 pb-5">
+			<div className="mx-auto flex w-full max-w-7xl flex-col p-10 pb-5">
 				<span className="flex items-start justify-center gap-2">
 					{metadata.map((item, index) => (
 						<div key={index} className="flex w-full max-w-50 flex-col gap-1 transition-all delay-75 duration-150 ease-in-out max-xl:max-w-40">
@@ -170,7 +165,7 @@ export const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 							/>
 
 							<Button className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300">
-								<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-gradient-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
+								<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-linear-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
 								<span className="font-bold text-black uppercase">Submit</span>
 							</Button>
 						</span>
@@ -200,3 +195,5 @@ export const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 		</footer>
 	);
 });
+
+export default Footer;
