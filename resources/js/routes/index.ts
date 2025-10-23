@@ -364,3 +364,84 @@ registerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 })
 
 register.form = registerForm
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+export const chat = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: chat.url(options),
+    method: 'get',
+})
+
+chat.definition = {
+    methods: ["get","head"],
+    url: '/chat',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+chat.url = (options?: RouteQueryOptions) => {
+    return chat.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+chat.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: chat.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+chat.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: chat.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+const chatForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: chat.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+chatForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: chat.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Chat\MessageController::chat
+* @see app/Http/Controllers/Chat/MessageController.php:27
+* @route '/chat'
+*/
+chatForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: chat.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+chat.form = chatForm

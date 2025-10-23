@@ -3,6 +3,8 @@ import type { FC } from "react";
 import type { InertiaLinkProps } from "@inertiajs/react";
 import type { LucideIcon } from "lucide-react";
 
+export type PartialExcept<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
+
 export interface Auth {
 	user: User;
 }

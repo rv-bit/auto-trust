@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $customerRole = Role::create(['name' => RolesEnum::Customer->value]);
+        $customerRole = Role::create(['name' => RolesEnum::User->value]);
         $adminRole = Role::create(['name' => RolesEnum::Admin->value]);
 
         $manageVehiclesPermission = Permission::create([
@@ -50,11 +50,27 @@ class DatabaseSeeder extends Seeder
         );
 
         User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
+            'name' => 'rontheline',
+            'email' => 'robertvilcu89@gmail.com',
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
             'is_admin' => true,
-            'password' => bcrypt('password'),
-        ])->assignRole(RolesEnum::Admin);
+            'email_verified_at' => now(),
+            'password' => Hash::make('password123'),
+
+        ])->assignRole(RolesEnum::Admin->value);
+    
+        User::factory()->create([
+            'name' => 'rontheline2',
+            'email' => 'onixpro92@gmail.com',
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+            'is_admin' => false,
+            'email_verified_at' => now(),
+            'password' => Hash::make('password123'),
+        ])->assignRole(RolesEnum::User->value);
 
         User::factory(10)->create();
 
