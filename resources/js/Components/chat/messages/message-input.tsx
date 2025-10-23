@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { Textarea } from "@/components/ui/textarea";
 
-export default function MessageInput({ value, onSend, onChange }: { value: string; onSend: () => void; onChange: (e: React.MouseEvent) => void }) {
+export default function MessageInput({ value, disabled, onSend, onChange }: { value: string; disabled: boolean; onSend: () => void; onChange: (e: React.MouseEvent) => void }) {
 	const input = useRef<HTMLTextAreaElement | null>(null);
 
 	const onHandleSubmit = (e: React.KeyboardEventHandler<HTMLTextAreaElement>) => {
@@ -41,6 +41,7 @@ export default function MessageInput({ value, onSend, onChange }: { value: strin
 	return (
 		<Textarea
 			ref={input}
+			disabled={disabled}
 			value={value}
 			rows={1}
 			placeholder="Type a message"

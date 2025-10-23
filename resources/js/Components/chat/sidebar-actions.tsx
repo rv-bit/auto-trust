@@ -4,12 +4,14 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { user as chat_user_route } from "@/routes/chat";
 
 import type { NavItem, PartialExcept, SharedData } from "@/types";
-import type { Conversation, Conversations, UserResource } from "@/types/routes/chat";
+import type { Conversation, Conversations, Message, UserResource } from "@/types/routes/chat";
 
-import { formatMessageDateLong } from "@/lib/helpers";
+import { formatMessageDateShort } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 
 import { useInitials } from "@/hooks/use-initials";
+
+import { useEventBus } from "@/providers/EventBus";
 
 import { NavFooter } from "@/components/navigation/nav-footer";
 import { NavUser } from "@/components/navigation/nav-user";
@@ -25,10 +27,12 @@ import { SidebarHeaderActions } from "./sidebar-header-actions";
 const footerNavItems: NavItem[] = [];
 
 type ChatConversation = NavItem & PartialExcept<Conversation, "id" | "avatar" | "name" | "last_message" | "last_message_date">;
+type Users = Record<number, UserResource>
 
 export function AppSidebar() {
 	const page = usePage<SharedData & Conversations>();
 
+	const { on } = useEventBus();
 	const { state, isMobile } = useSidebar();
 	const getInitials = useInitials();
 
@@ -36,7 +40,7 @@ export function AppSidebar() {
 	const selectedConversation = page.props.selectedConversation;
 
 	const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
-	const [onlineUsers, setOnlineUsers] = useState<Record<number, UserResource>>({});
+	const [onlineUsers, setOnlineUsers] = useState<Users>({});
 
 	const isUserOnline = useCallback(
 		(userId: number) => {
@@ -44,6 +48,18 @@ export function AppSidebar() {
 		},
 		[onlineUsers],
 	);
+
+	const messageCreated = useCallback((message: Message) => {
+		setLocalConversations((oldUsers: Conversations) => {
+			return oldUsers.map((u) => {
+				if (message.receiver_id && (u.id === message.sender_id || u.id === message.receiver_id)) {
+					u.last_message = message.message;
+					u.last_message_date = message.created_at;
+					return u;
+				}
+			})
+		})
+	}, []);
 
 	const sortedConversations = useMemo<Conversation[]>(() => {
 		return localConversations.sort((a: Conversation, b: Conversation) => {
@@ -81,6 +97,14 @@ export function AppSidebar() {
 			})),
 		[sortedConversations],
 	);
+
+	useEffect(() => {
+		const offCreated = on("message.created", messageCreated)
+
+		return () => {
+			offCreated();
+		}
+	}, [on])
 
 	useEffect(() => {
 		const Echo = window.Echo;
@@ -176,7 +200,7 @@ export function AppSidebar() {
 
 												{conversation.last_message && (
 													<div className="flex w-fit flex-col items-center justify-end">
-														<p>{formatMessageDateLong(conversation.last_message_date)}</p>
+														<p>{formatMessageDateShort(conversation.last_message_date)}</p>
 													</div>
 												)}
 											</div>

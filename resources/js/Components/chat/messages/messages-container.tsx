@@ -1,8 +1,13 @@
 import { usePage } from "@inertiajs/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { axios } from "axios";
 
 import type { SharedData } from "@/types";
 import type { Conversations, Message, MessagesProps } from "@/types/routes/chat";
+
+import message from "@/routes/chat/message";
+
+import { useEventBus } from "@/providers/EventBus";
 
 import { formatMessageDateLong } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
@@ -11,6 +16,7 @@ import MessageActions from "./message-actions";
 
 export default function MessageContainer() {
 	const page = usePage<SharedData & Conversations>();
+	const { on } = useEventBus();
 
 	const currentUser = page.props.auth.user;
 	const selectedConversation = page.props.selectedConversation;
@@ -20,6 +26,37 @@ export default function MessageContainer() {
 	const loadChatsIntersectRef = useRef<HTMLDivElement | null>(null);
 
 	const [localMessages, setLocalMessages] = useState<Message[]>([]);
+	const [noMoreMessages, setNoMoreMessages] = useState<boolean>(false);
+	const [scrollFromBottom, setScrollFromBottom] = useState<number | null>(null);
+
+	const messageCreated = (message: Message) => {
+		if (selectedConversation && selectedConversation.is_user && (selectedConversation === message.sender_id || selectedConversation.id === message.receiver_id)) {
+			setLocalMessages((prevMessages) => [...prevMessages, message])
+		}
+	}
+
+	const loadMoreMessages = useCallback(() => {
+		if (noMoreMessages) return;
+
+		const firstMessage = localMessages[0];
+		axios.get(message.loadOlder({id: firstMessage.id}))
+			.then((response: Response) => {
+				if (response.data.length === 0) {
+					setNoMoreMessages(true);
+					return;
+				}
+
+				const scrollHeight = messageCtrRef.current.scrollHeight;
+				const scrollTop = messageCtrRef.current.scrollTop;
+				const clientHeight = messageCtrRef.current.clientHeight;
+				const tempScrollFromBottom = scrollHeight - scrollTop - clientHeight;
+
+				setScrollFromBottom(tempScrollFromBottom)
+				setLocalMessages((prevMessages) => {
+					return [...response.data.reverse(), ...prevMessages];
+				})
+			})
+	}, [localMessages, noMoreMessages])
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -27,7 +64,13 @@ export default function MessageContainer() {
 			messageCtrRef.current.scrollTop = messageCtrRef.current.scrollHeight;
 		}, 100);
 
+		const offCreated = on("message.created", messageCreated);
+
+		setScrollFromBottom(0);
+		setNoMoreMessages(false);
+
 		return () => {
+			offCreated();
 			clearTimeout(timeout);
 		};
 	}, [selectedConversation]);
@@ -37,6 +80,31 @@ export default function MessageContainer() {
 
 		return () => {};
 	}, [messages]);
+	
+	useEffect(() => {
+		if (messageCtrRef.current && scrollFromBottom !== null) {
+			messageCtrRef.current.scrollTop = messageCtrRef.current.scrollHeight - messageCtrRef.current.offsetHeight - scrollFromBottom;
+		}
+
+		if (noMoreMessages) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => entries.forEach((entry) => entry.isIntersecting && loadMoreMessages()),
+			{
+				rootMargin: "0px 0px 250px 0px"
+			}
+		);
+
+		if (loadChatsIntersectRef.current) {
+			setTimeout(() => {
+				observer.observe(loadChatsIntersectRef.current)
+			}, 100)
+		}
+
+		return () => {
+			observer.disconnect()
+		};
+	}, [localMessages]);
 
 	if (!selectedConversation) {
 		return (
