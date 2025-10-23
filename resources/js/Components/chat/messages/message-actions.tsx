@@ -1,14 +1,53 @@
 import React from "@inertiajs/react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { axios } from "axios"
+
+import { Conversation } from "@/types/routes/chat";
 
 import { Button } from "@/components/ui/button";
 
 import MessageInput from "./message-input";
+import message from "@/routes/chat/message";
 
-export default function MessageActions() {
+export default function MessageActions({ conversation }: {conversation: Conversation}) {
 	const [newMessage, setNewMessage] = useState<string>("");
 	const [inputErrorMessage, setInputErrorMessage] = useState<string>("");
-	const [messageEditing, setMessageEditing] = useState<boolean>(false);
+	const [messageSending, setMessageSending] = useState<boolean>(false);
+
+	const onSendClick = useCallback((e: React.KeyboardEventHandler<HTMLTextAreaElement>) => {
+		if (newMessage.trim() === "") {
+			setInputErrorMessage("Please provide a message")
+
+			setTimeout(() => {
+				setInputErrorMessage("")
+			}, 3000)
+		}
+
+		const formData = new FormData();
+		formData.append("message", newMessage)
+		formData.append("receiver_id", conversation.id.toString())
+
+		setMessageSending(true);
+
+		axios.post(message.store(), formData, {
+			onUploadProgress: (progressEvent: ProgressEvent) => {
+				const progress = Math.round(
+					progressEvent.loaded / progressEvent.total * 100
+				)
+
+				console.log(progress)
+			},
+			// validateStatus: function (status: number) {
+			// 	// can validate things here
+			// }
+		}).then((response: Response) => {
+			setNewMessage("");
+		}).catch((error: unknown) => {
+			console.error(error)
+		}).finally(() => {
+			setMessageSending(false);
+		});
+	}, [newMessage])
 
 	return (
 		<div className="flex flex-wrap items-start border-t border-slate-700 py-3 dark:border-slate-300">
@@ -21,9 +60,7 @@ export default function MessageActions() {
 				<MessageInput
 					value={newMessage}
 					onChange={(e: React.ChangeEventHandler<HTMLTextAreaElement> | undefined) => setNewMessage(e.target.value)}
-					onSend={() => {
-						console.log("sent");
-					}}
+					onSend={onSendClick}
 				/>
 			</div>
 		</div>
