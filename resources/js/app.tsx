@@ -1,17 +1,20 @@
-import '../css/app.css';
+import "../css/app.css";
 
-import { createInertiaApp } from '@inertiajs/react';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createRoot } from 'react-dom/client';
-import { initializeTheme } from './hooks/use-appearance';
+import { createInertiaApp } from "@inertiajs/react";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { createRoot } from "react-dom/client";
+import { initializeTheme } from "./hooks/use-appearance";
 
-import Axios from 'axios';
-import { client } from 'laravel-precognition-react';
+import Axios from "axios";
+import { client } from "laravel-precognition-react";
 
 import { configureEcho } from "@laravel/echo-react";
 
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import React from "react";
+
+import { Toaster } from "./components/ui/sooner";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -40,7 +43,13 @@ createInertiaApp({
 	setup({ el, App, props }) {
 		const root = createRoot(el);
 
-		root.render(<App {...props} />);
+		root.render(
+			// <App {...props} />
+			<React.Fragment>
+				<App {...props} />
+				<Toaster />
+			</React.Fragment>,
+		);
 	},
 	progress: {
 		color: "#4B5563",
