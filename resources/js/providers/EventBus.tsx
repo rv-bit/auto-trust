@@ -31,21 +31,14 @@ export const EventBusProvider = ({ children }: React.PropsWithChildren) => {
 	};
 
 	const on = (name: string, cb: Callback<any>) => {
-		setEvents((prev) => {
-			const updated = { ...prev };
-			if (!updated[name]) {
-				updated[name] = [];
-			}
-			updated[name].push(cb);
-			return updated;
-		});
+		if (!events[name]) {
+			events[name] = [];
+		}
+
+		events[name].push(cb);
 
 		return () => {
-			setEvents((prev) => {
-				const updated = { ...prev };
-				updated[name] = updated[name]?.filter((callback) => callback !== cb) || [];
-				return updated;
-			});
+			events[name] = events[name].filter((callback) => callback !== cb);
 		};
 	};
 
