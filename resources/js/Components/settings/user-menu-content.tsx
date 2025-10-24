@@ -1,14 +1,17 @@
+import { HTMLAttributes } from "react";
 import { Link, router } from '@inertiajs/react';
 
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 
+import { cn } from "@/lib/utils";
+
 import type { User } from '@/types';
 
+import { Appearance, useAppearance } from "@/hooks/use-appearance";
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 
 import { UserInfo } from '@/components/settings/user-info';
-import AppearanceToggleTab from "@/components/settings/appearance-tabs";
 
 import {
     DropdownMenuGroup,
@@ -17,10 +20,49 @@ import {
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, LucideIcon, Monitor, Moon, Sun } from "lucide-react";
 
 interface UserMenuContentProps {
     user: User;
+}
+
+export default function AppearanceToggleTab({
+    className = '',
+    ...props
+}: HTMLAttributes<HTMLDivElement>) {
+    const { appearance, updateAppearance } = useAppearance();
+
+    const tabs: { value: Appearance; icon: LucideIcon; label: string }[] = [
+        { value: 'light', icon: Sun, label: 'Light' },
+        { value: 'dark', icon: Moon, label: 'Dark' },
+        { value: 'system', icon: Monitor, label: 'System' },
+    ];
+
+    return (
+        <div
+            className={cn(
+                'inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800',
+                className,
+            )}
+            {...props}
+        >
+            {tabs.map(({ value, icon: Icon, label }) => (
+                <button
+                    key={value}
+                    onClick={() => updateAppearance(value)}
+                    className={cn(
+                        'flex items-center md:justify-start justify-center rounded-md px-3.5 py-1.5 w-fit transition-colors',
+                        appearance === value
+                            ? 'bg-neutral-300/20 shadow-xs dark:bg-neutral-700 dark:text-neutral-100'
+                            : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
+                    )}
+                >
+                    <Icon className="-ml-1 md:size-4 size-5" />
+                    <span className="ml-1.5 text-sm md:inline-block hidden">{label}</span>
+                </button>
+            ))}
+        </div>
+    );
 }
 
 export function UserMenuContent({ user }: UserMenuContentProps) {

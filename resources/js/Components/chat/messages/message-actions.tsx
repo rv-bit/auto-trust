@@ -1,29 +1,29 @@
-import React, { useState, useCallback } from "react";
-import type { AxiosProgressEvent, AxiosResponse } from "axios"
+import React, { useState, useCallback, forwardRef, useRef, useEffect } from "react";
+import type { AxiosResponse } from "axios"
+import { toast } from "sonner"
 
 import { store } from "@/routes/chat/message";
 
 import { Conversation } from "@/types/routes/chat";
 
-import { Button } from "@/components/ui/button";
-
 import MessageInput from "./message-input";
 
-export default function MessageActions({ conversation }: {conversation: Conversation}) {
+interface MessageActionsProps { conversation: Conversation }
+
+const MessageActions = forwardRef<HTMLTextAreaElement, MessageActionsProps>(({ conversation, ...props }, ref) => {
 	const [newMessage, setNewMessage] = useState<string>("");
-	const [inputErrorMessage, setInputErrorMessage] = useState<string>("");
 	const [messageSending, setMessageSending] = useState<boolean>(false);
 
 	const onSendClick = useCallback(
 		(e: React.KeyboardEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLButtonElement>) => {
 			if (messageSending) return;
 
-			if (newMessage.trim() === "") {
-				setInputErrorMessage("Please provide a message");
+			if (newMessage.trim().length <= 0) {
+				toast.warning("Please provide a message", {
+					duration: 3000,
+				});
 
-				setTimeout(() => {
-					setInputErrorMessage("");
-				}, 3000);
+				return;
 			}
 
 			const axios = window.axios;
@@ -35,9 +35,9 @@ export default function MessageActions({ conversation }: {conversation: Conversa
 
 			axios
 				.post(store.url(), formData, {
-					onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-						const progress = Math.round((progressEvent.loaded / (progressEvent.total || 0)) * 100);
-					},
+					// onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+					// 	const progress = Math.round((progressEvent.loaded / (progressEvent.total || 0)) * 100);
+					// },
 				})
 				.then((response: AxiosResponse) => {
 					setNewMessage("");
@@ -53,16 +53,22 @@ export default function MessageActions({ conversation }: {conversation: Conversa
 	);
 
 	return (
-		<div className="sidebar flex w-full items-start px-3 py-3 dark:text-white">
-			<MessageInput disabled={messageSending} value={newMessage} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewMessage(e.target.value)} onSend={onSendClick} />
-			<Button
-				disabled={messageSending}
-				onClick={onSendClick}
-				className="group border-tequila-200 bg-rajah-200 hover:bg-rajah-200 hover:inset-ring-rajah-200 relative w-full overflow-hidden rounded-none border-2 px-3 py-6 inset-ring-2 inset-ring-black transition-shadow delay-75 duration-300"
-			>
-				<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-linear-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
-				<span className="font-bold text-black uppercase">Submit</span>
-			</Button>
+		<div className="relative w-full px-3 py-3 text-white">
+			<div className="from-sidebar via-sidebar/90 pointer-events-none absolute -top-2.5 right-[15px] bottom-0 left-0 z-1 bg-linear-to-t to-transparent backdrop-blur-[2px]" />
+
+			<div className="relative z-2">
+				<MessageInput
+					ref={ref}
+					disabled={messageSending}
+					loading={messageSending}
+					value={newMessage}
+					onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewMessage(e.target.value)}
+					onSend={onSendClick}
+					onSubmit={onSendClick}
+				/>
+			</div>
 		</div>
 	);
-}
+});
+
+export default MessageActions;
