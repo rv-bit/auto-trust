@@ -10,8 +10,12 @@ import { AppSidebar } from "@/components/chat/sidebar-actions";
 import { SidebarHeader } from "@/components/chat/sidebar-header";
 import { SidebarInset, SidebarProvider } from "@/components/chat/ui/sidebar";
 
-export interface SocketMessageEvent {
+interface SocketMessageEvent {
 	message: Message;
+}
+interface SocketMessageDeleteEvent {
+	message: Message;
+	prevMessage: Message;
 }
 
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
@@ -50,6 +54,21 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 						user: message.sender,
 						message: message.message || `Shared ${message.attachments.length === 1 ? "an attachment" : message.attachments.length + " attachments"}`,
 					});
+				})
+				.listen("MessageDeleted", (e: SocketMessageDeleteEvent) => {
+					const message = e.message;
+					const prevMessage = e.prevMessage;
+
+					emit("message.deleted", { message, prevMessage });
+					if (parseInt(e.message.sender_id) === user.id) {
+						return;
+					}
+
+					// If the conversation with the sender isn't selected then show a notification
+					emit("newMessageNotification", {
+						user: message.sender,
+						message: prevMessage.message || `Deleted shared ${prevMessage.attachments.length === 1 ? "attachment" : prevMessage.attachments.length + " attachments"}`,
+					});
 				});
 		});
 
@@ -67,7 +86,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 			<AppSidebar />
 			<SidebarInset>
 				<SidebarHeader />
-				<div className="flex min-h-0 flex-1 flex-col">{children}</div>
+				<section className="flex min-h-0 flex-1 flex-col">{children}</section>
 			</SidebarInset>
 		</SidebarProvider>
 	);

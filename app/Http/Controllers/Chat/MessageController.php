@@ -10,6 +10,7 @@ use App\Models\Chat\Message;
 use App\Models\User;
 
 use App\Events\SocketMessage;
+use App\Events\MessageDeleted;
 
 use App\Http\Requests\Chat\StoreMessageRequest;
 
@@ -82,15 +83,25 @@ class MessageController extends Controller
             return response()->json(['message'=> 'Forbidden'],403);
         }
 
+        $deletedMessageData = [
+            'id' => $message->id,
+            'sender_id' => $message->sender_id,
+            'receiver_id' => $message->receiver_id,
+            'message' => $message->message,
+            'created_at' => $message->created_at,
+        ];
+
         $lastMessage = null;
         $conversation = Conversation::where('last_message_id', $message->id)->first();
         
         $message->delete();
         
-        $conversation = Conversation::find($conversation->id);
         if ($conversation) {
-            $lastMessage = $conversation->las;
+            $conversation->refresh();
+            $lastMessage = $conversation->lastMessage;
         }
+
+        MessageDeleted::dispatch($deletedMessageData, $lastMessage);
 
         return response()->json(['message'=> $lastMessage ? new MessageResource($lastMessage): null],200);
     }

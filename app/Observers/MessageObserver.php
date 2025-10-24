@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Storage;
 class MessageObserver
 {
     public function deleting(Message $message) {
-        $message->attachments->each(function ($attachment) {
-            $dir = dirname($attachment->path);
-            Storage::disc('public')->deleteDirectory($dir);
-        });
+        if ($message->attachments && $message->attachments->count() > 0) {
+            $message->attachments->each(function ($attachment) {
+                $dir = dirname($attachment->path);
+                Storage::disc('public')->deleteDirectory($dir);
+            });
 
-        $message->attachments()->delete();
+            $message->attachments()->delete();
+        }
+
         $conversation = Conversation::where('last_message_id', $message->id)->first();
 
         if ($conversation) {
