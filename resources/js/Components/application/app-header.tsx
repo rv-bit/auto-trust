@@ -81,7 +81,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 											{rightNavItems.map((item) => (
 												<a
 													key={item.title}
-													href={typeof item.href === "string" ? item.href : item.href.url}
+													href={typeof item.href === "string" ? item.href : item.href?.url}
 													target="_blank"
 													rel="noopener noreferrer"
 													className="flex items-center space-x-2 font-medium"
@@ -111,7 +111,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 											href={item.href}
 											className={cn(
 												navigationMenuTriggerStyle(),
-												page.url === (typeof item.href === "string" ? item.href : item.href.url) && activeItemStyles,
+												page.url === (typeof item.href === "string" ? item.href : item.href?.url) && activeItemStyles,
 												"h-9 cursor-pointer px-3",
 											)}
 										>
@@ -128,7 +128,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 					<div className="ml-auto flex items-center space-x-2">
 						<div className="relative flex items-center space-x-1">
 							<Button variant="ghost" size="icon" className="group h-9 w-9 cursor-pointer">
-								<Search className="!size-5 opacity-80 group-hover:opacity-100" />
+								<Search className="size-5! opacity-80 group-hover:opacity-100" />
 							</Button>
 							<div className="hidden lg:flex">
 								{rightNavItems.map((item) => (
@@ -136,7 +136,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 										<Tooltip>
 											<TooltipTrigger>
 												<a
-													href={typeof item.href === "string" ? item.href : item.href.url}
+													href={typeof item.href === "string" ? item.href : item.href?.url}
 													target="_blank"
 													rel="noopener noreferrer"
 													className="group text-accent-foreground ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
