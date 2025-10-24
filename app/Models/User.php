@@ -62,12 +62,16 @@ class User extends Authenticatable
                 $query->whereNull('users.blocked_at');
             })
             ->leftJoin('conversations', function ($join) use ($userId) {
-                $join->on('conversations.user_id1', '=', 'users.id')
-                    ->where('conversations.user_id2', '=', $userId)
-                    ->orWhere(function ($query) use ($userId) {
-                        $query->on('conversations.user_id1', '=', 'users.id')
-                            ->where('conversations.user_id2', '=', $userId);
-                    });
+                $join->where(function ($query) use ($userId) {
+                    // Case 1: user is user_id1 and auth user is user_id2
+                    $query->whereColumn('conversations.user_id1', '=', 'users.id')
+                        ->where('conversations.user_id2', '=', $userId);
+                })
+                ->orWhere(function ($query) use ($userId) {
+                    // Case 2: user is user_id2 and auth user is user_id1
+                    $query->whereColumn('conversations.user_id2', '=', 'users.id')
+                        ->where('conversations.user_id1', '=', $userId);
+                });
             })
             ->leftJoin('messages', 'messages.id', '=', 'conversations.last_message_id')
             ->orderByRaw('IFNULL(users.blocked_at, 1)')
