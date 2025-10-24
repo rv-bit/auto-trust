@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 import message from './message'
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 export const user = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -17,7 +17,7 @@ user.definition = {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 user.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -50,7 +50,7 @@ user.url = (args: { user: number | { id: number } } | [user: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 user.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +60,7 @@ user.get = (args: { user: number | { id: number } } | [user: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 user.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -70,7 +70,7 @@ user.head = (args: { user: number | { id: number } } | [user: number | { id: num
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 const userForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -80,7 +80,7 @@ const userForm = (args: { user: number | { id: number } } | [user: number | { id
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 userForm.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -90,7 +90,7 @@ userForm.get = (args: { user: number | { id: number } } | [user: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::user
-* @see app/Http/Controllers/Chat/MessageController.php:32
+* @see app/Http/Controllers/Chat/MessageController.php:33
 * @route '/chat/{user}'
 */
 userForm.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 export const loadOlder = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ loadOlder.definition = {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 loadOlder.url = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ loadOlder.url = (args: { message: number | { id: number } } | [message: number |
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 loadOlder.get = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ loadOlder.get = (args: { message: number | { id: number } } | [message: number |
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 loadOlder.head = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -69,7 +69,7 @@ loadOlder.head = (args: { message: number | { id: number } } | [message: number 
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 const loadOlderForm = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ const loadOlderForm = (args: { message: number | { id: number } } | [message: nu
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 loadOlderForm.get = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -89,7 +89,7 @@ loadOlderForm.get = (args: { message: number | { id: number } } | [message: numb
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::loadOlder
-* @see app/Http/Controllers/Chat/MessageController.php:47
+* @see app/Http/Controllers/Chat/MessageController.php:48
 * @route '/chat/message/older/{message}'
 */
 loadOlderForm.head = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -106,7 +106,7 @@ loadOlder.form = loadOlderForm
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::store
-* @see app/Http/Controllers/Chat/MessageController.php:62
+* @see app/Http/Controllers/Chat/MessageController.php:63
 * @route '/chat/message'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -121,7 +121,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::store
-* @see app/Http/Controllers/Chat/MessageController.php:62
+* @see app/Http/Controllers/Chat/MessageController.php:63
 * @route '/chat/message'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::store
-* @see app/Http/Controllers/Chat/MessageController.php:62
+* @see app/Http/Controllers/Chat/MessageController.php:63
 * @route '/chat/message'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -140,7 +140,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::store
-* @see app/Http/Controllers/Chat/MessageController.php:62
+* @see app/Http/Controllers/Chat/MessageController.php:63
 * @route '/chat/message'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -150,7 +150,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::store
-* @see app/Http/Controllers/Chat/MessageController.php:62
+* @see app/Http/Controllers/Chat/MessageController.php:63
 * @route '/chat/message'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -162,7 +162,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::destroy
-* @see app/Http/Controllers/Chat/MessageController.php:79
+* @see app/Http/Controllers/Chat/MessageController.php:80
 * @route '/chat/message/{message}'
 */
 export const destroy = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -177,7 +177,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::destroy
-* @see app/Http/Controllers/Chat/MessageController.php:79
+* @see app/Http/Controllers/Chat/MessageController.php:80
 * @route '/chat/message/{message}'
 */
 destroy.url = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -210,7 +210,7 @@ destroy.url = (args: { message: number | { id: number } } | [message: number | {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::destroy
-* @see app/Http/Controllers/Chat/MessageController.php:79
+* @see app/Http/Controllers/Chat/MessageController.php:80
 * @route '/chat/message/{message}'
 */
 destroy.delete = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -220,7 +220,7 @@ destroy.delete = (args: { message: number | { id: number } } | [message: number 
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::destroy
-* @see app/Http/Controllers/Chat/MessageController.php:79
+* @see app/Http/Controllers/Chat/MessageController.php:80
 * @route '/chat/message/{message}'
 */
 const destroyForm = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -235,7 +235,7 @@ const destroyForm = (args: { message: number | { id: number } } | [message: numb
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::destroy
-* @see app/Http/Controllers/Chat/MessageController.php:79
+* @see app/Http/Controllers/Chat/MessageController.php:80
 * @route '/chat/message/{message}'
 */
 destroyForm.delete = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
