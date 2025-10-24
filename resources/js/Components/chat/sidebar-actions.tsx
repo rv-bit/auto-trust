@@ -34,6 +34,7 @@ export function AppSidebar() {
 
 	const { on } = useEventBus();
 	const { state, isMobile } = useSidebar();
+
 	const getInitials = useInitials();
 
 	const conversations = page.props.conversations;
@@ -67,9 +68,14 @@ export function AppSidebar() {
 				return u;
 			});
 
-			// Only return new array if there were actual changes
 			return hasChanges ? updated : oldUsers;
 		});
+	}, []);
+
+	const messageDeleted = useCallback(({ prevMessage }: { prevMessage: Message }) => {
+		if (!prevMessage) return;
+
+		messageCreated(prevMessage);
 	}, []);
 
 	const sortedConversations = useMemo<Conversation[]>(() => {
@@ -113,11 +119,13 @@ export function AppSidebar() {
 
 	useEffect(() => {
 		const offCreated = on("message.created", messageCreated);
+		const offDeleted = on("message.deleted", messageDeleted);
 
 		return () => {
 			offCreated();
+			offDeleted();
 		};
-	}, [on, messageCreated]);
+	}, [on, messageCreated, messageDeleted]);
 
 	useEffect(() => {
 		const Echo = window.Echo;
@@ -157,27 +165,30 @@ export function AppSidebar() {
 	}, []);
 
 	useEffect(() => {
-		// Only update local conversations if:
-		// 1. Initial mount (localConversations is empty)
-		// 2. Number of conversations changed
-		// 3. Different conversations exist (by ID)
-
 		if (localConversations.length === 0) {
 			setLocalConversations(conversations);
 			return;
 		}
 
-		const currentIds = new Set(localConversations.map((c) => c.id));
-		const newIds = new Set(conversations.map((c) => c.id));
+		setLocalConversations((prevConversations) => {
+			const prevMap = new Map(prevConversations.map((c) => [c.id, c]));
 
-		// Check if conversations were added or removed
-		const hasNewConversation = conversations.some((c) => !currentIds.has(c.id));
-		const hasRemovedConversation = localConversations.some((c) => !newIds.has(c.id));
+			// Merge: prioritize real-time updates (prevConversations) but add new ones from props
+			return conversations.map((propConversation) => {
+				const existingConversation = prevMap.get(propConversation.id);
 
-		if (hasNewConversation || hasRemovedConversation) {
-			setLocalConversations(conversations);
-		}
-	}, [conversations, localConversations]);
+				// If conversation exists locally and has a newer last_message_date, keep the local version
+				if (existingConversation && existingConversation.last_message_date && propConversation.last_message_date) {
+					if (new Date(existingConversation.last_message_date) >= new Date(propConversation.last_message_date)) {
+						return existingConversation;
+					}
+				}
+
+				// Otherwise use the prop version (fresher data from server)
+				return propConversation;
+			});
+		});
+	}, [conversations]);
 
 	return (
 		<Sidebar collapsible="offcanvas" variant="inset">
@@ -196,33 +207,33 @@ export function AppSidebar() {
 										isMobile={isMobile}
 										isActive={conversation.id === selectedConversation?.id}
 										tooltip={{ children: conversation.title }}
-										className="group/menu-button dark:data-[active=true]:from-sidebar-primary dark:data-[active=true]:to-sidebar-primary/70 flex h-12 items-center gap-2 rounded-md font-medium data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.15),inset_0_1px_0_0_rgb(255_255_255/.20)] data-[active=true]:hover:bg-transparent"
+										className="group/menu-button dark:data-[active=true]:from-zinc-800/50 flex h-12 items-center gap-2 rounded-md font-medium data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.15),inset_0_1px_0_0_rgb(255_255_255/.20)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:to-zinc-700"
 									>
 										<Link href={conversation.href} prefetch>
-											<div className="flex w-full items-start justify-between">
-												<div className="flex w-fit items-center justify-start gap-2">
-													<div className="relative">
+											<div className="flex w-full items-start justify-between gap-2">
+												<div className="flex min-w-0 flex-1 items-center justify-start gap-2">
+													<div className="relative shrink-0">
 														<div
 															className={cn("absolute -top-1 left-5 z-20 size-3 rounded-full bg-gray-400 dark:bg-gray-300", {
 																"bg-green-500": !!isUserOnline(conversation.id) === true,
 															})}
 														/>
-														<Avatar className="relative z-10 size-8 overflow-hidden rounded-full">
+														<Avatar className="relative z-10 size-8 rounded-full">
 															<AvatarImage src={conversation.avatar} alt={conversation.name} />
 															<AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
 																{getInitials(conversation.name)}
 															</AvatarFallback>
 														</Avatar>
 													</div>
-													<div className="flex flex-col items-start justify-start">
-														<h1 className="font-sans-pro truncate text-sm font-semibold">{conversation.name}</h1>
-														<p className="block truncate text-xs">{conversation.last_message || "No messages yet"}</p>
+													<div className="flex min-w-0 flex-1 flex-col items-start justify-start">
+														<h1 className="font-sans-pro w-full truncate text-sm font-semibold">{conversation.name}</h1>
+														<p className="w-full truncate text-xs">{conversation.last_message || "No messages yet"}</p>
 													</div>
 												</div>
 
 												{conversation.last_message && (
-													<div className="flex w-fit flex-col items-center justify-end">
-														<p className="text-xs">{formatMessageDateShort(conversation.last_message_date)}</p>
+													<div className="flex w-fit shrink-0 flex-col items-center justify-end">
+														<p className="truncate text-xs">{formatMessageDateShort(conversation.last_message_date)}</p>
 													</div>
 												)}
 											</div>
