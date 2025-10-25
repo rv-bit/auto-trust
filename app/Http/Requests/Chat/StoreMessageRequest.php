@@ -22,10 +22,11 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'nullable|string',
-            'receiver_id' => 'required_with:receiver_id|nullable|exists:users,id',
+            'message' => 'required|string|max:250',
+            'receiver_id' => 'required_with:receiver_id|exists:users,id',
             'attachments' => 'nullable|array|max:10',
             'attachments.*' => 'file:max:1024000', 
         ];
     }
 }
+
