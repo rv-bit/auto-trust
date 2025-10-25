@@ -52,7 +52,7 @@ export function SidebarHeaderActions({ setLocalConversations }: { setLocalConver
 	}, [debouncedFilterValue]);
 
 	return (
-		<SidebarHeader className="p-0">
+		<SidebarHeader className="md:p-0 px-0">
 			<SidebarGroup className="px-2 py-0">
 				<SidebarMenu>
 					<SidebarMenuItem>

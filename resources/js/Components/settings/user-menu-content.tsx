@@ -39,30 +39,24 @@ export default function AppearanceToggleTab({
     ];
 
     return (
-        <div
-            className={cn(
-                'inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800',
-                className,
-            )}
-            {...props}
-        >
-            {tabs.map(({ value, icon: Icon, label }) => (
-                <button
-                    key={value}
-                    onClick={() => updateAppearance(value)}
-                    className={cn(
-                        'flex items-center md:justify-start justify-center rounded-md px-3.5 py-1.5 w-fit transition-colors',
-                        appearance === value
-                            ? 'bg-neutral-300/20 shadow-xs dark:bg-neutral-700 dark:text-neutral-100'
-                            : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
-                    )}
-                >
-                    <Icon className="-ml-1 md:size-4 size-5" />
-                    <span className="ml-1.5 text-sm md:inline-block hidden">{label}</span>
-                </button>
-            ))}
-        </div>
-    );
+		<div className={cn("inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800", className)} {...props}>
+			{tabs.map(({ value, icon: Icon, label }) => (
+				<button
+					key={value}
+					onClick={() => updateAppearance(value)}
+					className={cn(
+						"flex min-w-10 items-center justify-center rounded-md py-1.5 transition-colors md:justify-start",
+						appearance === value
+							? "dark:bg-sidebar/60 bg-neutral-200 shadow-xs dark:text-neutral-100"
+							: "text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60",
+					)}
+				>
+					<Icon className="size-5 md:-ml-1 md:size-4" />
+					<span className="ml-1.5 hidden text-sm md:inline-block">{label}</span>
+				</button>
+			))}
+		</div>
+	);
 }
 
 export function UserMenuContent({ user }: UserMenuContentProps) {

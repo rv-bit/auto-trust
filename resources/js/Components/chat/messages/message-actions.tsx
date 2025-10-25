@@ -71,8 +71,8 @@ const MessageActions = forwardRef<HTMLTextAreaElement, MessageActionsProps>(({ c
 	);
 
 	return (
-		<div className="relative w-full px-3 py-3 text-white">
-			<div className="from-sidebar via-sidebar/90 pointer-events-none absolute -top-2.5 right-[15px] bottom-0 left-0 z-1 bg-linear-to-t to-transparent backdrop-blur-[2px]" />
+		<div className="relative w-full px-3 pb-3  text-white">
+			<div className="from-sidebar dark:from-sidebar-accent dark:via-sidebar-accent/90 via-sidebar/90 pointer-events-none absolute -top-1.5 right-[15px] bottom-0 left-0 z-1 bg-linear-to-t to-transparent backdrop-blur-[2px]" />
 
 			<div className="relative z-2">
 				<MessageInput

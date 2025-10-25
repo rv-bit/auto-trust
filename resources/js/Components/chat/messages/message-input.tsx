@@ -63,7 +63,7 @@ const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(({ value
 						placeholder="Type a message"
 						onKeyDown={onHandleSubmit}
 						onChange={onHandleOnChangeEvent}
-						className="max-h-40 w-full resize-none overflow-y-auto rounded-none rounded-br-2xl rounded-bl-2xl border-none p-5 shadow-2xl focus-visible:ring-0 active:ring-0 disabled:cursor-not-allowed"
+						className="max-h-40 w-full resize-none overflow-y-auto rounded-tr-xl rounded-tl-xl rounded-br-2xl rounded-bl-2xl border-none p-5 dark:bg-sidebar/40 shadow-2xl focus-visible:ring-0 active:ring-0 disabled:cursor-not-allowed"
 					/>
 				</div>
 

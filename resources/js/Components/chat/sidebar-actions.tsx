@@ -207,7 +207,7 @@ export function AppSidebar() {
 										isMobile={isMobile}
 										isActive={conversation.id === selectedConversation?.id}
 										tooltip={{ children: conversation.title }}
-										className="group/menu-button dark:data-[active=true]:from-zinc-800/50 flex h-12 items-center gap-2 rounded-md font-medium data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.15),inset_0_1px_0_0_rgb(255_255_255/.20)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:to-zinc-700"
+										className="group/menu-button dark:data-[active=true]:from-zinc-700/50 flex h-12 items-center gap-2 rounded-md font-medium data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:to-zinc-700"
 									>
 										<Link href={conversation.href} prefetch>
 											<div className="flex w-full items-start justify-between gap-2">
