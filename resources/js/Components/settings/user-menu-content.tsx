@@ -45,7 +45,7 @@ export default function AppearanceToggleTab({
 					key={value}
 					onClick={() => updateAppearance(value)}
 					className={cn(
-						"flex min-w-10 items-center justify-center rounded-md py-1.5 transition-colors md:justify-start",
+						"flex min-w-10 items-center justify-center rounded-md py-1.5 transition-colors md:w-fit md:justify-start md:px-3.5",
 						appearance === value
 							? "dark:bg-sidebar/60 bg-neutral-200 shadow-xs dark:text-neutral-100"
 							: "text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60",
