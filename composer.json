@@ -69,6 +69,10 @@
 			"Composer\\Config::disableProcessTimeout",
 			"@php artisan pail $@"
 		],
+		"typegen:zodgen": [
+			"Composer\\Config::disableProcessTimeout",
+			"bun generate:zodgen $@ --output resources/js/schemas/"
+		],
 		"pre-package-uninstall": [
 			"Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
 		],
