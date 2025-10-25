@@ -1,14 +1,17 @@
-import React, { useState, useCallback, forwardRef, useRef, useEffect } from "react";
-import type { AxiosResponse } from "axios"
-import { toast } from "sonner"
+import type { AxiosResponse } from "axios";
+import React, { forwardRef, useCallback, useState } from "react";
+import { toast } from "sonner";
+
+import { StoreMessageRequest } from "@/schemas/schema";
+import type { Conversation } from "@/types/routes/chat";
 
 import { store } from "@/routes/chat/message";
 
-import { Conversation } from "@/types/routes/chat";
-
 import MessageInput from "./message-input";
 
-interface MessageActionsProps { conversation: Conversation }
+interface MessageActionsProps {
+	conversation: Conversation;
+}
 
 const MessageActions = forwardRef<HTMLTextAreaElement, MessageActionsProps>(({ conversation, ...props }, ref) => {
 	const [newMessage, setNewMessage] = useState<string>("");
@@ -26,19 +29,34 @@ const MessageActions = forwardRef<HTMLTextAreaElement, MessageActionsProps>(({ c
 				return;
 			}
 
+			const data = {
+				message: newMessage,
+				receiver_id: conversation.id.toString(),
+				attachments: [],
+			};
+
+			const validation = StoreMessageRequest.safeParse(data);
+
+			if (!validation.success) {
+				const issues = validation.error.issues;
+
+				const errorMessages = issues.map((err) => `${err.path.join(".")}: ${err.message}`).join("\n");
+				toast.error(errorMessages, { duration: 5000 });
+				return;
+			}
+
+			const validatedData = validation.data;
+
 			const axios = window.axios;
 			const formData = new FormData();
-			formData.append("message", newMessage);
-			formData.append("receiver_id", conversation.id.toString());
+
+			formData.append("message", validatedData.message || "");
+			formData.append("receiver_id", validatedData.receiver_id);
 
 			setMessageSending(true);
 
 			axios
-				.post(store.url(), formData, {
-					// onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-					// 	const progress = Math.round((progressEvent.loaded / (progressEvent.total || 0)) * 100);
-					// },
-				})
+				.post(store.url(), formData, {})
 				.then((response: AxiosResponse) => {
 					setNewMessage("");
 				})
