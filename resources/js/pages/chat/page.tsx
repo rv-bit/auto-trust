@@ -1,6 +1,6 @@
 import { EventBusProvider } from "@/providers/EventBus";
 
-import MessageContainer from "@/components/chat/messages/messages-container";
+import MessageContainer from "@/components/chat/messages/message-container";
 
 import ChatLayout from "@/layouts/chat/main-layout";
 
