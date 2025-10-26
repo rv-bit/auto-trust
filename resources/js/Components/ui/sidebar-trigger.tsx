@@ -22,13 +22,13 @@ export const QuickActions = ({ isMobile, state, open, onClick }: QuickActionsPro
 				isTooltipHidden={false}
 				isMobile={isMobile}
 				onClick={onClick}
-				className="group/sidebar-trigger hover:bg-sidebar-accent flex size-fit items-center justify-center overflow-hidden rounded-sm p-2 py-2.5 text-white opacity-100 transition-opacity duration-200 ease-in-out group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:rounded-md group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-3 [&>svg]:size-auto"
+				className="group/sidebar-trigger hover:bg-zinc-300 dark:hover:bg-zinc-700 flex size-fit items-center justify-center overflow-hidden rounded-sm p-2 py-2.5 text-white opacity-100 transition-opacity duration-200 ease-in-out group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:rounded-md group-data-[collapsible=icon]:p-3 [&>svg]:size-auto"
 			>
 				<SidebarTriggerIcon
 					width={15}
 					height={15}
 					stroke="white"
-					className={cn("right-10 rotate-180 rounded-xs bg-black/50 fill-none px-[1px] dark:bg-white/50", {
+					className={cn("right-10 rotate-180 rounded-xs bg-black/50 fill-none px-px dark:bg-white/50", {
 						"rotate-0": !open,
 					})}
 				/>
