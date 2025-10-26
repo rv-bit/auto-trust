@@ -55,7 +55,16 @@ export const ProfileUpdateRequest = z.object({
 type ProfileUpdateRequest = z.infer<typeof ProfileUpdateRequest>;
 
 export const StoreMessageRequest = z.object({
-	message: z.string().max(250).nullable(),
+	message: z
+		.string()
+		.max(550)
+		.nullable()
+		.refine((val) => val === null || val.length > 0, {
+			message: "Message cannot be empty",
+		})
+		.refine((val) => val === null || val.length <= 550, {
+			message: "Message exceeds maximum length",
+		}),
 	receiver_id: z.string(),
 	attachments: z.array(z.string().optional()),
 });
