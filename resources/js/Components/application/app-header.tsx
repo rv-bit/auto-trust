@@ -243,10 +243,11 @@ const convertToCardNavItems = (sideData: SideOffsetData): CardNavItem[] => {
 };
 
 export const NavHeader = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"div">>(({ ...props }, ref) => {
-	const sentinelRef = useRef<HTMLDivElement>(null);
 	const page = usePage<SharedData>();
-
 	const { auth } = page.props;
+
+	const sentinelRef = useRef<HTMLDivElement>(null);
+
 	const [showCardNav, setShowCardNav] = useState(false);
 
 	const actions: SideOffsetData = useMemo(
@@ -304,11 +305,14 @@ export const NavHeader = forwardRef<HTMLDivElement, React.ComponentPropsWithoutR
 
 	return (
 		<>
-			{/* Sentinel element - scrolls with content to trigger CardNav */}
 			<div ref={sentinelRef} className="pointer-events-none absolute top-0 left-0 h-1 w-full" aria-hidden="true" />
 
-			{/* Original Navigation - Fixed at top */}
-			<nav style={{ ...props.style }} className={cn("border-sidebar-border/80 fixed top-0 right-0 left-0 z-30 h-auto min-h-10 w-full border-b bg-white", props.className)}>
+			<nav
+				style={{ ...props.style }}
+				className={cn("border-sidebar-border/80 fixed top-0 right-0 left-0 z-30 h-auto min-h-10 w-full border-b bg-white", props.className, {
+					hidden: showCardNav,
+				})}
+			>
 				<ul className="mx-auto flex max-w-7xl items-center justify-end gap-3 px-5 py-3">
 					{Object.entries(actions).flatMap(([side, items]) =>
 						items?.map(
@@ -330,10 +334,9 @@ export const NavHeader = forwardRef<HTMLDivElement, React.ComponentPropsWithoutR
 				</ul>
 			</nav>
 
-			{/* CardNav - Fixed position, shows when scrolling */}
 			<div
 				className={cn(
-					"fixed bottom-0 right-0 left-0 z-50 transition-all duration-300",
+					"fixed right-0 bottom-0 left-0 z-50 transition-all duration-300",
 					showCardNav ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0",
 				)}
 			>
@@ -351,6 +354,7 @@ const CardNav: React.FC<CardNavProps> = ({ logo, logoAlt = "Logo", items, classN
 
 	const navRef = useRef<HTMLDivElement | null>(null);
 	const cardsRef = useRef<HTMLDivElement[]>([]);
+
 	const tlRef = useRef<gsap.core.Timeline | null>(null);
 
 	const calculateHeight = () => {
@@ -471,9 +475,9 @@ const CardNav: React.FC<CardNavProps> = ({ logo, logoAlt = "Logo", items, classN
 					className={`card-nav ${isExpanded ? "open" : ""} relative block h-[60px] overflow-hidden rounded-xl shadow-lg will-change-[height]`}
 					style={{ backgroundColor: baseColor }}
 				>
-					<div className="card-nav-top absolute inset-x-0 top-0 z-[2] flex h-[60px] items-center justify-between p-2 pl-[1.1rem]">
+					<div className="card-nav-top absolute inset-x-0 top-0 z-2 flex h-[60px] items-center justify-between p-2 pl-[1.1rem]">
 						<div
-							className={`hamburger-menu ${isHamburgerOpen ? "open" : ""} group order-2 flex h-full cursor-pointer flex-col items-center justify-center gap-[6px] md:order-none`}
+							className={`hamburger-menu ${isHamburgerOpen ? "open" : ""} group order-2 flex h-full cursor-pointer flex-col items-center justify-center gap-1.5 md:order-0`}
 							onClick={toggleMenu}
 							role="button"
 							aria-label={isExpanded ? "Close menu" : "Open menu"}
@@ -481,19 +485,19 @@ const CardNav: React.FC<CardNavProps> = ({ logo, logoAlt = "Logo", items, classN
 							style={{ color: menuColor || "#000" }}
 						>
 							<div
-								className={`hamburger-line h-[2px] w-[30px] [transform-origin:50%_50%] bg-current transition-[transform,opacity,margin] duration-300 ease-linear ${
-									isHamburgerOpen ? "translate-y-[4px] rotate-45" : ""
+								className={`hamburger-line h-0.5 w-[30px] origin-[50%_50%] bg-current transition-[transform,opacity,margin] duration-300 ease-linear ${
+									isHamburgerOpen ? "translate-y-1 rotate-45" : ""
 								} group-hover:opacity-75`}
 							/>
 							<div
-								className={`hamburger-line h-[2px] w-[30px] [transform-origin:50%_50%] bg-current transition-[transform,opacity,margin] duration-300 ease-linear ${
-									isHamburgerOpen ? "-translate-y-[4px] -rotate-45" : ""
+								className={`hamburger-line h-0.5 w-[30px] origin-[50%_50%] bg-current transition-[transform,opacity,margin] duration-300 ease-linear ${
+									isHamburgerOpen ? "-translate-y-1 -rotate-45" : ""
 								} group-hover:opacity-75`}
 							/>
 						</div>
 
-						<div className="logo-container order-1 flex items-center md:absolute md:top-1/2 md:left-1/2 md:order-none md:-translate-x-1/2 md:-translate-y-1/2">
-							<img src={logo} alt={logoAlt} className="logo h-[28px]" />
+						<div className="logo-container order-1 flex items-center md:absolute md:top-1/2 md:left-1/2 md:order-0 md:-translate-x-1/2 md:-translate-y-1/2">
+							<img src={logo} alt={logoAlt} className="logo h-7" />
 						</div>
 
 						<button
@@ -506,9 +510,9 @@ const CardNav: React.FC<CardNavProps> = ({ logo, logoAlt = "Logo", items, classN
 					</div>
 
 					<div
-						className={`card-nav-content absolute top-[60px] right-0 bottom-0 left-0 z-[1] flex flex-col items-stretch justify-start gap-2 p-2 ${
+						className={`card-nav-content absolute top-[60px] right-0 bottom-0 left-0 z-1 flex flex-col items-stretch justify-start gap-2 p-2 ${
 							isExpanded ? "pointer-events-auto visible" : "pointer-events-none invisible"
-						} md:flex-row md:items-end md:gap-[12px]`}
+						} md:flex-row md:items-end md:gap-3`}
 						aria-hidden={!isExpanded}
 					>
 						{(items || []).slice(0, 3).map((item, idx) => (
@@ -519,11 +523,11 @@ const CardNav: React.FC<CardNavProps> = ({ logo, logoAlt = "Logo", items, classN
 								style={{ backgroundColor: item.bgColor, color: item.textColor }}
 							>
 								<div className="nav-card-label text-[18px] font-normal tracking-[-0.5px] md:text-[22px]">{item.label}</div>
-								<div className="nav-card-links mt-auto flex flex-col gap-[2px]">
+								<div className="nav-card-links mt-auto flex flex-col gap-0.5">
 									{item.links?.map((lnk, i) => (
 										<a
 											key={`${lnk.label}-${i}`}
-											className="nav-card-link inline-flex cursor-pointer items-center gap-[6px] text-[15px] no-underline transition-opacity duration-300 hover:opacity-75 md:text-[16px]"
+											className="nav-card-link inline-flex cursor-pointer items-center gap-1.5 text-[15px] no-underline transition-opacity duration-300 hover:opacity-75 md:text-[16px]"
 											href={lnk.href}
 											aria-label={lnk.ariaLabel}
 										>

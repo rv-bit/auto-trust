@@ -52,7 +52,7 @@ const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(({ value
 	}, [adjustHeight]);
 
 	return (
-		<div className="dark:bg-sidebar/70 w-full rounded-[27px] bg-white/40 pl-0 pr-1.5 py-1.5 shadow-2xl">
+		<div className="dark:bg-sidebar/70 w-full rounded-[27px] bg-white/40 py-1.5 pr-1.5 pl-0 shadow-2xl">
 			<div className="flex w-full items-end justify-center gap-2">
 				<div className="flex size-full justify-center p-2 py-1 pr-0">
 					<Textarea
@@ -72,12 +72,13 @@ const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(({ value
 				<div className="items-end">
 					<Button
 						disabled={disabled}
+						aria-label="message-submit-button"
 						data-slot="input-button-submit"
-						onClick={onSubmit}
 						tooltip={{
 							content: "Send",
 							side: "top",
 						}}
+						onClick={onSubmit}
 						className="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary hover:bg-primary/90 text-primary-foreground flex size-8 cursor-pointer items-center justify-center rounded-3xl text-sm font-medium whitespace-nowrap transition-all outline-none hover:scale-110 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
 					>
 						{!loading ? (

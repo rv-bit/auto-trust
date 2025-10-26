@@ -384,10 +384,8 @@ const MessageItem = ({ currentUser, message }: { currentUser: User; message: Mes
 								<span className="inline-block h-0 min-w-8"></span>
 								<time className="absolute right-2 bottom-1 text-[0.65rem] whitespace-nowrap opacity-90">{dateString}</time>
 								<DropdownMenu open={dropdownMenuOpen} onOpenChange={setDropdownMenuOpen}>
-									<DropdownMenuTrigger asChild className="bg-transparent dark:bg-transparent">
+									<DropdownMenuTrigger asChild aria-label="message-actions-button" className="bg-transparent dark:bg-transparent">
 										<Button
-											variant={"default"}
-											size={"icon"}
 											disabled={actionIsLoading}
 											className={cn(
 												"absolute top-0 right-1 inline-block size-fit opacity-0 transition-opacity duration-200 ease-in-out hover:bg-transparent hover:opacity-100 focus-visible:border-none focus-visible:ring-0 dark:hover:bg-transparent [&_svg]:size-auto",

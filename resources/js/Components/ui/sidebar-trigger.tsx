@@ -15,14 +15,15 @@ export const QuickActions = ({ isMobile, state, open, onClick }: QuickActionsPro
 	return (
 		<>
 			<SidebarMenuButton
+				aria-label="sidebar-trigger"
 				data-sidebar="trigger"
 				data-slot="sidebar-trigger"
 				sidebarState={state}
-				tooltip={{ content: open ? "Hide Sidebar" : "Show Sidebar", side: "bottom" }}
-				isTooltipHidden={false}
 				isMobile={isMobile}
+				isTooltipHidden={false}
+				tooltip={{ content: open ? "Hide Sidebar" : "Show Sidebar", side: "bottom" }}
 				onClick={onClick}
-				className="group/sidebar-trigger hover:bg-zinc-300 dark:hover:bg-zinc-700 flex size-fit items-center justify-center overflow-hidden rounded-sm p-2 py-2.5 text-white opacity-100 transition-opacity duration-200 ease-in-out group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:rounded-md group-data-[collapsible=icon]:p-3 [&>svg]:size-auto"
+				className="group/sidebar-trigger flex size-fit items-center justify-center overflow-hidden rounded-sm p-2 py-2.5 text-white opacity-100 transition-opacity duration-200 ease-in-out group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:rounded-md group-data-[collapsible=icon]:p-3 hover:bg-zinc-300 dark:hover:bg-zinc-700 [&>svg]:size-auto"
 			>
 				<SidebarTriggerIcon
 					width={15}

@@ -255,7 +255,7 @@ const SidebarConversationItem = React.memo(({ conversation }: { conversation: Ch
 				isMobile={isMobile}
 				isActive={conversation.id === selectedConversation?.id}
 				tooltip={{ children: conversation.title }}
-				className="group/menu-button dark:hover:bg-sidebar-accent flex h-13 pt-3 items-center gap-2 rounded-md transition-colors delay-0 duration-300 ease-in-out hover:bg-zinc-200 data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:from-zinc-700/50 dark:data-[active=true]:to-zinc-700"
+				className="group/menu-button dark:hover:bg-sidebar-accent flex h-13 items-center gap-2 rounded-md pt-3 transition-colors delay-0 duration-300 ease-in-out hover:bg-zinc-200 data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:from-zinc-700/50 dark:data-[active=true]:to-zinc-700"
 			>
 				<Link href={conversation.href} prefetch>
 					<div className="flex w-full items-start justify-between gap-2">
@@ -281,11 +281,10 @@ const SidebarConversationItem = React.memo(({ conversation }: { conversation: Ch
 									<p className="w-full truncate text-[0.7rem] transition-all duration-200">{conversation.last_message || "No messages yet"}</p>
 
 									<DropdownMenu open={dropdownMenuOpen} onOpenChange={setDropdownMenuOpen}>
-										<DropdownMenuTrigger asChild className="bg-transparent p-0 dark:bg-transparent">
+										<DropdownMenuTrigger asChild name="conversation-actions-button" className="bg-transparent p-0 dark:bg-transparent">
 											<Button
-												variant={"default"}
-												size={"icon"}
 												disabled={actionIsLoading}
+												aria-label="conversation-actions-button"
 												data-state={isHovering || dropdownMenuOpen ? "open" : "closed"}
 												className="size-fit origin-right bg-transparent p-0 transition-all duration-200 ease-in-out hover:bg-transparent focus-visible:border-none focus-visible:ring-0 data-[state=closed]:w-0 data-[state=closed]:opacity-0 data-[state=open]:w-5 data-[state=open]:opacity-100 dark:bg-transparent dark:hover:bg-transparent [&_svg]:size-auto"
 											>
