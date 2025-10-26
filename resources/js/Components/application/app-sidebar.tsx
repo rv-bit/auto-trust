@@ -12,7 +12,7 @@ import { useSidebar, Sidebar, SidebarContent, SidebarFooter, SidebarHeader, Side
 
 import { QuickActions } from "@/components/ui/sidebar-trigger";
 
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, MessageCircleMore } from "lucide-react";
 import AppLogo from "./app-logo";
 
 const mainNavItems: NavItem[] = [
@@ -23,7 +23,15 @@ const mainNavItems: NavItem[] = [
 	},
 ];
 
-const footerNavItems: NavItem[] = [];
+const footerNavItems: NavItem[] = [
+	{
+		title: "Chat Support",
+		href: "/chat",
+		icon: MessageCircleMore,
+		// target: "_blank",
+		// rel: "noopener noreferrer",
+	},
+];
 
 export function AppSidebar() {
     const { state, isMobile } = useSidebar();
@@ -43,12 +51,12 @@ export function AppSidebar() {
 			</SidebarHeader>
 
 			<SidebarContent>
-				<NavMain state={state} isMobile={isMobile} items={mainNavItems} />
+				<NavMain sidebarState={state} isMobile={isMobile} items={mainNavItems} />
 			</SidebarContent>
 
 			<SidebarFooter>
-				<NavFooter state={state} isMobile={isMobile} items={footerNavItems} className="mt-auto" />
-				<NavUser state={state} isMobile={isMobile} />
+				<NavFooter sidebarState={state} isMobile={isMobile} items={footerNavItems} className="mt-auto" />
+				<NavUser sidebarState={state} isMobile={isMobile} />
 			</SidebarFooter>
 		</Sidebar>
 	);

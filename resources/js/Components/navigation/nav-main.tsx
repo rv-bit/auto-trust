@@ -13,11 +13,11 @@ import {
 
 interface ContentProps {
 	items: NavItem[];
-	state: State;
+	sidebarState: State;
 	isMobile: boolean;
 }
 
-export function NavMain({ items = [], state, isMobile }: ContentProps) {
+export function NavMain({ items = [], sidebarState, isMobile }: ContentProps) {
 	const page = usePage();
 
 	return (
@@ -28,7 +28,7 @@ export function NavMain({ items = [], state, isMobile }: ContentProps) {
 					<SidebarMenuItem key={item.title}>
 						<SidebarMenuButton
 							asChild
-							sidebarState={state}
+							sidebarState={sidebarState}
 							isMobile={isMobile}
 							isActive={page.url.startsWith(typeof item.href === "string" ? item.href : (item.href?.url ?? ""))}
 							tooltip={{ children: item.title }}

@@ -1,7 +1,7 @@
-import { type ComponentPropsWithoutRef } from 'react';
+import { Link } from '@inertiajs/react';
+import type { ComponentPropsWithoutRef } from 'react';
 
-import type { NavItem } from "@/types";
-import type { State } from "@/types/ui/sidebar";
+import type { NavFooter } from "@/types";
 
 import {
     SidebarGroup,
@@ -13,15 +13,9 @@ import {
 
 import { Icon } from '@/icons/icons';
 
-interface FooterProps {
-	items: NavItem[];
-	state: State;
-	isMobile: boolean;
-}
-
-export function NavFooter({ items, state, isMobile, className, ...props }: ComponentPropsWithoutRef<typeof SidebarGroup> & FooterProps) {
+export function NavFooter({ items, sidebarState, isMobile, className, ...props }: ComponentPropsWithoutRef<typeof SidebarGroup> & NavFooter) {
 	return (
-		<SidebarGroup {...props} className={`group-data-[collapsible=icon]:p-0 ${className || ""}`}>
+		<SidebarGroup {...props} className="p-0">
 			<SidebarGroupContent>
 				<SidebarMenu>
 					{items?.map((item) =>
@@ -31,11 +25,11 @@ export function NavFooter({ items, state, isMobile, className, ...props }: Compo
 							<SidebarMenuItem key={item.title}>
 								<SidebarMenuButton
 									asChild
-									sidebarState={state}
+									sidebarState={sidebarState}
 									isMobile={isMobile}
-									className="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
+									className="group/menu-button dark:hover:bg-sidebar/50 flex h-10 items-center justify-start gap-2 rounded-md bg-transparent bg-linear-to-b p-2 text-black transition-colors delay-0 duration-200 ease-in-out hover:bg-zinc-100 hover:from-zinc-100 hover:to-zinc-100 hover:shadow-[0_1px_2px_0_rgb(0_0_0/.1),inset_0_1px_0_0_rgb(255_255_255/.05)] dark:text-white dark:hover:from-zinc-700/50 dark:hover:to-zinc-700"
 								>
-									<a href={typeof item.href === "string" ? item.href : item.href?.url} target="_blank" rel="noopener noreferrer">
+									<a href={typeof item.href === "string" ? item.href : item.href?.url} target={item.target} rel={item.rel}>
 										{item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
 										<span>{item.title}</span>
 									</a>

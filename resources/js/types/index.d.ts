@@ -3,6 +3,8 @@ import type { FC } from "react";
 import type { InertiaLinkProps } from "@inertiajs/react";
 import type { LucideIcon } from "lucide-react";
 
+import type { State } from "./ui/sidebar";
+
 export type PartialExcept<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 
 export interface Auth {
@@ -22,9 +24,17 @@ export interface NavGroup {
 export interface NavItem {
 	title: string;
 	href?: NonNullable<InertiaLinkProps["href"]>;
+	target?: InertiaLinkProps["target"];
+	rel?: InertiaLinkProps["rel"];
 	icon?: LucideIcon | null;
 	isActive?: boolean;
 	Component?: FC;
+}
+
+interface NavFooter {
+	items: NavItem[];
+	sidebarState: State;
+	isMobile: boolean;
 }
 
 export interface SharedData {
