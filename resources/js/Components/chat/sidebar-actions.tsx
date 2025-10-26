@@ -20,26 +20,39 @@ import { NavUser } from "@/components/navigation/nav-user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenuButton } from "@/components/ui/sidebar";
 import { QuickActions } from "@/components/ui/sidebar-trigger";
+import { Button } from "@/components/ui/button";
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
-
 import { SidebarHeaderActions } from "./sidebar-header-actions";
 
-const footerNavItems: NavItem[] = [];
+import { ChevronDown, EditIcon, InfoIcon, LayoutGrid, LucideIcon, ReplyIcon, TrashIcon } from "lucide-react";
+
+const footerNavItems: NavItem[] = [
+	{
+		title: "Dashboard",
+		href: "/dashboard",
+		icon: LayoutGrid,
+		// target: "_blank",
+		// rel: "noopener noreferrer",
+	},
+];
 
 type ChatConversation = NavItem & PartialExcept<Conversation, "id" | "avatar" | "name" | "last_message" | "last_message_date">;
+
+export const TriggerSidebar = React.forwardRef<HTMLDivElement>(() => {
+	const { toggleSidebar, open, state, isMobile } = useSidebar();
+	return <QuickActions open={open} onClick={toggleSidebar} state={state} isMobile={isMobile} />;
+});
 
 export function AppSidebar() {
 	const page = usePage<SharedData & Conversations>();
 
 	const { on } = useEventBus();
 	const { state, isMobile } = useSidebar();
-	const { isUserOnline: handleIsUserOnline } = useOnlineUsers();
-
-	const getInitials = useInitials();
 
 	const conversations = page.props.conversations;
-	const selectedConversation = page.props.selectedConversation;
 
 	const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
 
@@ -154,63 +167,166 @@ export function AppSidebar() {
 				<SidebarGroup className="px-2 py-0">
 					<SidebarGroupLabel className="uppercase">Chats</SidebarGroupLabel>
 					<SidebarMenu>
-						{chatConversations.map((conversation) => {
-							return (
-								<SidebarMenuItem key={conversation.id}>
-									<SidebarMenuButton
-										asChild
-										sidebarState={state}
-										isMobile={isMobile}
-										isActive={conversation.id === selectedConversation?.id}
-										tooltip={{ children: conversation.title }}
-										className="group/menu-button flex h-12 items-center gap-2 rounded-md font-medium transition-colors delay-0 duration-300 ease-in-out data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:from-zinc-700/50 dark:data-[active=true]:to-zinc-700"
-									>
-										<Link href={conversation.href} prefetch>
-											<div className="flex w-full items-start justify-between gap-2">
-												<div className="flex min-w-0 flex-1 items-center justify-start gap-2">
-													<div className="relative shrink-0">
-														<div
-															className={cn("absolute -top-1 left-5 z-20 size-3 rounded-full bg-gray-400 dark:bg-gray-300", {
-																"bg-green-500 dark:bg-green-500": !!handleIsUserOnline(conversation.id) === true,
-															})}
-														/>
-														<Avatar className="relative z-10 size-8 rounded-full">
-															<AvatarImage src={conversation.avatar} alt={conversation.name} />
-															<AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-																{getInitials(conversation.name)}
-															</AvatarFallback>
-														</Avatar>
-													</div>
-													<div className="flex min-w-0 flex-1 flex-col items-start justify-start">
-														<h1 className="font-sans-pro w-full truncate text-sm font-semibold">{conversation.name}</h1>
-														<p className="w-full truncate text-xs">{conversation.last_message || "No messages yet"}</p>
-													</div>
-												</div>
-
-												{conversation.last_message && (
-													<div className="flex w-fit shrink-0 flex-col items-center justify-end">
-														<p className="truncate text-xs">{formatMessageDate(conversation.last_message_date)}</p>
-													</div>
-												)}
-											</div>
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							);
-						})}
+						{chatConversations.length === 0 ? (
+							<p className="text-muted-foreground p-4 text-center text-sm">No conversations found.</p>
+						) : (
+							chatConversations.map((conversation) => {
+								return <SidebarConversationItem key={conversation.id} conversation={conversation} />;
+							})
+						)}
 					</SidebarMenu>
 				</SidebarGroup>
 			</SidebarContent>
 
 			<SidebarFooter>
-				<NavFooter state={state} isMobile={isMobile} items={footerNavItems} className="mt-auto" />
-				<NavUser state={state} isMobile={isMobile} />
+				<NavFooter sidebarState={state} isMobile={isMobile} items={footerNavItems} className="mt-auto" />
+				<NavUser sidebarState={state} isMobile={isMobile} />
 			</SidebarFooter>
 		</Sidebar>
 	);
 }
 
-export const TriggerSidebar = React.forwardRef<HTMLDivElement>(() => {
-	const { toggleSidebar, open, state, isMobile } = useSidebar();
-	return <QuickActions open={open} onClick={toggleSidebar} state={state} isMobile={isMobile} />;
+const SidebarConversationItem = React.memo(({ conversation }: { conversation: ChatConversation }) => {
+	const page = usePage<SharedData & Conversations>();
+
+	const getInitials = useInitials();
+	const { state, isMobile } = useSidebar();
+	const { isUserOnline: handleIsUserOnline } = useOnlineUsers();
+
+	const user = page.props.auth.user;
+	const selectedConversation = page.props.selectedConversation;
+
+	const [actionIsLoading, setActionIsLoading] = useState<boolean>(false);
+	const [dropdownMenuOpen, setDropdownMenuOpen] = useState<boolean>(false);
+	const [hoveringConversationId, setHoveringConversationId] = useState<number | null>(null);
+
+	const isHovering = hoveringConversationId === conversation.id;
+	const isCurrentUser = user.id === selectedConversation?.id;
+
+	const actions: {
+		label: string;
+		disabled: boolean;
+		className?: string;
+		hidden?: boolean;
+		icon?: LucideIcon;
+		onClick: () => void;
+	}[][] = useMemo(() => {
+		return [
+			[
+				{
+					label: "Message Info",
+					disabled: actionIsLoading,
+					onClick: () => {},
+					icon: InfoIcon,
+				},
+				{
+					label: "Edit",
+					hidden: !isCurrentUser,
+					disabled: actionIsLoading,
+					onClick: () => {},
+					icon: EditIcon,
+				},
+				{
+					label: "Reply",
+					hidden: isCurrentUser,
+					disabled: actionIsLoading,
+					icon: ReplyIcon,
+					onClick: () => {},
+				},
+			],
+			[
+				{
+					label: "Delete Chat",
+					hidden: !isCurrentUser,
+					disabled: actionIsLoading,
+					onClick: () => {},
+					icon: TrashIcon,
+					className: "dark:focus:text-red-500 focus:text-red-400 focus:bg-red-500/5 focus:[&_svg]:stroke-red-400",
+				},
+			],
+		];
+	}, [actionIsLoading, isCurrentUser]);
+
+	return (
+		<SidebarMenuItem key={conversation.id} onMouseEnter={() => setHoveringConversationId(conversation.id)} onMouseLeave={() => setHoveringConversationId(null)}>
+			<SidebarMenuButton
+				asChild
+				sidebarState={state}
+				isMobile={isMobile}
+				isActive={conversation.id === selectedConversation?.id}
+				tooltip={{ children: conversation.title }}
+				className="group/menu-button dark:hover:bg-sidebar-accent flex h-13 pt-3 items-center gap-2 rounded-md transition-colors delay-0 duration-300 ease-in-out hover:bg-zinc-200 data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:from-zinc-700/50 dark:data-[active=true]:to-zinc-700"
+			>
+				<Link href={conversation.href} prefetch>
+					<div className="flex w-full items-start justify-between gap-2">
+						<div className="flex min-w-0 flex-1 items-center justify-start gap-2">
+							<div className="relative shrink-0">
+								<div
+									className={cn("absolute -top-1 left-5 z-20 size-3 rounded-full bg-gray-400 dark:bg-gray-300", {
+										"bg-green-500 dark:bg-green-500": !!handleIsUserOnline(conversation.id) === true,
+									})}
+								/>
+								<Avatar className="relative z-10 size-8 rounded-full">
+									<AvatarImage src={conversation.avatar} alt={conversation.name} />
+									<AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">{getInitials(conversation.name)}</AvatarFallback>
+								</Avatar>
+							</div>
+							<div className="flex min-w-0 flex-1 flex-col items-start justify-start">
+								<div className="flex w-full justify-between gap-0.5">
+									<h1 className="font-sans-pro w-full truncate text-[0.9rem] font-medium">{conversation.name}</h1>
+									{conversation.last_message && <p className="size-fit text-xs">{formatMessageDate(conversation.last_message_date)}</p>}
+								</div>
+
+								<div className="flex w-full justify-between gap-0.5">
+									<p className="w-full truncate text-[0.7rem] transition-all duration-200">{conversation.last_message || "No messages yet"}</p>
+
+									<DropdownMenu open={dropdownMenuOpen} onOpenChange={setDropdownMenuOpen}>
+										<DropdownMenuTrigger asChild className="bg-transparent p-0 dark:bg-transparent">
+											<Button
+												variant={"default"}
+												size={"icon"}
+												disabled={actionIsLoading}
+												data-state={isHovering || dropdownMenuOpen ? "open" : "closed"}
+												className="size-fit origin-right bg-transparent p-0 transition-all duration-200 ease-in-out hover:bg-transparent focus-visible:border-none focus-visible:ring-0 data-[state=closed]:w-0 data-[state=closed]:opacity-0 data-[state=open]:w-5 data-[state=open]:opacity-100 dark:bg-transparent dark:hover:bg-transparent [&_svg]:size-auto"
+											>
+												<ChevronDown size={20} className="size-auto text-black dark:text-white" />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent className="dark:bg-sidebar border-sidebar-accent/50 min-w-36 rounded-lg p-2 shadow-lg">
+											{actions
+												.map((g) => g.filter((a) => !a.hidden))
+												.filter((g) => g.length > 0)
+												.map((actionGroup, groupIndex) => (
+													<DropdownMenuGroup key={`action-group-${groupIndex}`}>
+														{groupIndex > 0 && <DropdownMenuSeparator className="border-white" />}
+														{actionGroup.map((action, actionIndex) => {
+															if (action.hidden) return null;
+
+															return (
+																<DropdownMenuItem
+																	key={`action-${actionIndex}`}
+																	disabled={action.disabled}
+																	onClick={action.onClick}
+																	className={cn(
+																		"dark:text-muted-foreground focus:bg-sidebar-accent py-2 text-sm text-black opacity-100 transition-all delay-75 duration-300 ease-in-out hover:cursor-pointer [&_svg]:transition-all [&_svg]:delay-75 [&_svg]:duration-300",
+																		action.className,
+																	)}
+																>
+																	{action.icon && <action.icon />}
+																	{action.label}
+																</DropdownMenuItem>
+															);
+														})}
+													</DropdownMenuGroup>
+												))}
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Link>
+			</SidebarMenuButton>
+		</SidebarMenuItem>
+	);
 });
