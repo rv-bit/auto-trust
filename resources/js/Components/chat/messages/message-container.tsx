@@ -1,7 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import type { AxiosResponse } from "axios";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { SharedData, User } from "@/types";
 import type { Conversations, Message, MessagesProps } from "@/types/routes/chat";
@@ -14,10 +14,10 @@ import { formatMessageDate } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger, ContextMenuSeparator, ContextMenuGroup } from "@/components/ui/context-menu";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
+import { ContextMenu, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import { type LucideIcon, ChevronDown, ChevronsUpDown, EditIcon, InfoIcon, ReplyIcon, TrashIcon } from "lucide-react";
+import { type LucideIcon, ChevronDown, EditIcon, InfoIcon, ReplyIcon, TrashIcon } from "lucide-react";
 
 import MessageActions from "./message-actions";
 
@@ -237,14 +237,14 @@ export default function MessageContainer() {
 
 						return (
 							<div key={dateKey} className="relative">
-								<motion.div 
+								<motion.div
 									key={dateHeader}
-									initial={{ opacity: 0, y: -10 }} 
-									animate={{ opacity: 1, y: 0 }} 
-									transition={{ duration: 0.3 }} 
+									initial={{ opacity: 0, y: -10 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.3 }}
 									className="sticky top-0 z-10 flex justify-center py-3"
-								>	
-									<div className="rounded-md bg-zinc-800/40 px-3 py-1 text-xs font-medium dark:text-gray-300 text-white shadow-sm backdrop-blur-md">{dateHeader}</div>
+								>
+									<div className="rounded-md bg-zinc-800/40 px-3 py-1 text-xs font-medium text-white shadow-sm backdrop-blur-md dark:text-gray-300">{dateHeader}</div>
 								</motion.div>
 
 								{messagesForDate.map((message, index) => (
@@ -275,7 +275,7 @@ const MessageItem = ({ currentUser, message }: { currentUser: User; message: Mes
 	const [actionIsLoading, setActionIsLoading] = useState<boolean>(false);
 
 	const [hoveringMessage, setHoveringMessage] = useState<boolean>(false);
-	
+
 	const [dropdownMenuOpen, setDropdownMenuOpen] = useState<boolean>(false);
 	const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
 
@@ -390,7 +390,7 @@ const MessageItem = ({ currentUser, message }: { currentUser: User; message: Mes
 											size={"icon"}
 											disabled={actionIsLoading}
 											className={cn(
-												"absolute top-0 right-1 inline-block size-fit opacity-0 transition-opacity duration-200 ease-in-out hover:opacity-100 hover:bg-transparent focus-visible:border-none focus-visible:ring-0 dark:hover:bg-transparent [&_svg]:size-auto",
+												"absolute top-0 right-1 inline-block size-fit opacity-0 transition-opacity duration-200 ease-in-out hover:bg-transparent hover:opacity-100 focus-visible:border-none focus-visible:ring-0 dark:hover:bg-transparent [&_svg]:size-auto",
 												"rounded-tr-xl rounded-bl-md py-1.5 pr-2 pl-6",
 												"bg-radial-[at_70%_100%] from-zinc-700 to-transparent",
 												"hover:from-zinc-700",
