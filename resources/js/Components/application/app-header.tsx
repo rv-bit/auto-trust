@@ -215,7 +215,6 @@ type NavData = {
 	isHidden?: boolean;
 } & ({ href: RouteDefinition<"get">; component?: never } | { component: React.FC; href?: never } | { href?: never; component?: never });
 
-
 const convertToCardNavItems = (sideData: SideOffsetData): CardNavItem[] => {
 	const cards: CardNavItem[] = [];
 
