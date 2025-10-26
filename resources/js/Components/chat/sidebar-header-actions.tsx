@@ -58,7 +58,7 @@ export function SidebarHeaderActions({ setLocalConversations }: { setLocalConver
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild sidebarState={state} isMobile={isMobile} size="lg" className="active:bg-transparent">
 							<div className="flex h-auto w-full justify-between">
-								<Link prefetch href={index_chat_route.url()} className="active:bg-sidebar-accent flex h-full w-full items-center justify-start gap-2">
+								<Link prefetch href={index_chat_route.url()} className="active:bg-transparent flex h-full w-full items-center justify-start gap-2">
 									<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
 										<AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
 									</div>
