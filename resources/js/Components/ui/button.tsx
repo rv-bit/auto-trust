@@ -3,6 +3,9 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-mobile"
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
@@ -35,24 +38,45 @@ const buttonVariants = cva(
 )
 
 function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
+	className,
+	variant,
+	size,
+	tooltip,
+	isTooltipHidden,
+	asChild = false,
+	...props
 }: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot : "button"
+	VariantProps<typeof buttonVariants> & {
+		asChild?: boolean;
+		tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+		isTooltipHidden?: boolean;
+	}) {
+	const isMobile = useIsMobile();
 
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+	const Comp = asChild ? Slot : "button";
+
+	const button = <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+
+	if (!tooltip) {
+		return button;
+	}
+
+	if (typeof tooltip === "string") {
+		tooltip = {
+			children: tooltip,
+		};
+	}
+
+	const isHidden = typeof isTooltipHidden === "boolean" ? isTooltipHidden : isMobile;
+
+	return (
+        <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>{button}</TooltipTrigger>
+            <TooltipContent side="right" align="center" hidden={isHidden} {...tooltip}>
+                {tooltip.content || tooltip.children}
+            </TooltipContent>
+        </Tooltip>
+  );
 }
 
 export { Button, buttonVariants }
