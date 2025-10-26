@@ -6,12 +6,13 @@ import { user as chat_user_route } from "@/routes/chat";
 import type { NavItem, PartialExcept, SharedData } from "@/types";
 import type { Conversation, Conversations, Message, UserResource } from "@/types/routes/chat";
 
-import { formatMessageDateShort } from "@/lib/helpers";
+import { formatMessageDate } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 
 import { useInitials } from "@/hooks/use-initials";
 
 import { useEventBus } from "@/providers/EventBus";
+import { useOnlineUsers } from "@/providers/OnlineUsersProvider";
 
 import { NavFooter } from "@/components/navigation/nav-footer";
 import { NavUser } from "@/components/navigation/nav-user";
@@ -27,13 +28,13 @@ import { SidebarHeaderActions } from "./sidebar-header-actions";
 const footerNavItems: NavItem[] = [];
 
 type ChatConversation = NavItem & PartialExcept<Conversation, "id" | "avatar" | "name" | "last_message" | "last_message_date">;
-type Users = Record<number, UserResource>;
 
 export function AppSidebar() {
 	const page = usePage<SharedData & Conversations>();
 
 	const { on } = useEventBus();
 	const { state, isMobile } = useSidebar();
+	const { isUserOnline: handleIsUserOnline } = useOnlineUsers();
 
 	const getInitials = useInitials();
 
@@ -41,14 +42,6 @@ export function AppSidebar() {
 	const selectedConversation = page.props.selectedConversation;
 
 	const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
-	const [onlineUsers, setOnlineUsers] = useState<Users>({});
-
-	const isUserOnline = useCallback(
-		(userId: number) => {
-			return onlineUsers[userId];
-		},
-		[onlineUsers],
-	);
 
 	const messageCreated = useCallback((message: Message) => {
 		setLocalConversations((oldUsers: Conversation[]) => {
@@ -128,43 +121,6 @@ export function AppSidebar() {
 	}, [on, messageCreated, messageDeleted]);
 
 	useEffect(() => {
-		const Echo = window.Echo;
-
-		Echo.join("online")
-			.here((users: UserResource[]) => {
-				const onlineUsersObj = Object.fromEntries(users.map((user) => [user.id, user]));
-				setOnlineUsers((prevOnlineUsers) => {
-					return { ...prevOnlineUsers, ...onlineUsersObj };
-				});
-			})
-			.joining((user: UserResource) => {
-				setOnlineUsers((prevOnlineUsers) => {
-					const updatedUsers = { ...prevOnlineUsers };
-					updatedUsers[user.id] = user;
-					return updatedUsers;
-				});
-			})
-			.leaving((user: UserResource) => {
-				setOnlineUsers((prevOnlineUsers) => {
-					const updatedUsers = { ...prevOnlineUsers };
-					delete updatedUsers[user.id];
-					return updatedUsers;
-				});
-			})
-			.error((error: unknown) => {
-				if (error instanceof Error) {
-					console.error("Echo error:", error.message);
-				} else {
-					console.error("Echo error:", error);
-				}
-			});
-
-		return () => {
-			Echo.leave("online");
-		};
-	}, []);
-
-	useEffect(() => {
 		if (localConversations.length === 0) {
 			setLocalConversations(conversations);
 			return;
@@ -207,7 +163,7 @@ export function AppSidebar() {
 										isMobile={isMobile}
 										isActive={conversation.id === selectedConversation?.id}
 										tooltip={{ children: conversation.title }}
-										className="group/menu-button dark:data-[active=true]:from-zinc-700/50 flex h-12 items-center gap-2 rounded-md font-medium data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:to-zinc-700"
+										className="group/menu-button flex h-12 items-center gap-2 rounded-md font-medium transition-colors delay-0 duration-300 ease-in-out data-[active=true]:bg-linear-to-b data-[active=true]:from-zinc-200 data-[active=true]:to-zinc-300 data-[active=true]:shadow-[0_1px_2px_0_rgb(0_0_0/.5),inset_0_1px_0_0_rgb(255_255_255/.10)] data-[active=true]:hover:bg-transparent dark:data-[active=true]:from-zinc-700/50 dark:data-[active=true]:to-zinc-700"
 									>
 										<Link href={conversation.href} prefetch>
 											<div className="flex w-full items-start justify-between gap-2">
@@ -215,7 +171,7 @@ export function AppSidebar() {
 													<div className="relative shrink-0">
 														<div
 															className={cn("absolute -top-1 left-5 z-20 size-3 rounded-full bg-gray-400 dark:bg-gray-300", {
-																"bg-green-500": !!isUserOnline(conversation.id) === true,
+																"bg-green-500 dark:bg-green-500": !!handleIsUserOnline(conversation.id) === true,
 															})}
 														/>
 														<Avatar className="relative z-10 size-8 rounded-full">
@@ -233,7 +189,7 @@ export function AppSidebar() {
 
 												{conversation.last_message && (
 													<div className="flex w-fit shrink-0 flex-col items-center justify-end">
-														<p className="truncate text-xs">{formatMessageDateShort(conversation.last_message_date)}</p>
+														<p className="truncate text-xs">{formatMessageDate(conversation.last_message_date)}</p>
 													</div>
 												)}
 											</div>

@@ -26,6 +26,12 @@ window.Echo = new Echo({
 	wsPort: import.meta.env.VITE_REVERB_PORT,
 	forceTLS: false,
 	enabledTransports: ["ws", "wss"],
+	authEndpoint: "/broadcasting/auth",
+	auth: {
+		headers: {
+			"X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "",
+		},
+	},
 });
 
 configureEcho({
