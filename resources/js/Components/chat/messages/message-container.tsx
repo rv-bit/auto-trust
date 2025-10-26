@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import type { AxiosResponse } from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
 
 import type { SharedData, User } from "@/types";
 import type { Conversations, Message, MessagesProps } from "@/types/routes/chat";
@@ -9,12 +10,30 @@ import { loadOlder as load_older_chats_route, destroy as message_delete_route } 
 
 import { useEventBus } from "@/providers/EventBus";
 
-import { formatMessageDateLong } from "@/lib/helpers";
+import { formatMessageDate } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { Button } from "@/components/ui/button";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger, ContextMenuSeparator, ContextMenuGroup } from "@/components/ui/context-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
+
+import { type LucideIcon, ChevronDown, ChevronsUpDown, EditIcon, InfoIcon, ReplyIcon, TrashIcon } from "lucide-react";
 
 import MessageActions from "./message-actions";
+
+const groupMessagesByDate = (messages: Message[]) => {
+	const groups: { [key: string]: Message[] } = {};
+
+	messages.forEach((message) => {
+		const date = new Date(message.created_at).toDateString();
+		if (!groups[date]) {
+			groups[date] = [];
+		}
+		groups[date].push(message);
+	});
+
+	return groups;
+};
 
 export default function MessageContainer() {
 	const page = usePage<SharedData & Conversations>();
@@ -156,14 +175,13 @@ export default function MessageContainer() {
 			},
 			{
 				root: messageCtrRef.current,
-				rootMargin: "100px 0px 0px 0px",
-				threshold: 0.1,
+				rootMargin: "10px 0px 0px 0px",
+				threshold: 0.5,
 			},
 		);
 
 		const currentRef = loadChatsIntersectRef.current;
 		if (currentRef) {
-			// Small delay to ensure initial scroll is complete
 			const timeout = setTimeout(() => {
 				if (currentRef) {
 					observer.observe(currentRef);
@@ -197,27 +215,49 @@ export default function MessageContainer() {
 				</div>
 
 				<div className="group/message-actions shrink">
-					<MessageActions ref={textareaRef} conversation={selectedConversation} />
+					<MessageActions ref={textareaRef} conversation={selectedConversation} containerRef={messageCtrRef} />
 				</div>
 			</>
 		);
 	}
 
+	const groupedMessages = useMemo(() => groupMessagesByDate(localMessages), [localMessages]);
+	const dateKeys = useMemo(() => Object.keys(groupedMessages).sort((a, b) => new Date(a).getTime() - new Date(b).getTime()), [groupedMessages]);
+
 	return (
 		<>
 			<div ref={messageCtrRef} className="scrollbar-chat-container min-h-0 w-full flex-1 shrink overflow-x-hidden overflow-y-auto px-5 py-5">
-				<div className="flex w-full min-w-0 flex-col">
+				<div className="flex w-full max-w-full min-w-0 flex-col">
 					<div ref={loadChatsIntersectRef} className="h-1 shrink-0"></div>
 					{isLoadingMore && <div className="shrink-0 py-2 text-center text-sm text-gray-500">Loading more messages...</div>}
 
-					{localMessages.map((message, index) => {
-						return <MessageItem key={`${message.id}-${index}`} currentUser={currentUser} message={message} />;
+					{dateKeys.map((dateKey) => {
+						const messagesForDate = groupedMessages[dateKey];
+						const dateHeader = formatMessageDate(messagesForDate[0].created_at);
+
+						return (
+							<div key={dateKey} className="relative">
+								<motion.div 
+									key={dateHeader}
+									initial={{ opacity: 0, y: -10 }} 
+									animate={{ opacity: 1, y: 0 }} 
+									transition={{ duration: 0.3 }} 
+									className="sticky top-0 z-10 flex justify-center py-3"
+								>	
+									<div className="rounded-md bg-zinc-800/40 px-3 py-1 text-xs font-medium dark:text-gray-300 text-white shadow-sm backdrop-blur-md">{dateHeader}</div>
+								</motion.div>
+
+								{messagesForDate.map((message, index) => (
+									<MessageItem key={`${message.id}-${index}`} currentUser={currentUser} message={message} />
+								))}
+							</div>
+						);
 					})}
 				</div>
 			</div>
 
 			<div className="group/message-actions w-full shrink">
-				<MessageActions ref={textareaRef} conversation={selectedConversation} />
+				<MessageActions ref={textareaRef} conversation={selectedConversation} containerRef={messageCtrRef} />
 			</div>
 		</>
 	);
@@ -234,7 +274,18 @@ const MessageItem = ({ currentUser, message }: { currentUser: User; message: Mes
 
 	const [actionIsLoading, setActionIsLoading] = useState<boolean>(false);
 
+	const [hoveringMessage, setHoveringMessage] = useState<boolean>(false);
+	
+	const [dropdownMenuOpen, setDropdownMenuOpen] = useState<boolean>(false);
+	const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
+
 	const isCurrentUser = parseInt(message.sender_id) === currentUser.id;
+	const dateCreatedAt = new Date(message.created_at);
+	const dateString = dateCreatedAt.toLocaleTimeString("en-GB", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	});
 
 	const handleMessageDelete = useCallback(() => {
 		const axios = window.axios;
@@ -254,37 +305,164 @@ const MessageItem = ({ currentUser, message }: { currentUser: User; message: Mes
 			});
 	}, []);
 
+	const actions: {
+		label: string;
+		disabled: boolean;
+		className?: string;
+		hidden?: boolean;
+		icon?: LucideIcon;
+		onClick: () => void;
+	}[][] = useMemo(() => {
+		return [
+			[
+				{
+					label: "Message Info",
+					disabled: actionIsLoading,
+					onClick: () => {},
+					icon: InfoIcon,
+				},
+				{
+					label: "Edit",
+					hidden: !isCurrentUser,
+					disabled: actionIsLoading,
+					onClick: () => {},
+					icon: EditIcon,
+				},
+				{
+					label: "Reply",
+					hidden: isCurrentUser,
+					disabled: actionIsLoading,
+					icon: ReplyIcon,
+					onClick: () => {},
+				},
+			],
+			[
+				{
+					label: "Delete",
+					hidden: !isCurrentUser,
+					disabled: actionIsLoading,
+					onClick: handleMessageDelete,
+					icon: TrashIcon,
+					className: "dark:focus:text-red-500 focus:text-red-400 focus:bg-red-500/5 focus:[&_svg]:stroke-red-400",
+				},
+			],
+		];
+	}, [actionIsLoading]);
+
 	return (
 		<div
 			className={cn("flex w-full min-w-0 flex-col gap-1 py-1", {
 				"items-end": isCurrentUser,
 				"items-start": !isCurrentUser,
 			})}
+			onMouseEnter={() => setHoveringMessage(true)}
+			onMouseLeave={() => setHoveringMessage(false)}
 		>
-			<div className="px-2 text-sm font-medium">{isCurrentUser ? "You" : message.sender.name}</div>
-
-			<ContextMenu>
+			<ContextMenu
+				onOpenChange={(state) => {
+					setContextMenuOpen(state);
+					setDropdownMenuOpen(false);
+				}}
+			>
 				<ContextMenuTrigger asChild disabled={!isCurrentUser}>
 					<div
-						className={cn("relative max-w-[75%] min-w-0 rounded-xl rounded-bl-none bg-zinc-700 px-4 py-2 text-white", {
-							"rounded-br-none rounded-bl-xl bg-blue-700": isCurrentUser,
+						className={cn("chat max-w-200", {
+							"chat-end": isCurrentUser,
+							"chat-start": !isCurrentUser,
 						})}
+						onContextMenu={(e) => {
+							setDropdownMenuOpen(false);
+						}}
 					>
-						<div className="flex min-w-0 flex-col space-y-2">
-							<div className="wrap-break-word whitespace-pre-wrap">{message.message}</div>
-							<time className="text-[0.65rem] whitespace-nowrap opacity-90">{formatMessageDateLong(message.created_at)}</time>
+						<div
+							className={cn("chat-bubble relative inline-block max-w-full rounded-xl rounded-bl-none bg-zinc-700 p-2 pt-1 text-white", {
+								"bg-primary-business rounded-br-none rounded-bl-xl": isCurrentUser,
+							})}
+						>
+							<div className="chat-message">
+								<span className="chat-message-content text-[0.89rem] leading-5 wrap-break-word">{message.message}</span>
+								<span className="inline-block h-0 min-w-8"></span>
+								<time className="absolute right-2 bottom-1 text-[0.65rem] whitespace-nowrap opacity-90">{dateString}</time>
+								<DropdownMenu open={dropdownMenuOpen} onOpenChange={setDropdownMenuOpen}>
+									<DropdownMenuTrigger asChild className="bg-transparent dark:bg-transparent">
+										<Button
+											variant={"default"}
+											size={"icon"}
+											disabled={actionIsLoading}
+											className={cn(
+												"absolute top-0 right-1 inline-block size-fit opacity-0 transition-opacity duration-200 ease-in-out hover:opacity-100 hover:bg-transparent focus-visible:border-none focus-visible:ring-0 dark:hover:bg-transparent [&_svg]:size-auto",
+												"rounded-tr-xl rounded-bl-md py-1.5 pr-2 pl-6",
+												"bg-radial-[at_70%_100%] from-zinc-700 to-transparent",
+												"hover:from-zinc-700",
+												{
+													hidden: contextMenuOpen,
+													"opacity-100": hoveringMessage,
+													"from-primary-business/60 hover:from-primary-business/60 to-transparent": isCurrentUser,
+												},
+											)}
+										>
+											<ChevronDown className="text-muted ml-auto size-4 dark:text-white" />
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent className="dark:bg-sidebar border-sidebar-accent/50 min-w-36 rounded-lg p-2 shadow-lg">
+										{actions
+											.map((g) => g.filter((a) => !a.hidden))
+											.filter((g) => g.length > 0)
+											.map((actionGroup, groupIndex) => (
+												<DropdownMenuGroup key={`action-group-${groupIndex}`}>
+													{groupIndex > 0 && <DropdownMenuSeparator className="border-white" />}
+													{actionGroup.map((action, actionIndex) => {
+														if (action.hidden) return null;
+
+														return (
+															<DropdownMenuItem
+																key={`action-${actionIndex}`}
+																disabled={action.disabled}
+																onClick={action.onClick}
+																className={cn(
+																	"dark:text-muted-foreground focus:bg-sidebar-accent py-2 text-sm text-black opacity-100 transition-all delay-75 duration-300 ease-in-out hover:cursor-pointer [&_svg]:transition-all [&_svg]:delay-75 [&_svg]:duration-300",
+																	action.className,
+																)}
+															>
+																{action.icon && <action.icon />}
+																{action.label}
+															</DropdownMenuItem>
+														);
+													})}
+												</DropdownMenuGroup>
+											))}
+									</DropdownMenuContent>
+								</DropdownMenu>
+							</div>
 						</div>
 					</div>
 				</ContextMenuTrigger>
-				<ContextMenuContent>
-					<ContextMenuItem
-						variant="destructive"
-						disabled={actionIsLoading}
-						onClick={handleMessageDelete}
-						className="transition-colors delay-75 duration-300 ease-in-out hover:cursor-pointer"
-					>
-						Delete
-					</ContextMenuItem>
+				<ContextMenuContent className="dark:bg-sidebar border-sidebar-accent/50 min-w-36 gap-2 rounded-lg p-2 shadow-lg">
+					{actions
+						.map((g) => g.filter((a) => !a.hidden))
+						.filter((g) => g.length > 0)
+						.map((actionGroup, groupIndex) => (
+							<ContextMenuGroup key={`action-group-${groupIndex}`}>
+								{groupIndex > 0 && <ContextMenuSeparator className="border-white" />}
+								{actionGroup.map((action, actionIndex) => {
+									if (action.hidden) return null;
+									return (
+										<ContextMenuItem
+											key={`action-${actionIndex}`}
+											disabled={action.disabled}
+											onClick={action.onClick}
+											className={cn(
+												"dark:text-muted-foreground focus:bg-sidebar-accent py-2 text-sm text-black opacity-100 transition-all delay-75 duration-300 ease-in-out hover:cursor-pointer [&_svg]:transition-all [&_svg]:delay-75 [&_svg]:duration-300",
+												action.className,
+											)}
+										>
+											{action.icon && <action.icon />}
+											{action.label}
+										</ContextMenuItem>
+									);
+								})}
+							</ContextMenuGroup>
+						))}
 				</ContextMenuContent>
 			</ContextMenu>
 		</div>
