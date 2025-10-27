@@ -1,6 +1,6 @@
 {
 	"postman.settings.dotenv-detection-notification-visibility": false,
-	"cSpell.words": ["autotrust", "colour", "daisyui", "Dispatchable", "fakerphp", "nunomaduro", "pestphp", "satnav", "Satnav", "wayfinder", "zodgen"],
+	"cSpell.words": ["autotrust", "colour", "conv", "daisyui", "Dispatchable", "fakerphp", "nunomaduro", "pestphp", "Queueable", "satnav", "Satnav", "wayfinder", "zodgen"],
 
 	"php.validate.executablePath": "/opt/homebrew/etc/php/8.4"
 }
