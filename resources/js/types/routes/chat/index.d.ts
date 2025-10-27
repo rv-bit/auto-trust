@@ -19,6 +19,7 @@ export type Conversation = {
 	blocked_at: number;
 	last_message: string;
 	last_message_date: string;
+	unseen_messages: Message[];
 	created_at: string;
 	updated_at: string;
 };
@@ -48,8 +49,9 @@ export type Message = {
 	attachments: MessageAttachment[] | [];
 	created_at: string;
 	updated_at: string;
+	seen_at?: string | null;
 };
 
-export interface MessagesProps {
+export interface MessagesResponseProps {
 	data: Message[];
 }

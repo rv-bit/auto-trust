@@ -23,11 +23,14 @@ export interface NavGroup {
 
 export interface NavItem {
 	title: string;
+	isActive?: boolean;
+	hidden?: boolean;
+
 	href?: NonNullable<InertiaLinkProps["href"]>;
 	target?: InertiaLinkProps["target"];
 	rel?: InertiaLinkProps["rel"];
+
 	icon?: LucideIcon | null;
-	isActive?: boolean;
 	Component?: FC;
 }
 

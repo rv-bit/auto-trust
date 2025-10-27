@@ -13,6 +13,7 @@ import { configureEcho } from "@laravel/echo-react";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 import React from "react";
+import { NotificationsProvider } from "./providers/NotificationsProvider";
 
 import { Toaster } from "./components/ui/sooner";
 
@@ -52,7 +53,9 @@ createInertiaApp({
 		root.render(
 			// <App {...props} />
 			<React.Fragment>
-				<App {...props} />
+				<NotificationsProvider initialPage={props}>
+					<App {...props} />
+				</NotificationsProvider>
 				<Toaster />
 			</React.Fragment>,
 		);

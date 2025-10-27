@@ -14,6 +14,8 @@ use App\Events\MessageDeleted;
 
 use App\Http\Requests\Chat\StoreMessageRequest;
 
+use App\Notifications\MessageSeenNotification;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -104,5 +106,31 @@ class MessageController extends Controller
         MessageDeleted::dispatch($deletedMessageData, $lastMessage);
 
         return response()->json(['message'=> $lastMessage ? new MessageResource($lastMessage): null],200);
+    }
+
+    /**
+     * Mark messages in a conversation with the given user as seen (set seen_at)
+     * Returns updated conversation data to refresh UI
+     */
+    public function markConversationSeen(Request $request, User $user)
+    {
+        $authId = $request->user()->id;
+
+        // Mark messages where receiver is auth user and sender is the given user
+        Message::where('sender_id', $user->id)
+            ->where('receiver_id', $authId)
+            ->whereNull('seen_at')
+            ->update(['seen_at' => now()]);
+
+        // Get updated conversation data
+        $updatedConversation = $user->toConversationArray();
+
+        // Notify the sender that their messages have been seen
+        $user->notify(new MessageSeenNotification($updatedConversation));
+
+        return response()->json([
+            'message' => 'OK',
+            'conversation' => $updatedConversation
+        ], 200);
     }
 }

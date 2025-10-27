@@ -15,4 +15,5 @@ Route::middleware(['auth', 'verified', HandleChatsRequests::class])->group(funct
     Route::get('/chat/message/older/{message}', [MessageController::class, 'loadOlder'])->name('chat.message.loadOlder');
     Route::post('/chat/message', [MessageController::class, 'store'])->name('chat.message.store');
     Route::delete('/chat/message/{message}', [MessageController::class, 'destroy'])->name('chat.message.destroy');
+    Route::post('/chat/message/seen/{user}', [MessageController::class, 'markConversationSeen'])->name('chat.message.markSeen');
 });

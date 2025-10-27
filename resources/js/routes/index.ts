@@ -367,7 +367,7 @@ register.form = registerForm
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 export const chat = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -382,7 +382,7 @@ chat.definition = {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 chat.url = (options?: RouteQueryOptions) => {
@@ -391,7 +391,7 @@ chat.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 chat.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -401,7 +401,7 @@ chat.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 chat.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -411,7 +411,7 @@ chat.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 const chatForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -421,7 +421,7 @@ const chatForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 chatForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -431,7 +431,7 @@ chatForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Chat\MessageController::chat
-* @see app/Http/Controllers/Chat/MessageController.php:28
+* @see app/Http/Controllers/Chat/MessageController.php:30
 * @route '/chat'
 */
 chatForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -23,6 +23,10 @@ class Message extends Model
         'receiver_id',
     ];
 
+    protected $casts = [
+        'seen_at' => 'datetime',
+    ];
+
     public function sender(): BelongsTo
     {
         return $this->belongsTo(User::class, 'sender_id');

@@ -25,6 +25,7 @@ class MessageResource extends JsonResource
             'sender' => new UserResource($this->sender),
             'attachments' => MessageAttachmentResource::collection($this->attachments ? $this->attachments->toArray() : []),
             'created_at' => $this->created_at,
+            'seen_at' => $this->seen_at ?? null,
             'updated_at'=> $this->updated_at,
         ];
     }

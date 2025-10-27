@@ -4,9 +4,9 @@ import { motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { SharedData, User } from "@/types";
-import type { Conversations, Message, MessagesProps } from "@/types/routes/chat";
+import type { Conversations, Message, MessagesResponseProps } from "@/types/routes/chat";
 
-import { loadOlder as load_older_chats_route, destroy as message_delete_route } from "@/routes/chat/message";
+import { loadOlder as load_older_chats_route, destroy as message_delete_route, markSeen as mark_conversation_seen_route } from "@/routes/chat/message";
 
 import { useEventBus } from "@/providers/EventBus";
 
@@ -37,15 +37,18 @@ const groupMessagesByDate = (messages: Message[]) => {
 
 export default function MessageContainer() {
 	const page = usePage<SharedData & Conversations>();
-	const { on } = useEventBus();
+	const { emit, on } = useEventBus();
 
 	const currentUser = page.props.auth.user;
 	const selectedConversation = page.props.selectedConversation;
-	const messages = page.props.messages as MessagesProps;
+
+	const messages = page.props.messages as MessagesResponseProps;
 
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const messageCtrRef = useRef<HTMLDivElement | null>(null);
 	const loadChatsIntersectRef = useRef<HTMLDivElement>(null);
+
+	const [isAtBottom, setIsAtBottom] = useState(true);
 
 	const [localMessages, setLocalMessages] = useState<Message[]>([]);
 	const [noMoreMessages, setNoMoreMessages] = useState<boolean>(false);
@@ -66,9 +69,7 @@ export default function MessageContainer() {
 		const senderId = parseInt(message.sender_id);
 
 		if (selectedConversation.id === senderId || selectedConversation.id === receiverId) {
-			setLocalMessages((prevMessages) => {
-				return prevMessages.filter((m) => m.id !== message.id);
-			});
+			setLocalMessages((prevMessages) => prevMessages.filter((m) => m.id !== message.id));
 		}
 	};
 
@@ -114,6 +115,23 @@ export default function MessageContainer() {
 	}, [localMessages, noMoreMessages, isLoadingMore]);
 
 	useEffect(() => {
+		const handleScroll = () => {
+			if (!messageCtrRef.current) return;
+			const { scrollTop, scrollHeight, clientHeight } = messageCtrRef.current;
+			setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10);
+		};
+		
+		const ref = messageCtrRef.current;
+		if (ref) {
+			ref.addEventListener("scroll", handleScroll);
+		}
+
+		return () => {
+			if (ref) ref.removeEventListener("scroll", handleScroll);
+		};
+	}, [messageCtrRef]);
+
+	useEffect(() => {
 		setInitialScrollDone(false);
 
 		const timeout = setTimeout(() => {
@@ -144,13 +162,45 @@ export default function MessageContainer() {
 		setInitialScrollDone(false);
 	}, [messages]);
 
+	// When user opens a conversation, mark messages from that conversation as seen (if any are unseen)
+	useEffect(() => {
+		const axios = window.axios;
+
+		if (!selectedConversation || !localMessages || localMessages.length === 0) return;
+
+		const hasUnseen = localMessages.some((m) => parseInt(m.receiver_id) === currentUser.id && !m.seen_at);
+		if (!hasUnseen) return;
+
+		(async () => {
+			try {
+				await axios.post(mark_conversation_seen_route.post(selectedConversation.id).url);
+				const now = new Date().toISOString();
+
+				setLocalMessages((prev) => {
+					const updated = prev.map((m) => {
+						if (parseInt(m.sender_id) === selectedConversation.id && parseInt(m.receiver_id) === currentUser.id && !m.seen_at) {
+							return { ...m, seen_at: now };
+						}
+						return m;
+					});
+
+					setTimeout(() => emit("messages.seen", { conversationId: selectedConversation.id }), 0);
+					return updated;
+				});
+			} catch (error) {
+				console.error("Failed to mark conversation messages as seen:", error);
+			}
+		})();
+	}, [selectedConversation, localMessages]);
+	
 	useEffect(() => {
 		if (messageCtrRef.current && scrollFromBottom !== null) {
 			const newScrollTop = messageCtrRef.current.scrollHeight - messageCtrRef.current.clientHeight - scrollFromBottom;
 			messageCtrRef.current.scrollTop = newScrollTop;
+
 			setScrollFromBottom(null);
 		}
-	}, [localMessages, scrollFromBottom]);
+	}, [messageCtrRef, localMessages, scrollFromBottom]);
 
 	useEffect(() => {
 		if (scrollFromBottom === null && messageCtrRef.current && initialScrollDone && localMessages.length > 0) {
@@ -255,6 +305,20 @@ export default function MessageContainer() {
 					})}
 				</div>
 			</div>
+
+			{!isAtBottom && (
+				<div className="absolute right-5 bottom-15 z-20">
+					<Button className=" bg-neutral-700 size-10 hover:bg-neutral-700 rounded-full p-2 text-white shadow-2xl shadow-black transition hover:scale-110" onClick={(e) => {
+						e.preventDefault();
+
+						if (messageCtrRef.current) {
+							messageCtrRef.current.scrollTo({ top: messageCtrRef.current.scrollHeight, behavior: "smooth" });
+						}
+					}}>
+						<ChevronDown size={30} className="text-white" />
+					</Button>
+				</div>
+			)}
 
 			<div className="group/message-actions w-full shrink">
 				<MessageActions ref={textareaRef} conversation={selectedConversation} containerRef={messageCtrRef} />

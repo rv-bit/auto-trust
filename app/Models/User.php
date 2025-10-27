@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Chat\Message;
+
+use App\Http\Resources\Chat\MessageResource;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -81,8 +85,21 @@ class User extends Authenticatable
         return $query->get();
     }
 
-    public  function toConversationArray()
+    public function toConversationArray()
     {
+        // Get unseen messages for this conversation
+        $unseenMessages = Message::with('sender')
+            ->where('sender_id', $this->id)
+            ->where('receiver_id', auth()->id())
+            ->whereNull('seen_at')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Convert to resource
+        $unseenMessagesResource = $unseenMessages->map(function($message) {
+            return new MessageResource($message);
+        });
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -93,7 +110,24 @@ class User extends Authenticatable
             'updated_at' => $this->updated_at,
             'blocked_at' => $this->blocked_at,
             'last_message' => $this->last_message,
-            'last_message_date' => $this->last_message_date . ' UTC',
+            'last_message_date' => $this->last_message_date ? $this->last_message_date . ' UTC' : null,
+            'unseen_messages' => $unseenMessagesResource,
         ];
+    }
+
+    /**
+     * Get unseen notifications count for the user.
+     */
+    public function unseenNotificationsCount(): int
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    /**
+     * Get latest notifications for the user.
+     */
+    public function latestNotifications($limit = 10)
+    {
+        return $this->notifications()->latest()->limit($limit)->get();
     }
 }
