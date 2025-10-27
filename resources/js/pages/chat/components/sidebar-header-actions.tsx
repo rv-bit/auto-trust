@@ -11,12 +11,12 @@ import { useDebounceValue } from "@/hooks/use-debounce-value";
 import { Input } from "@/components/ui/input";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenuButton } from "@/components/ui/sidebar";
 
-import { SidebarHeader, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 import { TriggerSidebar } from "./sidebar-actions";
+import { SidebarHeader, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 
 import { LoaderCircleIcon, SearchIcon } from "lucide-react";
 
-import AppLogoIcon from "../../../../components/application/app-logo-icon";
+import AppLogoIcon from "../../../components/application/app-logo-icon";
 
 export function SidebarHeaderActions({ setLocalConversations }: { setLocalConversations: React.Dispatch<React.SetStateAction<Conversation[]>> }) {
 	const page = usePage<SharedData & Conversations>();
@@ -52,13 +52,13 @@ export function SidebarHeaderActions({ setLocalConversations }: { setLocalConver
 	}, [debouncedFilterValue]);
 
 	return (
-		<SidebarHeader className="md:p-0 px-0">
+		<SidebarHeader className="px-0 md:p-0">
 			<SidebarGroup className="px-2 py-0">
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild sidebarState={state} isMobile={isMobile} size="lg" className="active:bg-transparent">
 							<div className="flex h-auto w-full justify-between">
-								<Link prefetch href={index_chat_route.url()} className="active:bg-transparent flex h-full w-full items-center justify-start gap-2">
+								<Link prefetch href={index_chat_route.url()} className="flex h-full w-full items-center justify-start gap-2 active:bg-transparent">
 									<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
 										<AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
 									</div>
