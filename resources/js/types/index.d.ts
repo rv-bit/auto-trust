@@ -30,7 +30,7 @@ export interface NavItem {
 	target?: InertiaLinkProps["target"];
 	rel?: InertiaLinkProps["rel"];
 
-	icon?: LucideIcon | null;
+	icon?: LucideIcon;
 	Component?: FC;
 }
 
