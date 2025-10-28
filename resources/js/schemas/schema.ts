@@ -44,7 +44,7 @@ export const StoreVehicleRequest = z.object({
 	safety_rating: z.number().int().min(1).max(5).nullable().optional(),
 	image_url: z.string().url().nullable().optional(),
 });
-type StoreVehicleRequest = z.infer<typeof StoreVehicleRequest>;
+export type StoreVehicleRequestSchemaInfer = z.infer<typeof StoreVehicleRequest>;
 
 export const TwoFactorAuthenticationRequest = z.object({});
 
