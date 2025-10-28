@@ -8,7 +8,7 @@ import type { Conversations, Message, MessagesResponseProps } from "@/types/rout
 
 import { loadOlder as load_older_chats_route, markSeen as mark_conversation_seen_route, destroy as message_delete_route } from "@/routes/chat/message";
 
-import { useEventBus } from "@/providers/EventBus";
+import { useEventBus } from "@/providers/EventBusProvider";
 
 import { formatMessageDate } from "@/lib/helpers";
 import { cn } from "@/lib/utils";

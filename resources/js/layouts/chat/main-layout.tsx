@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import type { SharedData } from "@/types";
 import type { Conversation, Conversations, Message } from "@/types/routes/chat";
 
-import { useEventBus } from "@/providers/EventBus";
+import { useEventBus } from "@/providers/EventBusProvider";
 
-import { AppSidebar } from "@/components/chat/sidebar-actions";
-import { SidebarHeader } from "@/components/chat/sidebar-header";
-import { SidebarInset, SidebarProvider } from "@/components/chat/ui/sidebar";
+import { AppSidebar } from "@/pages/chat/components/sidebar-actions";
+import { SidebarHeader } from "@/pages/chat/components/sidebar-header";
+import { SidebarInset, SidebarProvider } from "@/pages/chat/components/ui/sidebar";
 
 interface SocketMessageEvent {
 	message: Message;

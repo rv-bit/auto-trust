@@ -1,4 +1,4 @@
-import { EventBusProvider } from "@/providers/EventBus";
+import { EventBusProvider } from "@/providers/EventBusProvider";
 import { OnlineUsersProvider } from "@/providers/OnlineUsersProvider";
 
 import MessageContainer from "@/pages/chat/components/messages/message-container";

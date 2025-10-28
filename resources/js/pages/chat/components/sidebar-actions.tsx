@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 import { useInitials } from "@/hooks/use-initials";
 
-import { useEventBus } from "@/providers/EventBus";
+import { useEventBus } from "@/providers/EventBusProvider";
 import { useOnlineUsers } from "@/providers/OnlineUsersProvider";
 
 import { NavFooter } from "@/components/navigation/nav-footer";
@@ -33,15 +33,15 @@ import { ChevronDown, EditIcon, InfoIcon, LayoutGrid, LucideIcon, ReplyIcon, Tra
 
 const footerNavItems: NavItem[] = [
 	{
+		title: "Notifications",
+		href: "/notifications",
+	},
+	{
 		title: "Dashboard",
 		href: "/dashboard",
 		icon: LayoutGrid,
 		// target: "_blank",
 		// rel: "noopener noreferrer",
-	},
-	{
-		title: "Notifications",
-		href: "/notifications",
 	},
 ];
 
