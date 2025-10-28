@@ -1,5 +1,7 @@
-import notificationsRoutes from "@/routes/notifications";
+import { AxiosResponse } from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
+
+import notificationsRoutes from "@/routes/notifications";
 
 type NotificationType = {
 	id: string;
@@ -19,13 +21,20 @@ type NotificationsContextType = {
 
 const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
 
+interface NotificationResponse extends AxiosResponse {
+	data: NotificationType[];
+}
+
 export function NotificationsProvider({ children, initialPage }: { children: React.ReactNode; initialPage?: any }) {
 	const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
 	const fetchNotifications = async () => {
+		const userId = initialPage?.props?.auth?.user?.id;
+		if (!userId) return;
+
 		const axios = window.axios;
 		try {
-			const res = await axios.get(notificationsRoutes.index().url);
+			const res = await axios.get<NotificationResponse>(notificationsRoutes.index().url);
 			setNotifications(res.data.data ?? []);
 		} catch (e) {
 			console.error("Failed to load notifications", e);

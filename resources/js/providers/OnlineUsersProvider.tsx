@@ -16,7 +16,7 @@ export function OnlineUsersProvider({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		const Echo = window.Echo;
 
-		const channel = Echo.join("online")
+		Echo.join("online")
 			.here((users: UserResource[]) => {
 				const onlineUsersObj = Object.fromEntries(users.map((user) => [user.id, user]));
 				setOnlineUsers(onlineUsersObj);
