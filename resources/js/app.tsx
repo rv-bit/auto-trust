@@ -3,8 +3,10 @@ import "../css/app.css";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
+
 import { initializeTheme } from "./hooks/use-appearance";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Axios from "axios";
 import { client } from "laravel-precognition-react";
 
@@ -13,16 +15,31 @@ import { configureEcho } from "@laravel/echo-react";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 import React from "react";
-import { NotificationsProvider } from "./providers/NotificationsProvider";
-
 import { Toaster } from "./components/ui/sooner";
+
+import { NotificationsProvider } from "./providers/NotificationsProvider";
+import Sprites from "./icons/sprites";
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 60 * 5,
+			gcTime: 1000 * 60 * 10,
+			retry: 1,
+			refetchOnWindowFocus: false,
+		},
+		mutations: {
+			retry: 1,
+		},
+	},
+});
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 window.Pusher = Pusher;
 window.Echo = new Echo({
 	broadcaster: "reverb",
-	key: import.meta.env.VITE_REVERB_APP_KEY, // optional, depending on config
+	key: import.meta.env.VITE_REVERB_APP_KEY,
 	wsHost: import.meta.env.VITE_REVERB_HOST,
 	wsPort: import.meta.env.VITE_REVERB_PORT,
 	forceTLS: false,
@@ -51,11 +68,14 @@ createInertiaApp({
 		const root = createRoot(el);
 
 		root.render(
-			// <App {...props} />
 			<React.Fragment>
-				<NotificationsProvider initialPage={props}>
-					<App {...props} />
-				</NotificationsProvider>
+				<Sprites />
+
+				<QueryClientProvider client={queryClient}>
+					<NotificationsProvider initialPage={props}>
+						<App {...props} />
+					</NotificationsProvider>
+				</QueryClientProvider>
 				<Toaster />
 			</React.Fragment>,
 		);
@@ -65,5 +85,4 @@ createInertiaApp({
 	},
 });
 
-// This will set light / dark mode on load...
 initializeTheme();
