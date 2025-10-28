@@ -15,6 +15,8 @@
 
 @theme {
 	--font-sans-pro: "Source Sans 3", sans-serif;
+	--font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--font-headlines: south-east-cn, "Arial Black", sans-serif;
 }
 
 @layer base {
@@ -60,8 +62,6 @@
 }
 
 @theme {
-	--font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
 	--radius-lg: var(--radius);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-sm: calc(var(--radius) - 4px);
@@ -121,6 +121,7 @@
 	}
 
 	body {
+		overflow: auto;
 		@apply bg-background text-foreground;
 	}
 
@@ -134,9 +135,9 @@
 		cursor: pointer;
 	}
 
-	html.dark .landing,
-	.landing {
-		/* Reset all light theme variables so components inside landing use them */
+	html.dark .overwrite-white-mode,
+	.overwrite-white-mode {
+		/* Reset all light theme variables so components inside this div use light theme */
 		--off-background: oklch(100% 0.00011 271.152);
 		--navigation-bar: oklch(0.2645 0 0);
 
