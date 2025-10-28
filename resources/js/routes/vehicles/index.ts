@@ -446,12 +446,105 @@ destroyForm.delete = (args: { vehicle: number | { id: number } } | [vehicle: num
 
 destroy.form = destroyForm
 
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+export const listing = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: listing.url(args, options),
+    method: 'get',
+})
+
+listing.definition = {
+    methods: ["get","head"],
+    url: '/vehicles/{listing}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+listing.url = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { listing: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            listing: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        listing: args.listing,
+    }
+
+    return listing.definition.url
+            .replace('{listing}', parsedArgs.listing.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+listing.get = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: listing.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+listing.head = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: listing.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+const listingForm = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: listing.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+listingForm.get = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: listing.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:17
+* @route '/vehicles/{listing}'
+*/
+listingForm.head = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: listing.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+listing.form = listingForm
+
 const vehicles = {
     index: Object.assign(index, index),
     store: Object.assign(store, store),
     show: Object.assign(show, show),
     update: Object.assign(update, update),
     destroy: Object.assign(destroy, destroy),
+    listing: Object.assign(listing, listing),
 }
 
 export default vehicles
