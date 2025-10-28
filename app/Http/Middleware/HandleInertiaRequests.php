@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Enum\VehicleListingsEnum;
 use Inertia\Middleware;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -54,6 +56,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => $sidebar_state,
             'chatSidebarOpen' => $chat_sidebar_state,
+
+            'vehicleListings' => VehicleListingsEnum::labels()
         ];
     }
 }
