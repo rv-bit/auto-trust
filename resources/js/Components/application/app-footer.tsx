@@ -56,7 +56,7 @@ const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"footer
 
 	if (isTablet) {
 		return (
-			<footer className={cn("mt-10 h-auto w-full flex-1", props.className)}>
+			<footer className={cn("border-border mt-auto flex w-full flex-col items-center justify-end border-t bg-transparent px-6 lg:px-8 pb-20", props.className)}>
 				<div className="mx-auto flex w-full max-w-7xl p-10 px-5 pb-5">
 					<span className="flex w-full flex-col items-start gap-10">
 						<Accordion type="single" collapsible className="w-full">
@@ -131,7 +131,7 @@ const Footer = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"footer
 	}
 
 	return (
-		<footer className={cn("mt-10 h-auto w-full flex-1", props.className)}>
+		<footer className={cn("border-border mt-auto flex w-full flex-col items-center justify-end border-t bg-transparent px-6 lg:px-8", props.className)}>
 			<div className="mx-auto flex w-full max-w-7xl flex-col p-10 pb-5">
 				<span className="flex items-start justify-center gap-2">
 					{metadata.map((item, index) => (

@@ -25,6 +25,10 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
 	{
+		title: "Notifications",
+		href: "/notifications",
+	},
+	{
 		title: "Chat Support",
 		href: "/chat",
 		icon: MessageCircleMore,

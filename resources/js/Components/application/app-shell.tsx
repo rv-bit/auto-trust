@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { type SharedData } from '@/types';
 
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppHeader } from './app-header';
 
 interface AppShellProps {
     children: React.ReactNode;
@@ -23,9 +24,13 @@ export function AppShell({
 
     if (variant === 'header') {
         return (
-            <div className={cn('flex min-h-screen w-full flex-col', className)}>
-                {children}
-            </div>
+            <>
+                <AppHeader />
+                
+                <div className={cn('flex min-h-screen w-full flex-col', className)}>
+                    {children}
+                </div>
+            </>
         );
     }
 
