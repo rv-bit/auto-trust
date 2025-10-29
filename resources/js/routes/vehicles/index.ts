@@ -447,7 +447,81 @@ destroyForm.delete = (args: { vehicle: number | { id: number } } | [vehicle: num
 destroy.form = destroyForm
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+dashboard.definition = {
+    methods: ["get","head"],
+    url: '/vehicles/dashboard',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+dashboard.url = (options?: RouteQueryOptions) => {
+    return dashboard.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: dashboard.url(options),
+    method: 'head',
+})
+
+/**
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/vehicles.php:11
+* @route '/vehicles/dashboard'
+*/
+dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+dashboard.form = dashboardForm
+
+/**
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 export const listing = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -461,7 +535,7 @@ listing.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 listing.url = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -487,7 +561,7 @@ listing.url = (args: { listing: string | number } | [listing: string | number ] 
 }
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 listing.get = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -496,7 +570,7 @@ listing.get = (args: { listing: string | number } | [listing: string | number ] 
 })
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 listing.head = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -505,7 +579,7 @@ listing.head = (args: { listing: string | number } | [listing: string | number ]
 })
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 const listingForm = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -514,7 +588,7 @@ const listingForm = (args: { listing: string | number } | [listing: string | num
 })
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 listingForm.get = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -523,7 +597,7 @@ listingForm.get = (args: { listing: string | number } | [listing: string | numbe
 })
 
 /**
-* @see routes/web.php:17
+* @see routes/vehicles.php:16
 * @route '/vehicles/{listing}'
 */
 listingForm.head = (args: { listing: string | number } | [listing: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -544,6 +618,7 @@ const vehicles = {
     show: Object.assign(show, show),
     update: Object.assign(update, update),
     destroy: Object.assign(destroy, destroy),
+    dashboard: Object.assign(dashboard, dashboard),
     listing: Object.assign(listing, listing),
 }
 
