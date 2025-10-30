@@ -22,7 +22,7 @@ Route::get('vehicles/{listing}', function (string $listing) {
         abort(404);
     }
 
-    return Inertia::render('vehicles/listing/page', [
+    return Inertia::render('vehicles/listings/page', [
         'listing' => $listing,
     ]);
 })->name('vehicles.listing');
