@@ -17,7 +17,7 @@ export default function Welcome() {
 	}, []);
 
 	return (
-		<AppLayout withFooter>
+		<AppLayout withFooter className="max-w-7xl">
 			<Head title="Welcome"></Head>
 
 			<div className="flex flex-col items-center justify-start px-6 lg:px-8">
