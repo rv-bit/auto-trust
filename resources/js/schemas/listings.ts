@@ -33,28 +33,28 @@ export const VehicleFiltersSchema = z.object({
 });
 
 export const VehicleExtraFeaturesSchema = z.object({
-	climateControl: z.boolean().default(false),
-	twoOrMoreKeys: z.boolean().default(false),
-	satnav: z.boolean().default(false),
-	sunroof: z.boolean().default(false),
-	towBar: z.boolean().default(false),
-	lockingWheelNut: z.boolean().default(false),
-	spareWheel: z.boolean().default(false),
-	wheelToolkit: z.boolean().default(false),
-	androidAuto: z.boolean().default(false),
-	appleCarPlay: z.boolean().default(false),
-	cruiseControl: z.boolean().default(false),
+	climateControl: z.boolean(),
+	twoOrMoreKeys: z.boolean(),
+	satnav: z.boolean(),
+	sunroof: z.boolean(),
+	towBar: z.boolean(),
+	lockingWheelNut: z.boolean(),
+	spareWheel: z.boolean(),
+	wheelToolkit: z.boolean(),
+	androidAuto: z.boolean(),
+	appleCarPlay: z.boolean(),
+	cruiseControl: z.boolean(),
 });
 
 export const VehicleSpecificationSchema = z.object({
-	cruiseControl: z.boolean().default(false),
-	parkingSensors: z.boolean().default(false),
-	touchscreenInfotainment: z.boolean().default(false),
-	navigation: z.boolean().default(false),
-	appleCarPlay: z.boolean().default(false),
-	androidAuto: z.boolean().default(false),
-	parkingCamera: z.boolean().default(false),
-	climateControl: z.boolean().default(false),
+	cruiseControl: z.boolean(),
+	parkingSensors: z.boolean(),
+	touchscreenInfotainment: z.boolean(),
+	navigation: z.boolean(),
+	appleCarPlay: z.boolean(),
+	androidAuto: z.boolean(),
+	parkingCamera: z.boolean(),
+	climateControl: z.boolean(),
 });
 
 export const CreateVehicleSchema = z.object({
@@ -77,7 +77,7 @@ export const CreateVehicleSchema = z.object({
 	extras: VehicleExtraFeaturesSchema.optional(),
 	specification: VehicleSpecificationSchema.optional(),
 	safety_rating: z.number().int().min(1).max(5).optional(),
-	image_url: z.string().url().optional(),
+	images: z.array(z.instanceof(File)).optional(),
 });
 
 export const UpdateVehicleSchema = CreateVehicleSchema.partial();
