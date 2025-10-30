@@ -1,3 +1,24 @@
+import { SharedData } from "@/types";
+
+export interface VehiclePageProps extends SharedData {
+	vehicle_makes: Makes[];
+	vehicle_models: Models[];
+}
+
+export interface Makes {
+	id: string;
+	name: string;
+	slug: string;
+	logo_url: string;
+}
+
+export interface Models {
+	id: string;
+	make_id: string;
+	name: string;
+	slug: string;
+}
+
 export enum BodyStyle {
 	SUV = "suv",
 	HATCHBACK = "hatchback",
