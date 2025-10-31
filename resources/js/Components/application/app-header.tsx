@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-import { type LucideIcon, Hamburger, LayoutGrid, Menu, Search } from "lucide-react";
+import {  Menu } from "lucide-react";
 import AppLogoIcon from "./app-logo-icon";
 
 interface AppHeaderProps {
@@ -122,7 +122,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 
 	if (isMobile) {
 		return (
-			<header className="flex h-10 items-center px-4">
+			<header className={cn("z-9999 flex h-10 items-center bg-transparent px-4", className)}>
 				<HeaderLogo />
 
 				<div className="fixed inset-x-0 bottom-0 z-9999 flex h-fit items-center justify-around border-t border-neutral-400/20 bg-white px-2 py-1">
@@ -150,9 +150,13 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 
 	return (
 		<header
-			className={cn("h-auto w-full bg-white", {
-				"flex-row bg-[#252525]": currentPath === "/",
-			})}
+			className={cn(
+				"z-9999 h-auto w-full",
+				{
+					"flex-row bg-[#252525]": currentPath === "/",
+				},
+				className,
+			)}
 		>
 			<div
 				className={cn("mx-auto flex flex-col items-center justify-between md:max-w-7xl", {
@@ -182,9 +186,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 				</div>
 
 				<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
-					{currentPath !== "/" && (
-						<HeaderLogo />
-					)}
+					{currentPath !== "/" && <HeaderLogo />}
 
 					<div className="flex justify-end gap-1">
 						{mainNavItems.map((value, index) => {
@@ -197,7 +199,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 									variant={"link"}
 									data-active={itemIsActive(value)}
 									className={cn(
-										"size-auto min-w-fit flex flex-col shrink-0 items-center justify-between gap-0 rounded-none border-b-4 border-transparent px-0 py-2 pt-3 text-xs font-semibold",
+										"flex size-auto min-w-fit shrink-0 flex-col items-center justify-between gap-0 rounded-none border-b-4 border-transparent px-0 py-2 pt-3 text-xs font-semibold",
 										"text-white hover:border-white hover:no-underline has-[>svg]:px-1.5 dark:text-white dark:hover:border-white",
 										"data-[active=true]:border-white data-[active=true]:hover:border-white data-[active=true]:dark:border-white data-[active=true]:dark:hover:border-white",
 										{

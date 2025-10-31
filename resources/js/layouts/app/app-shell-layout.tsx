@@ -1,11 +1,17 @@
-import type { PropsWithChildren } from "react";
+import * as React from "react";
 
 import { AppContent } from "@/components/application/app-content";
 import { AppShell } from "@/components/application/app-shell";
 
-export default function AppLayout({ children, classNameShell, className, withFooter }: PropsWithChildren<{ classNameShell?: string; className?: string; withFooter?: boolean }>) {
+interface AppLayoutProps extends React.ComponentProps<"div"> {
+	classNameShell?: string;
+	classNameHeader?: string;
+	withFooter?: boolean;
+}
+
+export default function AppLayout({ children, className, classNameShell, classNameHeader, withFooter }: AppLayoutProps) {
 	return (
-		<AppShell withFooter={withFooter} className={classNameShell}>
+		<AppShell withFooter={withFooter} className={classNameShell} classNameHeader={classNameHeader}>
 			<AppContent className={className}>{children}</AppContent>
 		</AppShell>
 	);
