@@ -47,6 +47,24 @@ return [
             'report' => false,
         ],
 
+        'r2' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION', 'auto'),
+            'bucket' => env('AWS_BUCKET'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'url' => env('CLOUDFLARE_PUBLIC_ACCESS_URL'), // Public access URL if configured
+            'use_path_style_endpoint' => true, // Required for R2
+            'throw' => false,
+            'report' => false,
+            'visibility' => 'public', // Default to public, adjust as needed
+            'streaming' => [
+                'threshold' => env('R2_STREAMING_THRESHOLD', 16384), // 16MB default
+            ],
+        ],
+
+        // Keep s3 config for reference or if you need both
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
