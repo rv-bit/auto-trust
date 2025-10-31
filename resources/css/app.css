@@ -66,9 +66,12 @@
 	--radius-sm: calc(var(--radius) - 4px);
 
 	--color-off-background: var(--off-background);
-	--color-navigation-bar: var(--navigation-bar);
-
 	--color-primary-business: var(--primary-business);
+	--color-factory-white: var(--factory-white);
+	--color-black-rgb: var(--black-rgb);
+
+	--color-header-gradient-primary: var(--header-gradient-primary);
+	--color-header-gradient-secondary: var(--header-gradient-secondary);
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -138,7 +141,6 @@
 	.overwrite-white-mode {
 		/* Reset all light theme variables so components inside this div use light theme */
 		--off-background: oklch(100% 0.00011 271.152);
-		--navigation-bar: oklch(0.2645 0 0);
 
 		--foreground: oklch(0.145 0 0);
 		--card: oklch(1 0 0);
@@ -164,10 +166,11 @@
 	:root {
 		--header-h: 3.5rem;
 
-		--off-background: oklch(100% 0.00011 271.152);
-		--navigation-bar: oklch(0.2645 0 0);
-
 		--primary-business: oklch(53.057% 0.26936 281.282);
+		--header-gradient-primary: oklch(91.478% 0.03162 211.715);
+		--header-gradient-secondary: oklch(90.192% 0.02779 40.028);
+		--factory-white: oklch(96.516% 0.00863 307.924);
+		--black-rgb: oklch(96.516% 0.00863 307.924);
 
 		--background: oklch(1 0 0);
 		--foreground: oklch(0.145 0 0);
