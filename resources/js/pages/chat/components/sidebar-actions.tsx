@@ -359,7 +359,7 @@ const SidebarConversationItem = React.memo(({ conversation }: { conversation: Ch
 												disabled={actionIsLoading}
 												aria-label="conversation-actions-button"
 												data-state={isHovering || dropdownMenuOpen ? "open" : "closed"}
-												className="size-fit origin-right bg-transparent p-0 transition-all duration-200 ease-in-out hover:bg-transparent focus-visible:border-none focus-visible:ring-0 data-[state=closed]:w-0 data-[state=closed]:opacity-0 data-[state=open]:w-5 data-[state=open]:opacity-100 dark:bg-transparent dark:hover:bg-transparent [&_svg]:size-auto"
+												className="size-fit origin-right bg-transparent p-0 transition-all duration-200 ease-in-out hover:bg-transparent focus-visible:border-none focus-visible:ring-0 has-[>svg]:px-1 data-[state=closed]:w-0 data-[state=closed]:opacity-0 data-[state=open]:w-5 data-[state=open]:opacity-100 dark:bg-transparent dark:hover:bg-transparent [&_svg]:size-auto"
 											>
 												<ChevronDown size={20} className="size-auto text-black dark:text-white" />
 											</Button>
