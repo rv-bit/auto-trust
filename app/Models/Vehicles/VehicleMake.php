@@ -4,9 +4,11 @@ namespace App\Models\Vehicles;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class VehicleMake extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'name',
         'slug',

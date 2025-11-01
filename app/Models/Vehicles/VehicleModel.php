@@ -5,9 +5,11 @@ namespace App\Models\Vehicles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class VehicleModel extends Model
 {
+    use HasFactory;
     protected $table = 'vehicle_models';
 
     protected $fillable = [
