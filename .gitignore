@@ -30,6 +30,7 @@ yarn-error.log
 # others
 .DS_Store
 
-# Pem files
-*.pem
-resources/css/app.css
+# Pem files for local SSL
+/.certs/*.pem
+/.certs/*.key
+/.certs/*.crt

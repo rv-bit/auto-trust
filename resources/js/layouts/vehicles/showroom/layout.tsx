@@ -20,8 +20,6 @@ export default function Layout({ navItems, children }: { navItems: LocalNavItem[
 	const page = usePage<VehiclePageProps>();
 	const currentPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : "";
 
-	const currentUser = page.props.auth.user;
-
 	const itemIsActive = useCallback((item: LocalNavItem) => {
 		if (item.isActive) return true;
 
@@ -51,8 +49,6 @@ export default function Layout({ navItems, children }: { navItems: LocalNavItem[
 			document.body.classList.remove("overwrite-white-mode");
 		};
 	}, []);
-
-	console.log(navItems);
 
 	return (
 		<AppLayout withFooter className="gap-0 px-0">
