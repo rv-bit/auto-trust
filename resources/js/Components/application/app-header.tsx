@@ -40,6 +40,18 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 	
 	const currentPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : "";
 
+	const vehicleListingsItems = useMemo(() => {
+		return Object.entries(vehicleListings).map(([value, label]) => {
+			const href = `/vehicles/${value}`;
+			
+			return {
+				title: label,
+				href,
+				activePaths: [href],
+			};
+		});
+	}, [vehicleListings]);
+
 	const mainNavItems: LocalNavItem[] = useMemo(() => {
 		return [
 			{
@@ -163,29 +175,31 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 					"flex-row bg-[#252525]": currentPath === "/",
 				})}
 			>
-				<div className={cn("flex h-fit w-full items-center px-2", { "h-15": currentPath === "/" })}>
-					{Object.entries(vehicleListings).map(([value, label]) => {
-						const href = `/vehicles/${value}`;
-
-						return (
-							<Button
-								asChild
-								key={`${value}-${label}`}
-								variant={"link"}
-								className={cn("p-2 text-sm font-extrabold text-white/60 decoration-3 underline-offset-5 hover:text-white dark:text-white/60 dark:hover:text-white", {
+			<div className={cn("flex h-fit w-full items-center px-2", { "h-15": currentPath === "/" })}>
+				{vehicleListingsItems.map(({ href, title }, index) => {
+					return (
+						<Button
+							asChild
+							key={`${href}-${title}`}
+							variant={"link"}
+							data-active={currentPath === href}
+							className={cn(
+								"p-2 text-sm font-extrabold text-white/60 decoration-3 underline-offset-5 hover:text-white data-[active=true]:underline dark:text-white/60 dark:hover:text-white",
+								{
 									"text-white dark:text-white": currentPath === "/",
-									"text-black/60 hover:text-black dark:text-black/60 dark:hover:text-black": currentPath !== "/",
-								})}
-							>
-								<Link key={value} href={href}>
-									{label}
-								</Link>
-							</Button>
-						);
-					})}
-				</div>
-
-				<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
+									"data-[active=true]:text-white data-[active=true]:dark:text-white": currentPath === href,
+									"text-black/60 hover:text-black data-[active=true]:text-black dark:text-black/60 dark:hover:text-black data-[active=true]:dark:text-black": currentPath !== "/",
+									"pl-0": index === 0,
+								},
+							)}
+						>
+							<Link key={title} href={href}>
+								{title}
+							</Link>
+						</Button>
+					);
+				})}
+			</div>				<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
 					{currentPath !== "/" && <HeaderLogo />}
 
 					<div className="flex justify-end gap-1">
