@@ -16,6 +16,7 @@ class VehicleSeeder extends Seeder
     private array $colors = ['black', 'blue', 'brown', 'gold', 'green', 'grey', 'multi_colour', 'orange', 'beige'];
     private array $postcodes = ['WV6 0XD', 'B1 1AA', 'M1 1AA', 'E1 6AN', 'L1 1AA', 'G2 1BB', 'EH8 8DX', 'CF10 1AA'];
     private array $statuses = ['active', 'active', 'active', 'active', 'sold', 'inactive'];
+    private array $conditions = ['new', 'used', 'used', 'used', 'nearly-new'];
 
     public function run(): void
     {
@@ -46,8 +47,14 @@ class VehicleSeeder extends Seeder
                 'latitude' => 52.5 + (rand(-100, 100) / 1000),
                 'longitude' => -2.0 + (rand(-100, 100) / 1000),
                 'safety_rating' => rand(1, 5),
-                'image_url' => 'https://via.placeholder.com/400x300?text=' . urlencode($make->name . ' ' . $model->name),
+                'images' => json_encode([
+                    'https://via.placeholder.com/800x600?text=' . urlencode($make->name . ' ' . $model->name . ' - Front'),
+                    'https://via.placeholder.com/800x600?text=' . urlencode($make->name . ' ' . $model->name . ' - Side'),
+                    'https://via.placeholder.com/800x600?text=' . urlencode($make->name . ' ' . $model->name . ' - Interior'),
+                    'https://via.placeholder.com/800x600?text=' . urlencode($make->name . ' ' . $model->name . ' - Back'),
+                ]),
                 'status' => $this->statuses[array_rand($this->statuses)],
+                'condition' => $this->conditions[array_rand($this->conditions)],
                 'extras' => json_encode([
                     'climateControl' => (bool)rand(0, 1),
                     'twoOrMoreKeys' => (bool)rand(0, 1),

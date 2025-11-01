@@ -41,8 +41,13 @@ class VehicleFactory extends Factory
                 'torque' => $this->faker->numberBetween(100, 800),
             ]),
             'safety_rating' => $this->faker->numberBetween(1, 5),
-            'image_url' => $this->faker->imageUrl(640, 480, 'cars'),
+            'images' => json_encode([
+                $this->faker->imageUrl(640, 480, 'cars'),
+                $this->faker->imageUrl(640, 480, 'cars'),
+                $this->faker->imageUrl(640, 480, 'cars'),
+            ]),
             'status' => $this->faker->randomElement(['active', 'inactive', 'sold']),
+            'condition' => $this->faker->randomElement(['new', 'nearly-new', 'used']),
         ];
     }
 }

@@ -34,7 +34,8 @@ class StoreVehicleRequest extends FormRequest
             'extras' => 'nullable|json',
             'specification' => 'nullable|json',
             'safety_rating' => 'nullable|integer|min:1|max:5',
-            'image_url' => 'nullable|url',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240', // Max 10MB per image
         ];
     }
 
@@ -52,6 +53,10 @@ class StoreVehicleRequest extends FormRequest
             'price.required' => 'Please enter the price',
             'doors.required' => 'Please enter the number of doors',
             'postcode.required' => 'Please enter the postcode',
+            'images.max' => 'You can upload a maximum of 10 images',
+            'images.*.image' => 'Each file must be an image',
+            'images.*.mimes' => 'Images must be in JPEG, JPG, PNG, or WEBP format',
+            'images.*.max' => 'Each image must not exceed 10MB',
         ];
     }
 }

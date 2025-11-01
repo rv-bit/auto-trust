@@ -4,6 +4,7 @@ namespace App\Models\Vehicles;
 
 use App\Models\User;
 
+use App\Services\GeocodeService;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Database\Eloquent\Model;
@@ -36,13 +37,15 @@ class Vehicle extends Model
         'extras',
         'specification',
         'safety_rating',
-        'image_url',
+        'images',
         'status',
+        'condition',
     ];
 
     protected $casts = [
         'extras' => 'json',
         'specification' => 'json',
+        'images' => 'json',
         'year' => 'integer',
         'mileage' => 'integer',
         'price' => 'integer',
@@ -99,6 +102,11 @@ class Vehicle extends Model
         return $query->whereIn('body_style', $styles);
     }
 
+    public function scopeByCondition($query, string $condition)
+    {
+        return $query->where('condition', $condition);
+    }
+
     public function scopeByFuelType($query, array $fuelTypes)
     {
         return $query->whereIn('fuel_type', $fuelTypes);
@@ -143,9 +151,41 @@ class Vehicle extends Model
 
     public function scopeNearPostcode($query, string $postcode, int $radius = 50)
     {
-        // Implement using latitude/longitude or postcode lookup service
-        // This is a placeholder - you'd use a geolocation service
-        return $query->where('postcode', 'like', '%' . $postcode . '%');
+        $geocodeService = app(GeocodeService::class);
+        $coordinates = $geocodeService->getCoordinatesFromPostcode($postcode);
+        
+        if (!$coordinates) {
+            // If geocoding fails, return empty results
+            return $query->whereRaw('1 = 0');
+        }
+        
+        // Get all vehicles with their postcodes
+        $vehicles = Vehicle::select('id', 'postcode')->get();
+        $nearbyIds = [];
+        
+        foreach ($vehicles as $vehicle) {
+            if (!$vehicle->postcode) {
+                continue;
+            }
+            
+            $vehicleCoords = $geocodeService->getCoordinatesFromPostcode($vehicle->postcode);
+            if (!$vehicleCoords) {
+                continue;
+            }
+            
+            $distance = $geocodeService->calculateDistance(
+                $coordinates['lat'],
+                $coordinates['lng'],
+                $vehicleCoords['lat'],
+                $vehicleCoords['lng']
+            );
+            
+            if ($distance <= $radius) {
+                $nearbyIds[] = $vehicle->id;
+            }
+        }
+        
+        return $query->whereIn('id', $nearbyIds);
     }
 
     public function scopeWithSpecification($query, array $specs)

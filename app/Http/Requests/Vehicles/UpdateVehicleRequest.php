@@ -34,8 +34,10 @@ class UpdateVehicleRequest extends FormRequest
             'extras' => 'nullable|json',
             'specification' => 'nullable|json',
             'safety_rating' => 'nullable|integer|min:1|max:5',
-            'image_url' => 'nullable|url',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240',
             'status' => 'sometimes|in:active,sold,inactive',
+            'condition' => 'sometimes|in:new,used,nearly-new',
         ];
     }
 }

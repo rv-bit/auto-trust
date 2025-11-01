@@ -39,9 +39,10 @@ return new class extends Migration
             $table->json('specification')->nullable();
 
             $table->integer('safety_rating')->nullable();
-            $table->string('image_url')->nullable();
+            $table->json('images')->nullable();
 
             $table->enum('status', ['active', 'sold', 'inactive'])->default('active');
+            $table->enum('condition', ['new', 'used', 'nearly-new'])->default('used');
 
             $table->softDeletes();
             $table->timestamps();
