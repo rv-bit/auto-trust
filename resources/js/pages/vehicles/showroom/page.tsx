@@ -62,7 +62,7 @@ function Page() {
 	const ActiveComponent = getActiveComponent(currentPath, navItems);
 
 	return (
-		<div className="flex w-full justify-center bg-[#f5f2f8] py-10">
+		<div className="bg-factory-white flex w-full justify-center py-10">
 			<div className="mx-auto flex w-full max-w-7xl flex-col">{ActiveComponent ? <ActiveComponent /> : null}</div>
 		</div>
 	);

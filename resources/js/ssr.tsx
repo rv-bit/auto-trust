@@ -36,15 +36,16 @@ const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 window.Pusher = Pusher;
 window.Echo = new Echo({
 	broadcaster: "reverb",
-	key: import.meta.env.VITE_REVERB_APP_KEY, // optional, depending on config
+	key: import.meta.env.VITE_REVERB_APP_KEY,
 	wsHost: import.meta.env.VITE_REVERB_HOST,
 	wsPort: import.meta.env.VITE_REVERB_PORT,
-	forceTLS: false,
+	// wsPath: import.meta.env.VITE_REVERB_SERVER_PATH,
+	forceTLS: import.meta.env.VITE_REVERB_SCHEME === "https",
 	enabledTransports: ["ws", "wss"],
 	authEndpoint: "/broadcasting/auth",
 	auth: {
 		headers: {
-			"X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "",
+			"X-CSRF-TOKEN": document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute("content") || "",
 		},
 	},
 });
@@ -53,9 +54,11 @@ configureEcho({
 	broadcaster: "reverb",
 });
 
-window.axios = Axios.create();
+window.axios = Axios.create({
+	withCredentials: true,
+	withXSRFToken: true,
+});
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-window.axios.defaults.withCredentials = true;
 client.use(window.axios);
 
 createServer((page) =>
