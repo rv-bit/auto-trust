@@ -34,7 +34,12 @@ return [
             'path' => env('REVERB_SERVER_PATH', ''),
             'hostname' => env('REVERB_HOST'),
             'options' => [
-                'tls' => [],
+                'tls' => [
+                    // 'local_cert' => base_path('.certs/nginx-selfsigned.crt'),
+                    // 'local_pk' => base_path('.certs/nginx-selfsigned.key'),
+                    // 'allow_self_signed' => true,
+                    // 'verify_peer' => false,
+                ],
             ],
             'max_request_size' => env('REVERB_MAX_REQUEST_SIZE', 10_000),
             'scaling' => [
@@ -82,7 +87,7 @@ return [
                     'scheme' => env('REVERB_SCHEME', 'https'),
                     'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
                 ],
-                'allowed_origins' => ['*'],
+                'allowed_origins' => array_filter(array_map('trim', explode(',', env('REVERB_ALLOWED_ORIGINS', '*')))),
                 'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),
                 'activity_timeout' => env('REVERB_APP_ACTIVITY_TIMEOUT', 30),
                 'max_connections' => env('REVERB_APP_MAX_CONNECTIONS'),

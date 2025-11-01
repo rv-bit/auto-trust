@@ -43,7 +43,6 @@ it('checks if origin validation would allow valid origin', function () {
 
 it('checks if origin validation would block invalid origin', function () {
     $allowedOrigins = Config::get('reverb.apps.apps.0.allowed_origins', []);
-    
     // Skip if wildcard is set (all origins allowed)
     if (in_array('*', $allowedOrigins)) {
         $this->markTestSkipped('Wildcard origin allows all connections');
@@ -76,19 +75,3 @@ it('checks if wildcard origin allows all connections', function () {
         }
     }
 });
-
-/**
- * The following tests are skipped because they require a running WebSocket server.
- * To test actual WebSocket upgrade behavior:
- * 1. Start Laravel Reverb: php artisan reverb:start
- * 2. Use a WebSocket client library in tests
- * 3. Test actual connections with different origins
- */
-
-it('allows WebSocket upgrade with correct origin', function () {
-    test()->markTestSkipped('WebSocket upgrade requires running Reverb server. Use integration tests or manual testing.');
-})->skip();
-
-it('blocks WebSocket upgrade with wrong origin', function () {
-    test()->markTestSkipped('WebSocket upgrade requires running Reverb server. Use integration tests or manual testing.');
-})->skip();
