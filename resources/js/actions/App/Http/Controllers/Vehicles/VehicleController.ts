@@ -1,5 +1,86 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+export const search = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: search.url(options),
+    method: 'get',
+})
+
+search.definition = {
+    methods: ["get","head"],
+    url: '/api/vehicles/search',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+search.url = (options?: RouteQueryOptions) => {
+    return search.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: search.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: search.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+const searchForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: search.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+searchForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: search.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::search
+* @see app/Http/Controllers/Vehicles/VehicleController.php:134
+* @route '/api/vehicles/search'
+*/
+searchForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: search.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+search.form = searchForm
+
+/**
 * @see \App\Http\Controllers\Vehicles\VehicleController::index
 * @see app/Http/Controllers/Vehicles/VehicleController.php:20
 * @route '/api/vehicles'
@@ -446,87 +527,6 @@ destroyForm.delete = (args: { vehicle: number | { id: number } } | [vehicle: num
 
 destroy.form = destroyForm
 
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-export const search = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: search.url(options),
-    method: 'get',
-})
-
-search.definition = {
-    methods: ["get","head"],
-    url: '/api/vehicles/search',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-search.url = (options?: RouteQueryOptions) => {
-    return search.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: search.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: search.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-const searchForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: search.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-searchForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: search.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Vehicles\VehicleController::search
-* @see app/Http/Controllers/Vehicles/VehicleController.php:134
-* @route '/api/vehicles/search'
-*/
-searchForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: search.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-search.form = searchForm
-
-const VehicleController = { index, store, show, update, destroy, search }
+const VehicleController = { search, index, store, show, update, destroy }
 
 export default VehicleController
