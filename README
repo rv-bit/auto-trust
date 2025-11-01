@@ -1,3 +1,34 @@
+## Installation
+
+### Prerequisites
+
+- [Bun](https://bun.sh/)
+- PHP 8.1+
+- Composer
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/rv-bit/auto-trust
+cd auto-trust
+
+# Install dependencies
+bun install
+composer install
+
+# Set up your environment variables using .env.example
+
+# Generate the application key
+php artisan key:generate
+
+# Run migrations and seed the database
+php artisan migrate --seed
+
+# Start the development server
+composer run dev
+```
+
 # Local Development Setup (macOS)
 
 These instructions are for running the Laravel app and Reverb WebSocket server locally on a macOS system using Nginx and PHP-FPM.
