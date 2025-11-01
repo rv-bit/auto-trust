@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Vehicles;
 use App\Http\Controllers\Controller;
 
 use App\Models\Vehicles\Vehicle;
+use App\Services\GeocodeService;
 
 use App\Http\Requests\Vehicles\StoreVehicleRequest;
 use App\Http\Requests\Vehicles\UpdateVehicleRequest;
+use App\Http\Resources\Vehicles\VehicleResource;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
 
 class VehicleController extends Controller
@@ -17,7 +20,7 @@ class VehicleController extends Controller
     /**
      * Display a listing of vehicles with filters
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Vehicle::query()->with(['make', 'model']);
 
@@ -46,38 +49,77 @@ class VehicleController extends Controller
             $query->byColor((array)$request->color);
         }
 
-        // Price filtering
+        // Vehicle condition/age filtering
+        if ($request->filled('vehicleAge') && $request->vehicleAge !== 'all') {
+            $query->byCondition($request->vehicleAge);
+        }
+
+        // Price filtering - support both formats
         if ($request->filled('price')) {
             $query->priceRange(
                 $request->input('price.min'),
                 $request->input('price.max')
             );
+        } elseif ($request->filled('priceMin') || $request->filled('priceMax')) {
+            $query->priceRange(
+                $request->input('priceMin'),
+                $request->input('priceMax')
+            );
         }
 
-        // Year filtering
+        // Year filtering - support both formats
         if ($request->filled('year')) {
             $query->yearRange(
                 $request->input('year.from', 1900),
                 $request->input('year.to', now()->year)
             );
+        } elseif ($request->filled('yearFrom') && $request->filled('yearTo')) {
+            $query->yearRange(
+                $request->input('yearFrom', 1900),
+                $request->input('yearTo', now()->year)
+            );
         }
 
-        // Mileage filtering
+        // Mileage filtering - support both formats
         if ($request->filled('mileage')) {
             $query->mileageRange(
                 $request->input('mileage.min'),
                 $request->input('mileage.max')
             );
+        } elseif ($request->filled('mileageMin') || $request->filled('mileageMax')) {
+            $query->mileageRange(
+                $request->input('mileageMin'),
+                $request->input('mileageMax')
+            );
         }
 
         // Location filtering
         if ($request->filled('postcode')) {
-            $query->nearPostcode($request->postcode);
+            $radius = $request->input('radius', 50); // Default 50 miles
+            $query->nearPostcode($request->postcode, $radius);
         }
 
         // Safety rating filtering
         if ($request->filled('safetyRating') && $request->safetyRating !== 'any') {
             $query->where('safety_rating', '>=', (int)str_replace('_star_up', '', $request->safetyRating));
+        }
+
+        // Equipment/Specification filtering
+        if ($request->filled('specification')) {
+            foreach ($request->specification as $spec => $value) {
+                if ($value) {
+                    $query->whereJsonContains('specification->' . $spec, true);
+                }
+            }
+        }
+
+        // Extra features filtering
+        if ($request->filled('extras')) {
+            foreach ($request->extras as $extra => $value) {
+                if ($value) {
+                    $query->whereJsonContains('extras->' . $extra, true);
+                }
+            }
         }
 
         // Only show active vehicles
@@ -87,15 +129,42 @@ class VehicleController extends Controller
         $perPage = $request->input('per_page', 15);
         $vehicles = $query->paginate($perPage);
 
-        return response()->json($vehicles);
+        return VehicleResource::collection($vehicles);
     }
 
     /**
      * Store a newly created vehicle in storage
      */
-    public function store(StoreVehicleRequest $request): JsonResponse
+    public function store(StoreVehicleRequest $request, GeocodeService $geocodeService): JsonResponse
     {
-        $vehicle = Vehicle::create($request->validated());
+        $data = $request->validated();
+        
+        // Get coordinates from postcode using Google Maps Geocoding API
+        if (!empty($data['postcode'])) {
+            $coordinates = $geocodeService->getCoordinatesFromPostcode($data['postcode']);
+            if ($coordinates) {
+                $data['latitude'] = $coordinates['latitude'];
+                $data['longitude'] = $coordinates['longitude'];
+            }
+        }
+        
+        // Handle image uploads
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                // Store in public/storage/vehicles folder
+                $path = $image->store('vehicles', 'public');
+                $imagePaths[] = $path;
+            }
+        }
+        
+        // Replace images array with stored paths
+        $data['images'] = $imagePaths;
+        
+        // Set seller_id to current authenticated user
+        $data['seller_id'] = auth()->id();
+        
+        $vehicle = Vehicle::create($data);
 
         return response()->json($vehicle->load(['make', 'model']), 201);
     }
@@ -105,7 +174,21 @@ class VehicleController extends Controller
      */
     public function show(Vehicle $vehicle): JsonResponse
     {
-        return response()->json($vehicle->load(['make', 'model']));
+        $vehicle->load(['make', 'model', 'seller']);
+        return response()->json(VehicleResource::make($vehicle));
+    }
+
+    /**
+     * Display the vehicle details page (Inertia)
+     */
+    public function showPage(string $id)
+    {
+        $vehicle = Vehicle::with(['make', 'model', 'seller'])
+            ->findOrFail($id);
+
+        return inertia('vehicles/[slug]/page', [
+            'vehicle' => VehicleResource::make($vehicle)->resolve(),
+        ]);
     }
 
     /**
@@ -129,10 +212,222 @@ class VehicleController extends Controller
     }
 
     /**
+     * Geocode a postcode to get latitude and longitude
+     */
+    public function geocodePostcode(Request $request, GeocodeService $geocodeService): JsonResponse
+    {
+        $request->validate([
+            'postcode' => 'required|string|max:10',
+        ]);
+
+        $coordinates = $geocodeService->getCoordinatesFromPostcode($request->postcode);
+
+        if (!$coordinates) {
+            return response()->json([
+                'error' => 'Could not geocode postcode',
+                'message' => 'Please check the postcode and try again.',
+            ], 422);
+        }
+
+        return response()->json($coordinates);
+    }
+
+    /**
      * Search vehicles endpoint
      */
-    public function search(Request $request): JsonResponse
+    public function search(Request $request): AnonymousResourceCollection
     {
         return $this->index($request);
+    }
+
+    /**
+     * Get filter counts based on current filters
+     */
+    public function filterCounts(Request $request): JsonResponse
+    {
+        // For each filter, exclude only itself, always apply make, model, price, location, and condition
+        $counts = [
+            'bodyStyle' => $this->getCountsByField('body_style', $request, ['bodyStyle']),
+            'fuelType' => $this->getCountsByField('fuel_type', $request, ['fuelType']),
+            'gearbox' => $this->getCountsByField('gearbox', $request, ['gearbox']),
+            'color' => $this->getCountsByField('color', $request, ['color']),
+            'vehicleAge' => $this->getCountsByCondition($request),
+            'makes' => $this->getMakeCounts($request),
+            'models' => $this->getModelCounts($request),
+        ];
+
+        return response()->json($counts);
+    }
+
+    /**
+     * Apply filters to query excluding specific filter types
+     */
+    private function applyFilters($query, Request $request, array $excludeFilters = [])
+    {
+        if (!in_array('make', $excludeFilters) && $request->filled('make')) {
+            $query->whereHas('make', fn($q) => $q->where('slug', $request->make));
+        }
+
+        if (!in_array('model', $excludeFilters) && $request->filled('model')) {
+            $query->whereHas('model', fn($q) => $q->where('slug', $request->model));
+        }
+
+        if (!in_array('bodyStyle', $excludeFilters) && $request->filled('bodyStyle')) {
+            $query->byBodyStyle((array)$request->bodyStyle);
+        }
+
+        if (!in_array('fuelType', $excludeFilters) && $request->filled('fuelType')) {
+            $query->byFuelType((array)$request->fuelType);
+        }
+
+        if (!in_array('gearbox', $excludeFilters) && $request->filled('gearbox')) {
+            $query->byGearbox((array)$request->gearbox);
+        }
+
+        if (!in_array('color', $excludeFilters) && $request->filled('color')) {
+            $query->byColor((array)$request->color);
+        }
+
+        if (!in_array('vehicleAge', $excludeFilters) && $request->filled('vehicleAge') && $request->vehicleAge !== 'all') {
+            $query->byCondition($request->vehicleAge);
+        }
+
+        if (!in_array('price', $excludeFilters)) {
+            if ($request->filled('price')) {
+                $query->priceRange(
+                    $request->input('price.min'),
+                    $request->input('price.max')
+                );
+            } elseif ($request->filled('priceMin') || $request->filled('priceMax')) {
+                $query->priceRange(
+                    $request->input('priceMin'),
+                    $request->input('priceMax')
+                );
+            }
+        }
+
+        if (!in_array('year', $excludeFilters)) {
+            if ($request->filled('year')) {
+                $query->yearRange(
+                    $request->input('year.from', 1900),
+                    $request->input('year.to', now()->year)
+                );
+            } elseif ($request->filled('yearFrom') && $request->filled('yearTo')) {
+                $query->yearRange(
+                    $request->input('yearFrom', 1900),
+                    $request->input('yearTo', now()->year)
+                );
+            }
+        }
+
+        if (!in_array('mileage', $excludeFilters)) {
+            if ($request->filled('mileage')) {
+                $query->mileageRange(
+                    $request->input('mileage.min'),
+                    $request->input('mileage.max')
+                );
+            } elseif ($request->filled('mileageMin') || $request->filled('mileageMax')) {
+                $query->mileageRange(
+                    $request->input('mileageMin'),
+                    $request->input('mileageMax')
+                );
+            }
+        }
+
+        if (!in_array('postcode', $excludeFilters) && $request->filled('postcode')) {
+            $radius = $request->input('radius', 50); // Default 50 miles
+            $query->nearPostcode($request->postcode, $radius);
+        }
+
+        if (!in_array('safetyRating', $excludeFilters) && $request->filled('safetyRating') && $request->safetyRating !== 'any') {
+            $query->where('safety_rating', '>=', (int)str_replace('_star_up', '', $request->safetyRating));
+        }
+
+        if (!in_array('specification', $excludeFilters) && $request->filled('specification')) {
+            foreach ($request->specification as $spec => $value) {
+                if ($value) {
+                    $query->whereJsonContains('specification->' . $spec, true);
+                }
+            }
+        }
+
+        if (!in_array('extras', $excludeFilters) && $request->filled('extras')) {
+            foreach ($request->extras as $extra => $value) {
+                if ($value) {
+                    $query->whereJsonContains('extras->' . $extra, true);
+                }
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get counts for a specific field
+     */
+    /**
+     * For filter counts (body style, fuel type, gearbox, color, etc.), always apply make, model, price, location, and condition filters,
+     * and only exclude the filter being counted.
+     */
+    private function getCountsByField(string $field, Request $request, array $excludeFilters = [])
+    {
+        $query = Vehicle::query()->active();
+        // Always exclude only the filter being counted, always apply make, model, price, location, and condition
+        $this->applyFilters($query, $request, $excludeFilters);
+
+        return $query->select($field, \DB::raw('count(*) as count'))
+            ->whereNotNull($field)
+            ->groupBy($field)
+            ->pluck('count', $field)
+            ->toArray();
+    }
+
+    /**
+     * Get counts by vehicle condition
+     */
+    private function getCountsByCondition(Request $request)
+    {
+        $query = Vehicle::query()->active();
+        $this->applyFilters($query, $request, ['vehicleAge']);
+        
+        return $query->select('condition', \DB::raw('count(*) as count'))
+            ->whereNotNull('condition')
+            ->groupBy('condition')
+            ->pluck('count', 'condition')
+            ->toArray();
+    }
+
+    /**
+     * Get counts by make
+     */
+    private function getMakeCounts(Request $request)
+    {
+        $query = Vehicle::query()->active();
+        $this->applyFilters($query, $request, ['make']);
+        
+        return $query->join('vehicle_makes', 'vehicles.make_id', '=', 'vehicle_makes.id')
+            ->select('vehicle_makes.slug', \DB::raw('count(*) as count'))
+            ->groupBy('vehicle_makes.slug')
+            ->pluck('count', 'slug')
+            ->toArray();
+    }
+
+    /**
+     * Get counts by model (only when make is selected)
+     */
+    private function getModelCounts(Request $request)
+    {
+        if (!$request->filled('make')) {
+            return [];
+        }
+
+        $query = Vehicle::query()->active();
+        $this->applyFilters($query, $request, ['model']);
+        
+        return $query->join('vehicle_models', 'vehicles.model_id', '=', 'vehicle_models.id')
+            ->select('vehicle_models.slug', \DB::raw('count(*) as count'))
+            ->groupBy('vehicle_models.slug')
+            ->pluck('count', 'slug')
+            ->toArray();
     }
 }
