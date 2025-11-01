@@ -1,13 +1,19 @@
 <?php
 
-use App\Models\User;
+declare(strict_types=1);
 
-test('guests are redirected to the login page', function () {
-    $this->get(route('dashboard'))->assertRedirect(route('login'));
+use App\Models\User;
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\get;
+
+it('guests are redirected to the login page', function () {
+    $response = get('/dashboard');
+    $response->assertRedirect('/login');
 });
 
-test('authenticated users can visit the dashboard', function () {
-    $this->actingAs($user = User::factory()->create());
-
-    $this->get(route('dashboard'))->assertOk();
+it('authenticated users can visit the dashboard', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    actingAs($user);
+    $response = get('/dashboard');
+    $response->assertOk();
 });
