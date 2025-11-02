@@ -57,14 +57,19 @@ export default function MessageContainer() {
 	const [initialScrollDone, setInitialScrollDone] = useState<boolean>(false);
 
 	const messageCreated = (message: Message) => {
+		if (!selectedConversation) return;
+
 		const receiverId = parseInt(message.receiver_id);
 		const senderId = parseInt(message.sender_id);
+
 		if (selectedConversation.id === senderId || selectedConversation.id === receiverId) {
 			setLocalMessages((prevMessages) => [...prevMessages, message]);
 		}
 	};
 
 	const messageDeleted = ({ message }: { message: Message }) => {
+		if (!selectedConversation) return;
+
 		const receiverId = parseInt(message.receiver_id);
 		const senderId = parseInt(message.sender_id);
 
