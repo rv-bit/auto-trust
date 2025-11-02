@@ -38,6 +38,8 @@ interface NavFooter {
 	items: NavItem[];
 	sidebarState: State;
 	isMobile: boolean;
+
+	Component?: FC;
 }
 
 export interface SharedData {

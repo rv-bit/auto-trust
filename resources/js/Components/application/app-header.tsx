@@ -15,7 +15,8 @@ import { APP_NAME } from "@/resources/app-config";
 import { UserMenuContent } from "@/components/pages/settings/user-menu-content";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+
+import NotificationsDrawer from "@/components/notifications/notifications-drawer";
 
 import {  Menu } from "lucide-react";
 import AppLogoIcon from "./app-logo-icon";
@@ -25,10 +26,11 @@ interface AppHeaderProps {
 	breadcrumbs?: BreadcrumbItem[];
 }
 
-interface LocalNavItem extends Omit<NavItem, "icon"> {
+interface LocalNavItem extends Omit<NavItem, "icon" | "Component"> {
 	icon?: React.ReactNode;
 	isHidden?: boolean;
 	activePaths?: string[];
+	Component?: React.ComponentType<{ trigger?: React.ReactNode }>;
 }
 
 export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
@@ -46,8 +48,9 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 			
 			return {
 				title: label,
-				href,
+				href: href,
 				activePaths: [href],
+				disabled: value === 'new-cars',
 			};
 		});
 	}, [vehicleListings]);
@@ -102,6 +105,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 					</svg>
 				),
 				isHidden: user === null,
+				Component: NotificationsDrawer,
 			},
 			{
 				title: "Menu",
@@ -141,6 +145,21 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 					{mainNavItems.map((value, index) => {
 						if (value.isHidden) return null;
 
+						if (value.Component) {
+							const triggerButton = (
+								<Button
+									variant={"link"}
+									key={`${value.title}-${index}`}
+									className="flex flex-col items-center justify-center size-auto min-w-fit shrink-0 gap-1 rounded-none px-0 py-2 text-sm font-semibold text-black/60 hover:no-underline has-[>svg]:px-1.5 dark:text-black/60"
+								>
+									{value.icon}
+									{value.title}
+								</Button>
+							);
+
+							return <value.Component key={`${value.title}-${index}`} trigger={triggerButton} />;
+						}
+
 						return (
 							<Button
 								asChild
@@ -148,10 +167,17 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 								key={`${value.title}-${index}`}
 								className="size-auto min-w-fit shrink-0 items-center justify-between gap-1 rounded-none px-0 py-2 text-sm font-semibold text-black/60 hover:no-underline has-[>svg]:px-1.5 dark:text-black/60"
 							>
-								<Link href={value.href} className="flex flex-col items-center justify-center">
-									{value.icon}
-									{value.title}
-								</Link>
+								{value.href ? (
+									<Link href={value.href} className="flex flex-col items-center justify-center">
+										{value.icon}
+										{value.title}
+									</Link>
+								) : (
+									<span className="flex flex-col items-center justify-center">
+										{value.icon}
+										{value.title}
+									</span>
+								)}
 							</Button>
 						);
 					})}
@@ -199,12 +225,37 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 						</Button>
 					);
 				})}
-			</div>				<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
+			</div>		
+		
+			<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
 					{currentPath !== "/" && <HeaderLogo />}
 
 					<div className="flex justify-end gap-1">
 						{mainNavItems.map((value, index) => {
 							if (value.isHidden) return null;
+
+							if (value.Component) {
+								const triggerButton = (
+									<Button
+										variant={"link"}
+										data-active={itemIsActive(value)}
+										className={cn(
+											"flex size-auto min-w-fit shrink-0 flex-col items-center justify-between gap-0 rounded-none border-b-4 border-transparent px-0 py-2 pt-3 text-xs font-semibold",
+											"text-white hover:border-white hover:no-underline has-[>svg]:px-1.5 dark:text-white dark:hover:border-white",
+											"data-[active=true]:border-white data-[active=true]:hover:border-white data-[active=true]:dark:border-white data-[active=true]:dark:hover:border-white",
+											{
+												"text-black hover:border-black data-[active=true]:border-black data-[active=true]:hover:border-black dark:text-black dark:hover:border-black data-[active=true]:dark:border-black data-[active=true]:dark:hover:border-black":
+													currentPath !== "/",
+											},
+										)}
+									>
+										{value.icon}
+										{value.title}
+									</Button>
+								);
+
+								return <value.Component key={`${value.title}-${index}`} trigger={triggerButton} />;
+							}
 
 							return (
 								<Button
@@ -222,10 +273,17 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 										},
 									)}
 								>
-									<Link href={value.href}>
-										{value.icon}
-										{value.title}
-									</Link>
+									{value.href ? (
+										<Link href={value.href}>
+											{value.icon}
+											{value.title}
+										</Link>
+									) : (
+										<span className="flex flex-col items-center justify-center">
+											{value.icon}
+											{value.title}
+										</span>
+									)}
 								</Button>
 							);
 						})}

@@ -26,14 +26,12 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
 	{
 		title: "Notifications",
-		href: "/notifications",
+		Component: React.lazy(() => import("@/components/notifications/notifications-drawer")),
 	},
 	{
 		title: "Chat Support",
 		href: "/chat",
 		icon: MessageCircleMore,
-		// target: "_blank",
-		// rel: "noopener noreferrer",
 	},
 ];
 

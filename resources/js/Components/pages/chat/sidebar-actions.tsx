@@ -34,7 +34,7 @@ import { ChevronDown, EditIcon, InfoIcon, LayoutGrid, LucideIcon, ReplyIcon, Tra
 const footerNavItems: NavItem[] = [
 	{
 		title: "Notifications",
-		href: "/notifications",
+		Component: React.lazy(() => import("@/components/notifications/notifications-drawer")),
 	},
 	{
 		title: "Dashboard",
