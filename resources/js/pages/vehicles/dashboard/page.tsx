@@ -1,5 +1,5 @@
-import { router, usePage } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import { Head, router, usePage } from "@inertiajs/react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { dashboard as vehicles_dashboard } from "@/routes/vehicles";
 
@@ -8,9 +8,12 @@ import type { VehiclePageProps } from "@/types/routes/listings";
 
 import Layout from "@/layouts/vehicles/dashboard/layout";
 
+import { AdminVehiclesTable } from "@/components/pages/admin/admin-vehicles-table";
 import { SavedVehicleSearches } from "@/components/pages/vehicles/saved-vehicle-searches";
 import { UserVehiclesList } from "@/components/pages/vehicles/user-vehicles-list";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 import ListVehicleForm from "./forms/list-vehicle-form";
@@ -21,21 +24,6 @@ interface LocalNavItem extends Omit<NavItem, "icon"> {
 	activePaths?: string[];
 	Component?: React.FC;
 }
-
-const navItems: LocalNavItem[] = [
-	{
-		title: "Buying",
-		href: vehicles_dashboard().url + "?tab=my-cars-tab-buying",
-		activePaths: [vehicles_dashboard().url + "?tab=my-cars-tab-buying"],
-		Component: VehiclePurchaseListing,
-	},
-	{
-		title: "Selling",
-		href: vehicles_dashboard().url + "?tab=my-cars-tab-selling",
-		activePaths: [vehicles_dashboard().url + "?tab=my-cars-tab-selling"],
-		Component: VehicleSellListing,
-	},
-];
 
 function getActiveComponent(currentPath: string, navItems: LocalNavItem[]): React.FC | null {
 	for (const item of navItems) {
@@ -59,7 +47,36 @@ function getActiveComponent(currentPath: string, navItems: LocalNavItem[]): Reac
 
 function Page() {
 	const { props } = usePage<VehiclePageProps>();
+	const user = props.auth.user;
+
 	const currentPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : "";
+
+	console.log("User Permissions:", user);
+
+	const navItems: LocalNavItem[] = useMemo(
+		() => [
+			{
+				title: "Buying",
+				href: vehicles_dashboard().url + "?tab=my-cars-tab-buying",
+				activePaths: [vehicles_dashboard().url + "?tab=my-cars-tab-buying"],
+				Component: VehiclePurchaseListing,
+			},
+			{
+				title: "Selling",
+				href: vehicles_dashboard().url + "?tab=my-cars-tab-selling",
+				activePaths: [vehicles_dashboard().url + "?tab=my-cars-tab-selling"],
+				Component: VehicleSellListing,
+			},
+			{
+				title: "Manage Vehicles",
+				href: vehicles_dashboard().url + "?tab=my-cars-tab-manage",
+				activePaths: [vehicles_dashboard().url + "?tab=my-cars-tab-manage"],
+				Component: ManageVehicles,
+				isHidden: !user?.permissions?.includes("manage_vehicles"),
+			},
+		],
+		[user],
+	);
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -77,9 +94,11 @@ function Page() {
 	const ActiveComponent = getActiveComponent(currentPath, navItems);
 
 	return (
-		<div className="bg-factory-white flex w-full justify-center py-10">
-			<div className="mx-auto flex w-full max-w-7xl flex-col">{ActiveComponent ? <ActiveComponent /> : null}</div>
-		</div>
+		<Layout navItems={navItems}>
+			<div className="bg-factory-white flex w-full justify-center py-10">
+				<div className="mx-auto flex w-full max-w-7xl flex-col">{ActiveComponent ? <ActiveComponent /> : null}</div>
+			</div>
+		</Layout>
 	);
 }
 
@@ -111,18 +130,31 @@ function VehicleSellListing() {
 				</Drawer>
 			</div>
 
-			{/* User's Posted Vehicles */}
 			<UserVehiclesList />
 		</>
 	);
 }
 
 function VehiclePurchaseListing() {
-	const [newVehicleListing, setNewVehicleListing] = useState(false);
-
 	return <SavedVehicleSearches />;
 }
 
-Page.layout = (page: React.ReactNode) => <Layout navItems={navItems}>{page}</Layout>;
+function ManageVehicles() {
+	return (
+		<div className="px-4 md:px-6">
+			<Head title="All Vehicles - Admin" />
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Manage Vehicles</CardTitle>
+					<CardDescription>Manage and view all posted vehicles in the system</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<AdminVehiclesTable />
+				</CardContent>
+			</Card>
+		</div>
+	);
+}
 
 export default Page;
