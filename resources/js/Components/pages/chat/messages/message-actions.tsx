@@ -1,6 +1,6 @@
-import type { AxiosResponse } from "axios";
 import React, { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import axios, {type AxiosResponse } from "axios";
 
 import { StoreMessageRequest } from "@/schemas/schema";
 import type { Conversation } from "@/types/routes/chat";
@@ -52,7 +52,6 @@ const MessageActions = forwardRef<HTMLTextAreaElement, MessageActionsProps>(({ c
 
 			const validatedData = validation.data;
 
-			const axios = window.axios;
 			const formData = new FormData();
 
 			formData.append("message", validatedData.message || "");

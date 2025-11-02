@@ -1,5 +1,5 @@
 import { usePage } from "@inertiajs/react";
-import type { AxiosResponse } from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -76,7 +76,6 @@ export default function MessageContainer() {
 	const loadMoreMessages = useCallback(() => {
 		if (noMoreMessages || isLoadingMore || localMessages.length === 0) return;
 
-		const axios = window.axios;
 		const firstMessage = localMessages[0];
 
 		setIsLoadingMore(true);
@@ -164,8 +163,6 @@ export default function MessageContainer() {
 
 	// When user opens a conversation, mark messages from that conversation as seen (if any are unseen)
 	useEffect(() => {
-		const axios = window.axios;
-
 		if (!selectedConversation || !localMessages || localMessages.length === 0) return;
 
 		const hasUnseen = localMessages.some((m) => parseInt(m.receiver_id) === currentUser.id && !m.seen_at);
@@ -355,8 +352,6 @@ const MessageItem = ({ currentUser, message }: { currentUser: User; message: Mes
 	});
 
 	const handleMessageDelete = useCallback(() => {
-		const axios = window.axios;
-
 		setActionIsLoading(true);
 
 		axios

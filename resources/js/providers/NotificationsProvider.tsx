@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import notificationsRoutes from "@/routes/notifications";
@@ -32,7 +32,6 @@ export function NotificationsProvider({ children, initialPage }: { children: Rea
 		const userId = initialPage?.props?.auth?.user?.id;
 		if (!userId) return;
 
-		const axios = window.axios;
 		try {
 			const res = await axios.get<NotificationResponse>(notificationsRoutes.index().url);
 			setNotifications(res.data.data ?? []);
@@ -80,7 +79,6 @@ export function NotificationsProvider({ children, initialPage }: { children: Rea
 	}, []);
 
 	const markSeen = async (id: string) => {
-		const axios = window.axios;
 		try {
 			await axios.post(notificationsRoutes.markSeen.post(id).url);
 			setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n)));
@@ -90,7 +88,6 @@ export function NotificationsProvider({ children, initialPage }: { children: Rea
 	};
 
 	const markAllSeen = async () => {
-		const axios = window.axios;
 		try {
 			await axios.post(notificationsRoutes.markAllSeen().url);
 			setNotifications((prev) => prev.map((n) => ({ ...n, read_at: new Date().toISOString() })));
