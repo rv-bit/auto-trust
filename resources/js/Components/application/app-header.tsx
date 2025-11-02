@@ -12,8 +12,6 @@ import { useIsMobile } from "@/hooks/useMobile";
 
 import { APP_NAME } from "@/resources/app-config";
 
-import { UserMenuContent } from "@/components/pages/settings/user-menu-content";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 import NotificationsDrawer from "@/components/notifications/notifications-drawer";
