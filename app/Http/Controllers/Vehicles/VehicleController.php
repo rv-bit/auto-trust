@@ -125,6 +125,53 @@ class VehicleController extends Controller
         // Only show active vehicles
         $query->active();
 
+        // Sorting
+        $sort = $request->input('sort', 'recommended');
+        
+        // Skip sorting if 'closest' is selected and postcode was provided
+        // (nearPostcode scope already adds distance ordering)
+        $skipSorting = ($sort === 'closest' && $request->filled('postcode'));
+        
+        if (!$skipSorting) {
+            switch ($sort) {
+                case 'price_low_high':
+                    $query->orderBy('price', 'asc');
+                    break;
+                    
+                case 'price_high_low':
+                    $query->orderBy('price', 'desc');
+                    break;
+                    
+                case 'mileage_low':
+                    $query->orderBy('mileage', 'asc');
+                    break;
+                    
+                case 'age_new_old':
+                    $query->orderBy('year', 'desc');
+                    break;
+                    
+                case 'age_old_new':
+                    $query->orderBy('year', 'asc');
+                    break;
+                    
+                case 'best_deal':
+                    // Calculate value score: lower price per year and mileage = better deal
+                    // (year / price) * (100000 / mileage)
+                    $query->selectRaw('vehicles.*, 
+                        ((year - 1990) / NULLIF(price, 0)) * (100000 / NULLIF(mileage, 1)) as deal_score')
+                        ->orderByDesc('deal_score');
+                    break;
+                    
+                case 'recommended':
+                default:
+                    // Recommended: newer, lower mileage, recently posted
+                    $query->orderByDesc('year')
+                        ->orderBy('mileage', 'asc')
+                        ->orderBy('created_at', 'desc');
+                    break;
+            }
+        }
+
         // Pagination
         $perPage = $request->input('per_page', 15);
         $vehicles = $query->paginate($perPage);
@@ -272,7 +319,7 @@ class VehicleController extends Controller
     /**
      * Apply filters to query excluding specific filter types
      */
-    private function applyFilters($query, Request $request, array $excludeFilters = [])
+    private function applyFilters($query, Request $request, array $excludeFilters = [], bool $forCounts = false)
     {
         if (!in_array('make', $excludeFilters) && $request->filled('make')) {
             $query->whereHas('make', fn($q) => $q->where('slug', $request->make));
@@ -346,7 +393,13 @@ class VehicleController extends Controller
 
         if (!in_array('postcode', $excludeFilters) && $request->filled('postcode')) {
             $radius = $request->input('radius', 50); // Default 50 miles
-            $query->nearPostcode($request->postcode, $radius);
+            
+            // For count queries, use a simpler location filter without distance calculation
+            if ($forCounts) {
+                $this->applySimpleLocationFilter($query, $request->postcode, $radius);
+            } else {
+                $query->nearPostcode($request->postcode, $radius);
+            }
         }
 
         if (!in_array('safetyRating', $excludeFilters) && $request->filled('safetyRating') && $request->safetyRating !== 'any') {
@@ -373,6 +426,35 @@ class VehicleController extends Controller
     }
 
     /**
+     * Apply simple location filter without distance calculation
+     * Used for count queries where we don't need to calculate exact distance
+     */
+    private function applySimpleLocationFilter($query, string $postcode, int $radius = 50)
+    {
+        $geocodeService = app(GeocodeService::class);
+        $coordinates = $geocodeService->getCoordinatesFromPostcode($postcode);
+        
+        if (!$coordinates || !$coordinates['latitude'] || !$coordinates['longitude']) {
+            return $query->whereRaw('1 = 0'); // No results if geocoding fails
+        }
+
+        $lat = $coordinates['latitude'];
+        $lng = $coordinates['longitude'];
+        
+        // Convert radius to degrees (approximate)
+        $milesPerDegree = 69;
+        $degreeDelta = $radius / $milesPerDegree;
+        
+        // Use bounding box only (faster, approximate)
+        $query->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->whereBetween('latitude', [$lat - $degreeDelta, $lat + $degreeDelta])
+            ->whereBetween('longitude', [$lng - $degreeDelta, $lng + $degreeDelta]);
+
+        return $query;
+    }
+
+    /**
      * Get counts for a specific field
      */
     /**
@@ -383,7 +465,7 @@ class VehicleController extends Controller
     {
         $query = Vehicle::query()->active();
         // Always exclude only the filter being counted, always apply make, model, price, location, and condition
-        $this->applyFilters($query, $request, $excludeFilters);
+        $this->applyFilters($query, $request, $excludeFilters, true); // true = forCounts
 
         return $query->select($field, \DB::raw('count(*) as count'))
             ->whereNotNull($field)
@@ -398,7 +480,7 @@ class VehicleController extends Controller
     private function getCountsByCondition(Request $request)
     {
         $query = Vehicle::query()->active();
-        $this->applyFilters($query, $request, ['vehicleAge']);
+        $this->applyFilters($query, $request, ['vehicleAge'], true); // true = forCounts
         
         return $query->select('condition', \DB::raw('count(*) as count'))
             ->whereNotNull('condition')
@@ -413,7 +495,7 @@ class VehicleController extends Controller
     private function getMakeCounts(Request $request)
     {
         $query = Vehicle::query()->active();
-        $this->applyFilters($query, $request, ['make']);
+        $this->applyFilters($query, $request, ['make'], true); // true = forCounts
         
         return $query->join('vehicle_makes', 'vehicles.make_id', '=', 'vehicle_makes.id')
             ->select('vehicle_makes.slug', \DB::raw('count(*) as count'))
@@ -432,7 +514,7 @@ class VehicleController extends Controller
         }
 
         $query = Vehicle::query()->active();
-        $this->applyFilters($query, $request, ['model']);
+        $this->applyFilters($query, $request, ['model'], true); // true = forCounts
         
         return $query->join('vehicle_models', 'vehicles.model_id', '=', 'vehicle_models.id')
             ->select('vehicle_models.slug', \DB::raw('count(*) as count'))

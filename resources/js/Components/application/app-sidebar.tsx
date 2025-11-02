@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 
-import { dashboard } from "@/routes/home";
+import { dashboard } from "@/routes/vehicles";
 import type { NavItem } from "@/types";
 
 import { NavFooter } from "@/components/navigation/nav-footer";

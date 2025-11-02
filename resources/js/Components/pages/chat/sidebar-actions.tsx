@@ -2,6 +2,7 @@ import { Link, usePage } from "@inertiajs/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type { AxiosResponse } from "axios";
 
+import { dashboard } from "@/routes/vehicles";
 import { user as chat_user_route } from "@/routes/chat";
 
 import type { NavItem, PartialExcept, SharedData } from "@/types";
@@ -38,7 +39,7 @@ const footerNavItems: NavItem[] = [
 	},
 	{
 		title: "Dashboard",
-		href: "/dashboard",
+		href: dashboard(),
 		icon: LayoutGrid,
 		// target: "_blank",
 		// rel: "noopener noreferrer",

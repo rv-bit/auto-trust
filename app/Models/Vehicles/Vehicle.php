@@ -193,10 +193,12 @@ class Vehicle extends Model
             ))
         ";
         
-        return $query->whereRaw(
-            "{$distanceFormula} <= ?", 
-            [$lat, $lng, $lat, $radius]
-        );
+        // Add distance as a selectable column and filter by radius
+        $query->selectRaw("vehicles.*, {$distanceFormula} as distance", [$lat, $lng, $lat])
+            ->havingRaw('distance <= ?', [$radius])
+            ->orderBy('distance', 'asc');
+            
+        return $query;
     }
 
     public function scopeWithSpecification($query, array $specs)
