@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
 import * as React from "react";
 
-import { home } from "@/routes";
+import { index as home_route } from "@/routes/home";
 
 import type { SharedData } from "@/types";
 
@@ -31,8 +31,7 @@ export default function Layout({ children, title, description }: React.PropsWith
 					className="absolute inset-0"
 				/>
 
-				{/* <div className="absolute inset-0 bg-zinc-900" /> */}
-				<Link href={home()} className="relative z-20 flex items-center text-lg font-medium">
+				<Link href={home_route()} className="relative z-20 flex items-center text-lg font-medium">
 					<AppLogoIcon className="mr-2 size-8 fill-current text-white" />
 					{name}
 				</Link>
@@ -40,7 +39,7 @@ export default function Layout({ children, title, description }: React.PropsWith
 
 			<div className="flex h-full w-full items-center justify-center p-0 md:p-8">
 				<div className="mx-auto flex w-full flex-col justify-center space-y-6 md:max-w-[500px]">
-					<Link href={home()} className="relative z-20 flex items-center justify-center md:hidden">
+					<Link href={home_route()} className="relative z-20 flex items-center justify-center md:hidden">
 						<AppLogoIcon className="h-10 fill-current text-black" />
 					</Link>
 					<div className="flex flex-col items-center gap-2 text-center">
