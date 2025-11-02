@@ -14,6 +14,7 @@ use App\Http\Resources\Vehicles\VehicleResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class VehicleController extends Controller
 {
@@ -24,7 +25,6 @@ class VehicleController extends Controller
     {
         $query = Vehicle::query()->with(['make', 'model']);
 
-        // Apply filters
         if ($request->filled('make')) {
             $query->whereHas('make', fn($q) => $q->where('slug', $request->make));
         }
@@ -214,13 +214,23 @@ class VehicleController extends Controller
     /**
      * Geocode a postcode to get latitude and longitude
      */
-    public function geocodePostcode(Request $request, GeocodeService $geocodeService): JsonResponse
+    public function geocodePostcode(string $postcode, GeocodeService $geocodeService): JsonResponse
     {
-        $request->validate([
-            'postcode' => 'required|string|max:10',
-        ]);
+        // Validate the postcode using Laravel's validator
+        $validator = Validator::make(
+            ['postcode' => $postcode],
+            ['postcode' => 'required|string|max:10|min:5']
+        );
 
-        $coordinates = $geocodeService->getCoordinatesFromPostcode($request->postcode);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Invalid postcode',
+                'message' => $validator->errors()->first('postcode'),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $coordinates = $geocodeService->getCoordinatesFromPostcode($postcode);
 
         if (!$coordinates) {
             return response()->json([
