@@ -169,9 +169,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		// Only redirect to stock-cars if currently on used-cars or new-cars routes
 		// Once on stock-cars, stay there even if vehicleAge filter changes
 		const currentPath = page.url.split("?")[0];
+		const searchString = typeof window !== "undefined" ? window.location.search.substring(1) : page.url.split("?")[1] || "";
+		const searchParams = new URLSearchParams(searchString);
 		const isOnSpecificRoute = currentPath.includes("/vehicles/used-cars") || currentPath.includes("/vehicles/new-cars");
 
-		if (isOnSpecificRoute) {
+		if (isOnSpecificRoute && searchParams.has("vehicleAge")) {
 			const queryString = page.url.split("?")[1];
 			const stockCarsUrl = `/vehicles/stock-cars${queryString ? `?${queryString}` : ""}`;
 			router.visit(stockCarsUrl, { replace: true });
@@ -220,15 +222,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						</div>
 						<div id="hero-frame-media" className="absolute inset-0 flex justify-center">
 							<span className="relative w-full max-w-240">
-								<img
-									alt="kia sportage side view"
-									className="absolute top-15 right-0 block h-78 translate-x-full transform"
-									src="https://deals.carwow.co.uk/image?filter%5Bbrand_slug%5D=kia&filter%5Bmodel_review_slug%5D=sportage-2022&filter%5Bsize%5D=medium&filter%5Bzoom_type%5D=fullscreen"
-								/>
+								<img alt="kia sportage side view" className="absolute top-15 right-0 block h-78 translate-x-full transform" src="/storage/routes/kia-sportage-side-view.webp" />
 								<img
 									alt="kia sportage side view reverse"
 									className="absolute top-15 right-auto left-0 block h-78 -translate-x-full transform"
-									src="https://deals.carwow.co.uk/image?filter%5Bbrand_slug%5D=kia&filter%5Bmodel_review_slug%5D=sportage-2022&filter%5Bsize%5D=medium&filter%5Bzoom_type%5D=fullscreen"
+									src="/storage/routes/kia-sportage-side-view.webp"
 								/>
 							</span>
 						</div>
