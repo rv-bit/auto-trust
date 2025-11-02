@@ -1,14 +1,17 @@
+import { useState } from "react";
+import { toast } from "sonner";
+import { Link } from "@inertiajs/react";
+
+import { useDeleteVehicle, useUpdateVehicleStatus, useUserVehicles, type UserVehicle } from "@/hooks/vehicles/useUserVehicles";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useDeleteVehicle, useUpdateVehicleStatus, useUserVehicles, type UserVehicle } from "@/hooks/useUserVehicles";
-import { Link } from "@inertiajs/react";
+
 import { Calendar, Eye, Fuel, Gauge, MoreVertical, Pause, Play, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export function UserVehiclesList() {
 	const [currentPage, setCurrentPage] = useState(1);
