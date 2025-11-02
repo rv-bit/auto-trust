@@ -3,8 +3,8 @@ import { usePage } from '@inertiajs/react';
 import type { SharedData } from "@/types";
 import type { State } from "@/types/ui/sidebar";
 
-import { UserInfo } from '@/components/settings/user-info';
-import { UserMenuContent } from '@/components/settings/user-menu-content';
+import { UserInfo } from '@/components/pages/settings/user-info';
+import { UserMenuContent } from '@/components/pages/settings/user-menu-content';
 
 import {
     DropdownMenu,

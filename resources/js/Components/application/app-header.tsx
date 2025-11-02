@@ -12,7 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 import { APP_NAME } from "@/resources/app-config";
 
-import { UserMenuContent } from "@/components/settings/user-menu-content";
+import { UserMenuContent } from "@/components/pages/settings/user-menu-content";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";

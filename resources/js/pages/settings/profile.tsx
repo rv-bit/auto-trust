@@ -6,7 +6,7 @@ import { Form, Head, Link, usePage } from '@inertiajs/react';
 
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
-import DeleteUser from '@/components/settings/delete-user';
+import DeleteUser from "@/components/pages/settings/delete-user";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

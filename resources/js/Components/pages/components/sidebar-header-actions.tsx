@@ -16,7 +16,7 @@ import { SidebarHeader, SidebarMenu, SidebarMenuItem, useSidebar } from "./ui/si
 
 import { LoaderCircleIcon, SearchIcon } from "lucide-react";
 
-import AppLogoIcon from "../../../components/application/app-logo-icon";
+import AppLogoIcon from "../../application/app-logo-icon";
 
 export function SidebarHeaderActions({ setLocalConversations }: { setLocalConversations: React.Dispatch<React.SetStateAction<Conversation[]>> }) {
 	const page = usePage<SharedData & Conversations>();

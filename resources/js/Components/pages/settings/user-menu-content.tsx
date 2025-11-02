@@ -11,7 +11,7 @@ import type { User } from '@/types';
 import { Appearance, useAppearance } from "@/hooks/use-appearance";
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 
-import { UserInfo } from '@/components/settings/user-info';
+import { UserInfo } from '@/components/pages/settings/user-info';
 
 import {
     DropdownMenuGroup,

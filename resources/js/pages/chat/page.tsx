@@ -1,7 +1,7 @@
 import { EventBusProvider } from "@/providers/EventBusProvider";
 import { OnlineUsersProvider } from "@/providers/OnlineUsersProvider";
 
-import MessageContainer from "@/pages/chat/components/messages/message-container";
+import MessageContainer from "@/components/pages/components/messages/message-container";
 
 import Layout from "@/layouts/chat/layout";
 

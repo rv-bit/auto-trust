@@ -6,9 +6,9 @@ import type { Conversation, Conversations, Message } from "@/types/routes/chat";
 
 import { useEventBus } from "@/providers/EventBusProvider";
 
-import { AppSidebar } from "@/pages/chat/components/sidebar-actions";
-import { SidebarHeader } from "@/pages/chat/components/sidebar-header";
-import { SidebarInset, SidebarProvider } from "@/pages/chat/components/ui/sidebar";
+import { AppSidebar } from "@/components/pages/components/sidebar-actions";
+import { SidebarHeader } from "@/components/pages/components/sidebar-header";
+import { SidebarInset, SidebarProvider } from "@/components/pages/components/ui/sidebar";
 
 interface SocketMessageEvent {
 	message: Message;
