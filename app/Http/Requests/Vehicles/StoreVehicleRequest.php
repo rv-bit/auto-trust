@@ -34,8 +34,8 @@ class StoreVehicleRequest extends FormRequest
             'extras' => 'nullable|json',
             'specification' => 'nullable|json',
             'safety_rating' => 'nullable|integer|min:1|max:5',
-            'images' => 'nullable|array|max:10',
-            'images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:10240', // Max 10MB per image
+            'images' => 'sometimes|array|max:10',
+            'images.*' => 'image|mimes:jpeg,jpg,png,webp|max:10240', // Max 10MB per image
         ];
     }
 
