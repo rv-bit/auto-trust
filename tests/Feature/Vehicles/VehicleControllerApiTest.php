@@ -31,6 +31,10 @@ it('creates a vehicle', function () {
         'body_style' => 'suv',
         'fuel_type' => 'petrol',
     ])->toArray();
+    
+    // Remove images from factory data as it's optional
+    unset($vehicleData['images']);
+    
     $response = post('/api/vehicles', $vehicleData);
     $response->assertCreated();
     $response->assertJsonFragment(['color' => 'black']);

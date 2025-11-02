@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 it('transforms message attachment to array', function () {
-    Storage::fake('local');
+    Storage::fake('public');
     
     $user = User::factory()->create();
     $user2 = User::factory()->create();
@@ -28,6 +28,9 @@ it('transforms message attachment to array', function () {
         'receiver_id' => $user2->id,
         'message' => 'Test message',
     ]);
+    
+    // Create a fake file
+    Storage::disk('public')->put('attachments/test-file.pdf', 'fake content');
     
     $attachment = MessageAttachment::create([
         'message_id' => $message->id,
@@ -45,5 +48,7 @@ it('transforms message attachment to array', function () {
     expect($array['mime'])->toBe('application/pdf');
     expect($array['size'])->toBe(1024);
     expect($array['url'])->toBeString();
-})->skip('Storage facade configuration issue with S3');
+    expect($array['url'])->toContain('attachments/test-file.pdf');
+});
+
 

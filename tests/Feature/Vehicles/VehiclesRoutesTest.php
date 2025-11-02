@@ -19,6 +19,9 @@ it('redirects unauthenticated user from vehicles dashboard', function () {
 });
 
 it('returns 200 for valid vehicle listing', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    actingAs($user);
+    
     $response = get('/vehicles/used-cars');
     $response->assertOk();
     $response = get('/vehicles/new-cars');
@@ -26,6 +29,9 @@ it('returns 200 for valid vehicle listing', function () {
 });
 
 it('returns 404 for invalid vehicle listing', function () {
+    $user = User::factory()->create(['email_verified_at' => now()]);
+    actingAs($user);
+    
     $response = get('/vehicles/invalid-listing');
     $response->assertNotFound();
 });
