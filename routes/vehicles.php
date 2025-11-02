@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 Route::middleware(['auth', HandleVehicleRequests::class])->group(function () {
     Route::get('vehicles/dashboard', function () {
-        return Inertia::render('vehicles/showroom/page');
+        return Inertia::render('vehicles/dashboard/page');
     })->name('vehicles.dashboard');
     
     Route::get('vehicles/stock-cars', function (Request $request) {

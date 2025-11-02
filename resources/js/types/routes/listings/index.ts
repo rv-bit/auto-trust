@@ -233,6 +233,7 @@ export interface VehicleFilters {
 	extras?: Partial<VehicleExtraFeatures>;
 	specification?: Partial<VehicleSpecification>;
 	safetyRating?: SafetyRating;
+	sort?: string;
 }
 
 export interface PaginatedResponse<T> {

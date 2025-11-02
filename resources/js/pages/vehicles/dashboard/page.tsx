@@ -1,17 +1,17 @@
-import { usePage } from "@inertiajs/react";
-import React, { useState } from "react";
+import { router, usePage } from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
 
 import { dashboard as vehicles_dashboard } from "@/routes/vehicles";
 
 import type { NavItem } from "@/types";
 import type { VehiclePageProps } from "@/types/routes/listings";
 
-import Layout from "@/layouts/vehicles/showroom/layout";
+import Layout from "@/layouts/vehicles/dashboard/layout";
 
-import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { SavedVehicleSearches } from "@/components/pages/vehicles/saved-vehicle-searches";
 import { UserVehiclesList } from "@/components/pages/vehicles/user-vehicles-list";
+import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 import ListVehicleForm from "./forms/list-vehicle-form";
 
@@ -58,7 +58,21 @@ function getActiveComponent(currentPath: string, navItems: LocalNavItem[]): Reac
 }
 
 function Page() {
+	const { props } = usePage<VehiclePageProps>();
 	const currentPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : "";
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			const searchParams = new URLSearchParams(window.location.search);
+			const tabParam = searchParams.get("tab");
+
+			if (!tabParam) {
+				router.visit(vehicles_dashboard().url + "?tab=my-cars-tab-selling", {
+					replace: true,
+				});
+			}
+		}
+	}, []);
 
 	const ActiveComponent = getActiveComponent(currentPath, navItems);
 

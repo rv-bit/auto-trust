@@ -1,8 +1,7 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import React, { useCallback } from "react";
 
 import type { NavItem } from "@/types";
-import type { VehiclePageProps } from "@/types/routes/listings";
 
 import { cn } from "@/lib/utils";
 
@@ -17,7 +16,6 @@ interface LocalNavItem extends Omit<NavItem, "icon"> {
 }
 
 export default function Layout({ navItems, children }: { navItems: LocalNavItem[]; children: React.ReactNode }) {
-	const page = usePage<VehiclePageProps>();
 	const currentPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : "";
 
 	const itemIsActive = useCallback((item: LocalNavItem) => {
