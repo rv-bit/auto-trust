@@ -342,6 +342,177 @@ geocodeForm.head = (args: { postcode: string | number } | [postcode: string | nu
 geocode.form = geocodeForm
 
 /**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+export const myVehicles = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: myVehicles.url(options),
+    method: 'get',
+})
+
+myVehicles.definition = {
+    methods: ["get","head"],
+    url: '/api/vehicles/my-vehicles',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+myVehicles.url = (options?: RouteQueryOptions) => {
+    return myVehicles.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+myVehicles.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: myVehicles.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+myVehicles.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: myVehicles.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+const myVehiclesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: myVehicles.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+myVehiclesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: myVehicles.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::myVehicles
+* @see app/Http/Controllers/Vehicles/VehicleController.php:478
+* @route '/api/vehicles/my-vehicles'
+*/
+myVehiclesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: myVehicles.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+myVehicles.form = myVehiclesForm
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::updateStatus
+* @see app/Http/Controllers/Vehicles/VehicleController.php:499
+* @route '/api/vehicles/{vehicle}/status'
+*/
+export const updateStatus = (args: { vehicle: number | { id: number } } | [vehicle: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updateStatus.url(args, options),
+    method: 'patch',
+})
+
+updateStatus.definition = {
+    methods: ["patch"],
+    url: '/api/vehicles/{vehicle}/status',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::updateStatus
+* @see app/Http/Controllers/Vehicles/VehicleController.php:499
+* @route '/api/vehicles/{vehicle}/status'
+*/
+updateStatus.url = (args: { vehicle: number | { id: number } } | [vehicle: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { vehicle: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { vehicle: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            vehicle: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        vehicle: typeof args.vehicle === 'object'
+        ? args.vehicle.id
+        : args.vehicle,
+    }
+
+    return updateStatus.definition.url
+            .replace('{vehicle}', parsedArgs.vehicle.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::updateStatus
+* @see app/Http/Controllers/Vehicles/VehicleController.php:499
+* @route '/api/vehicles/{vehicle}/status'
+*/
+updateStatus.patch = (args: { vehicle: number | { id: number } } | [vehicle: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: updateStatus.url(args, options),
+    method: 'patch',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::updateStatus
+* @see app/Http/Controllers/Vehicles/VehicleController.php:499
+* @route '/api/vehicles/{vehicle}/status'
+*/
+const updateStatusForm = (args: { vehicle: number | { id: number } } | [vehicle: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateStatus.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Vehicles\VehicleController::updateStatus
+* @see app/Http/Controllers/Vehicles/VehicleController.php:499
+* @route '/api/vehicles/{vehicle}/status'
+*/
+updateStatusForm.patch = (args: { vehicle: number | { id: number } } | [vehicle: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateStatus.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+updateStatus.form = updateStatusForm
+
+/**
 * @see \App\Http\Controllers\Vehicles\VehicleController::index
 * @see app/Http/Controllers/Vehicles/VehicleController.php:24
 * @route '/api/vehicles'
@@ -1132,6 +1303,8 @@ const vehicles = {
     allFromFilters: Object.assign(allFromFilters, allFromFilters),
     filterCounts: Object.assign(filterCounts, filterCounts),
     geocode: Object.assign(geocode, geocode),
+    myVehicles: Object.assign(myVehicles, myVehicles),
+    updateStatus: Object.assign(updateStatus, updateStatus),
     index: Object.assign(index, index),
     store: Object.assign(store, store),
     show: Object.assign(show, show),

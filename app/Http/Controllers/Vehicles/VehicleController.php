@@ -440,4 +440,81 @@ class VehicleController extends Controller
             ->pluck('count', 'slug')
             ->toArray();
     }
+
+    /**
+     * Get all vehicles for admin dashboard
+     * Admin only - shows all vehicles regardless of status
+     */
+    public function adminIndex(Request $request): AnonymousResourceCollection
+    {
+        $query = Vehicle::query()
+            ->with(['make', 'model', 'seller'])
+            ->orderBy('created_at', 'desc');
+
+        // Optional filters
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->whereHas('make', fn($query) => $query->where('name', 'like', "%{$searchTerm}%"))
+                  ->orWhereHas('model', fn($query) => $query->where('name', 'like', "%{$searchTerm}%"))
+                  ->orWhereHas('seller', fn($query) => $query->where('name', 'like', "%{$searchTerm}%"))
+                  ->orWhere('id', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $perPage = $request->input('per_page', 20);
+        $vehicles = $query->paginate($perPage);
+
+        return VehicleResource::collection($vehicles);
+    }
+
+    /**
+     * Get current user's posted vehicles
+     */
+    public function myVehicles(Request $request): AnonymousResourceCollection
+    {
+        $query = Vehicle::query()
+            ->with(['make', 'model'])
+            ->where('seller_id', auth()->id())
+            ->orderBy('created_at', 'desc');
+
+        // Optional status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $perPage = $request->input('per_page', 10);
+        $vehicles = $query->paginate($perPage);
+
+        return VehicleResource::collection($vehicles);
+    }
+
+    /**
+     * Update vehicle status (active/inactive/sold)
+     */
+    public function updateStatus(Request $request, Vehicle $vehicle): JsonResponse
+    {
+        // Ensure the user owns this vehicle
+        if ($vehicle->seller_id !== auth()->id()) {
+            return response()->json([
+                'error' => 'Unauthorized',
+                'message' => 'You do not have permission to update this vehicle.'
+            ], 403);
+        }
+
+        $request->validate([
+            'status' => 'required|in:active,inactive,sold'
+        ]);
+
+        $vehicle->update(['status' => $request->status]);
+
+        return response()->json([
+            'message' => 'Vehicle status updated successfully',
+            'vehicle' => VehicleResource::make($vehicle->load(['make', 'model']))
+        ]);
+    }
 }
