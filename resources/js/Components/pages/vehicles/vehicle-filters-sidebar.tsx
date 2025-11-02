@@ -130,7 +130,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 
 	return (
 		<div className={className}>
-			<div className="sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto rounded-lg border bg-white p-4 shadow-sm">
+			<div className="sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto rounded-lg border bg-white p-4 shadow-sm dark:border-gray-200 border-gray-200">
 				<div className="mb-4 flex items-center justify-between">
 					<h2 className="text-lg font-bold">Filters</h2>
 					<div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 							size="sm"
 							onClick={handleSaveSearch}
 							disabled={!filters.make && !filters.model && !filters.bodyStyle && !filters.fuelType && !filters.price && !filters.year}
-							className="flex items-center gap-1"
+							className="flex items-center gap-1 dark:bg-white dark:text-black dark:hover:bg-gray-100"
 						>
 							{justSaved ? (
 								<>
@@ -153,15 +153,14 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 								</>
 							)}
 						</Button>
-						<Button variant="ghost" size="sm" onClick={clearFilters}>
+						<Button variant="ghost" size="sm" className="dark:bg-white dark:text-black dark:hover:bg-gray-100" onClick={clearFilters}>
 							Clear all
 						</Button>
 					</div>
 				</div>
 
 				<Accordion type="multiple" defaultValue={["make", "model", "condition", "bodyStyle", "price", "location"]} className="space-y-2">
-					{/* Make Filter */}
-					<AccordionItem value="make">
+					<AccordionItem value="make" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Make</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -175,15 +174,17 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 										}
 									}}
 								>
-									<SelectTrigger id="make-select">
+									<SelectTrigger id="make-select" className="dark:border-gray-300">
 										<SelectValue placeholder="Select make" />
 									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="__all__">All Makes</SelectItem>
+									<SelectContent className="dark:border-gray-200 dark:bg-white dark:text-black">
+										<SelectItem value="__all__" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+											All Makes
+										</SelectItem>
 										{vehicleMakes
 											.filter((make) => availableMakeSlugs.includes(make.slug))
 											.map((make) => (
-												<SelectItem key={make.id} value={make.slug}>
+												<SelectItem key={make.id} value={make.slug} className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
 													{make.name}
 												</SelectItem>
 											))}
@@ -193,8 +194,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Model Filter */}
-					<AccordionItem value="model">
+					<AccordionItem value="model" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Model</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -209,11 +209,13 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 									}}
 									disabled={!filters.make}
 								>
-									<SelectTrigger id="model-select">
+									<SelectTrigger id="model-select" className="dark:border-gray-300">
 										<SelectValue placeholder={filters.make ? "Select model" : "Select make first"} />
 									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="__all__">All Models</SelectItem>
+									<SelectContent className="dark:border-gray-200 dark:bg-white dark:text-black">
+										<SelectItem value="__all__" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+											All Models
+										</SelectItem>
 										{vehicleModels
 											.filter((model) => availableModelSlugs.includes(model.slug))
 											.filter((model) => {
@@ -222,7 +224,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 												return selectedMake && model.make_id == selectedMake.id;
 											})
 											.map((model) => (
-												<SelectItem key={model.id} value={model.slug}>
+												<SelectItem key={model.id} value={model.slug} className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
 													{model.name}
 												</SelectItem>
 											))}
@@ -231,8 +233,8 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 							</div>
 						</AccordionContent>
 					</AccordionItem>
-					{/* Location Filter */}
-					<AccordionItem value="location">
+
+					<AccordionItem value="location" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Location</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-3">
@@ -244,6 +246,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 										id="postcode"
 										type="text"
 										placeholder="e.g. SW1A 1AA"
+										className="dark:border-gray-300"
 										value={filters.postcode || ""}
 										onChange={(e) => updateFilters({ postcode: e.target.value || undefined })}
 									/>
@@ -253,16 +256,28 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 										Radius (miles)
 									</Label>
 									<Select value={filters.radius?.toString() || "50"} onValueChange={(v) => updateFilters({ radius: parseInt(v) })}>
-										<SelectTrigger id="radius">
+										<SelectTrigger id="radius" className="dark:border-gray-300">
 											<SelectValue placeholder="50 miles" />
 										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="10">10 miles</SelectItem>
-											<SelectItem value="25">25 miles</SelectItem>
-											<SelectItem value="50">50 miles</SelectItem>
-											<SelectItem value="100">100 miles</SelectItem>
-											<SelectItem value="250">250 miles</SelectItem>
-											<SelectItem value="500">500 miles</SelectItem>
+										<SelectContent className="dark:border-gray-200 dark:bg-white dark:text-black">
+											<SelectItem value="10" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+												10 miles
+											</SelectItem>
+											<SelectItem value="25" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+												25 miles
+											</SelectItem>
+											<SelectItem value="50" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+												50 miles
+											</SelectItem>
+											<SelectItem value="100" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+												100 miles
+											</SelectItem>
+											<SelectItem value="250" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+												250 miles
+											</SelectItem>
+											<SelectItem value="500" className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
+												500 miles
+											</SelectItem>
 										</SelectContent>
 									</Select>
 								</div>
@@ -270,14 +285,18 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Vehicle Condition */}
-					<AccordionItem value="condition">
+					<AccordionItem value="condition" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Condition</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
 								{VEHICLE_AGE_OPTIONS.map((option) => (
 									<div key={option.value} className="flex items-center space-x-2">
-										<Checkbox id={`condition-${option.value}`} checked={filters.vehicleAge === option.value} onCheckedChange={() => updateFilters({ vehicleAge: option.value })} />
+										<Checkbox
+											id={`condition-${option.value}`}
+											checked={filters.vehicleAge === option.value}
+											className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
+											onCheckedChange={() => updateFilters({ vehicleAge: option.value })}
+										/>
 										<Label htmlFor={`condition-${option.value}`} className="cursor-pointer text-sm font-normal">
 											{option.label}
 										</Label>
@@ -287,8 +306,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Price Range */}
-					<AccordionItem value="price">
+					<AccordionItem value="price" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Price</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-3">
@@ -302,6 +320,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 											type="number"
 											placeholder="£0"
 											value={filters.price?.min || ""}
+											className="dark:border-gray-300"
 											onChange={(e) =>
 												updateFilters({
 													price: { ...filters.price, min: e.target.value ? parseInt(e.target.value) : null },
@@ -318,6 +337,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 											type="number"
 											placeholder="£100,000"
 											value={filters.price?.max || ""}
+											className="dark:border-gray-300"
 											onChange={(e) =>
 												updateFilters({
 													price: { ...filters.price, max: e.target.value ? parseInt(e.target.value) : null },
@@ -330,8 +350,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Body Style */}
-					<AccordionItem value="bodyStyle">
+					<AccordionItem value="bodyStyle" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Body Style</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -343,6 +362,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 												<Checkbox
 													id={`body-${style.value}`}
 													checked={filters.bodyStyle?.includes(style.value as BodyStyle) || false}
+													className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
 													onCheckedChange={() => toggleArrayFilter("bodyStyle", style.value)}
 													disabled={count === 0}
 												/>
@@ -358,8 +378,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Fuel Type */}
-					<AccordionItem value="fuelType">
+					<AccordionItem value="fuelType" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Fuel Type</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -371,6 +390,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 												<Checkbox
 													id={`fuel-${fuel.value}`}
 													checked={filters.fuelType?.includes(fuel.value as FuelType) || false}
+													className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
 													onCheckedChange={() => toggleArrayFilter("fuelType", fuel.value)}
 													disabled={count === 0}
 												/>
@@ -386,8 +406,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Gearbox */}
-					<AccordionItem value="gearbox">
+					<AccordionItem value="gearbox" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Gearbox</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -399,6 +418,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 												<Checkbox
 													id={`gear-${gear.value}`}
 													checked={filters.gearbox?.includes(gear.value as Gearbox) || false}
+													className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
 													onCheckedChange={() => toggleArrayFilter("gearbox", gear.value)}
 													disabled={count === 0}
 												/>
@@ -414,8 +434,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Year Range */}
-					<AccordionItem value="year">
+					<AccordionItem value="year" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Year</AccordionTrigger>
 						<AccordionContent>
 							<div className="grid grid-cols-2 gap-2">
@@ -431,12 +450,12 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 											})
 										}
 									>
-										<SelectTrigger id="year-from">
+										<SelectTrigger id="year-from" className="dark:border-gray-300">
 											<SelectValue placeholder="Year" />
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent className="dark:border-gray-200 dark:bg-white dark:text-black">
 											{YEARS.map((year) => (
-												<SelectItem key={year} value={year.toString()}>
+												<SelectItem key={year} value={year.toString()} className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
 													{year}
 												</SelectItem>
 											))}
@@ -455,12 +474,12 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 											})
 										}
 									>
-										<SelectTrigger id="year-to">
+										<SelectTrigger id="year-to" className="dark:border-gray-300">
 											<SelectValue placeholder="Year" />
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent className="dark:border-gray-200 dark:bg-white dark:text-black dark:hover:bg-gray-100">
 											{YEARS.map((year) => (
-												<SelectItem key={year} value={year.toString()}>
+												<SelectItem key={year} value={year.toString()} className="dark:bg-white dark:text-black dark:hover:bg-gray-100">
 													{year}
 												</SelectItem>
 											))}
@@ -471,8 +490,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Mileage */}
-					<AccordionItem value="mileage">
+					<AccordionItem value="mileage" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Mileage</AccordionTrigger>
 						<AccordionContent>
 							<div className="grid grid-cols-2 gap-2">
@@ -484,6 +502,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 										id="mileage-min"
 										type="number"
 										placeholder="0"
+										className="dark:border-gray-300"
 										value={filters.mileage?.min || ""}
 										onChange={(e) =>
 											updateFilters({
@@ -512,14 +531,18 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Color */}
-					<AccordionItem value="color">
+					<AccordionItem value="color" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Color</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
 								{COLORS.map((color) => (
 									<div key={color.value} className="flex items-center space-x-2">
-										<Checkbox id={`color-${color.value}`} checked={filters.color?.includes(color.value) || false} onCheckedChange={() => toggleArrayFilter("color", color.value)} />
+										<Checkbox
+											id={`color-${color.value}`}
+											checked={filters.color?.includes(color.value) || false}
+											className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
+											onCheckedChange={() => toggleArrayFilter("color", color.value)}
+										/>
 										<Label htmlFor={`color-${color.value}`} className="cursor-pointer text-sm font-normal">
 											{color.label}
 										</Label>
@@ -529,8 +552,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Safety Rating */}
-					<AccordionItem value="safetyRating">
+					<AccordionItem value="safetyRating" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Safety Rating</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -540,21 +562,21 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 											<Checkbox
 												id={`safety-${rating.value}`}
 												checked={filters.safetyRating === rating.value}
+												className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
 												onCheckedChange={() => updateFilters({ safetyRating: rating.value })}
 											/>
 											<Label htmlFor={`safety-${rating.value}`} className="cursor-pointer text-sm font-normal">
 												{rating.label}
 											</Label>
 										</div>
-										{rating.count && <span className="text-muted-foreground text-xs">{rating.count.toLocaleString()}</span>}
+										{/* {rating.count && <span className="text-muted-foreground text-xs">{rating.count.toLocaleString()}</span>} */}
 									</div>
 								))}
 							</div>
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Equipment */}
-					<AccordionItem value="equipment">
+					<AccordionItem value="equipment" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Equipment</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -564,6 +586,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 											<Checkbox
 												id={`equipment-${equipment.value}`}
 												checked={filters.specification?.[equipment.value as keyof typeof filters.specification] || false}
+												className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
 												onCheckedChange={(checked) =>
 													updateFilters({
 														specification: { ...filters.specification, [equipment.value]: checked as boolean },
@@ -574,15 +597,14 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 												{equipment.label}
 											</Label>
 										</div>
-										<span className="text-muted-foreground text-xs">{equipment.count.toLocaleString()}</span>
+										{/* <span className="text-muted-foreground text-xs">{equipment.count.toLocaleString()}</span> */}
 									</div>
 								))}
 							</div>
 						</AccordionContent>
 					</AccordionItem>
 
-					{/* Extra Features */}
-					<AccordionItem value="extras">
+					<AccordionItem value="extras" className="dark:border-gray-200">
 						<AccordionTrigger className="text-sm font-semibold">Extra Features</AccordionTrigger>
 						<AccordionContent>
 							<div className="space-y-2">
@@ -591,6 +613,7 @@ export function VehicleFiltersSidebar({ className }: VehicleFiltersSidebarProps)
 										<Checkbox
 											id={`extra-${extra.value}`}
 											checked={filters.extras?.[extra.value as keyof typeof filters.extras] || false}
+											className="data-[state=checked]:dark:bg-black data-[state=checked]:dark:text-white"
 											onCheckedChange={(checked) =>
 												updateFilters({
 													extras: { ...filters.extras, [extra.value]: checked as boolean },

@@ -32,18 +32,18 @@ function Page({ vehicle }: PageProps) {
 		<div className="container mx-auto py-8">
 			<div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
 				<div className="lg:col-span-2">
-					<Card className="overflow-hidden">
+					<Card className="overflow-hidden py-0 dark:border-gray-200 dark:bg-white dark:text-black">
 						<VehicleImageCarousel images={vehicle.images || []} alt={`${vehicle.make?.name} ${vehicle.model?.name}`} className="h-96" />
 					</Card>
 
-					<Card className="mt-6">
+					<Card className="mt-6 dark:border-gray-200 dark:bg-white dark:text-black">
 						<CardHeader>
 							<div className="flex items-start justify-between">
 								<div>
 									<CardTitle className="text-3xl">
 										{vehicle.make?.name} {vehicle.model?.name}
 									</CardTitle>
-									<CardDescription className="mt-2 flex items-center gap-4 text-base">
+									<CardDescription className="mt-2 flex items-center gap-4 text-base dark:text-gray-500">
 										<span className="flex items-center gap-1">
 											<Calendar className="h-4 w-4" />
 											{vehicle.year}
@@ -58,17 +58,17 @@ function Page({ vehicle }: PageProps) {
 										</span>
 									</CardDescription>
 								</div>
-								<Badge className="capitalize" variant="secondary">
+								<Badge variant="secondary" className="capitalize dark:bg-gray-100 dark:text-black">
 									{vehicle.condition.replace("-", " ")}
 								</Badge>
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="text-primary text-4xl font-bold">£{vehicle.price.toLocaleString()}</div>
+							<div className="text-4xl font-bold text-black dark:text-black">£{vehicle.price.toLocaleString()}</div>
 						</CardContent>
 					</Card>
 
-					<Card className="mt-6">
+					<Card className="mt-6 dark:border-gray-200 dark:bg-white dark:text-black">
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<Settings className="h-5 w-5" />
@@ -126,7 +126,7 @@ function Page({ vehicle }: PageProps) {
 					</Card>
 
 					{vehicle.specification && Object.entries(vehicle.specification).filter(([_, value]) => value === true).length > 0 && (
-						<Card className="mt-6">
+						<Card className="mt-6 dark:border-gray-200 dark:bg-white dark:text-black">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<Wrench className="h-5 w-5" />
@@ -149,7 +149,7 @@ function Page({ vehicle }: PageProps) {
 					)}
 
 					{vehicle.extras && Object.entries(vehicle.extras).filter(([_, value]) => value === true).length > 0 && (
-						<Card className="mt-6">
+						<Card className="mt-6 dark:border-gray-200 dark:bg-white dark:text-black">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<Shield className="h-5 w-5" />
@@ -173,7 +173,7 @@ function Page({ vehicle }: PageProps) {
 				</div>
 
 				<div className="lg:col-span-1">
-					<Card>
+					<Card className="dark:border-gray-200 dark:bg-white dark:text-black">
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<User className="h-5 w-5" />
@@ -184,7 +184,7 @@ function Page({ vehicle }: PageProps) {
 							<div className="flex items-center gap-4">
 								<Avatar className="h-16 w-16">
 									<AvatarImage src={vehicle.seller?.avatar} alt={vehicle.seller?.name} />
-									<AvatarFallback>
+									<AvatarFallback className="dark:border-gray-200 dark:bg-gray-100 dark:text-black">
 										{vehicle.seller?.name
 											?.split(" ")
 											.map((n) => n[0])
@@ -198,10 +198,10 @@ function Page({ vehicle }: PageProps) {
 								</div>
 							</div>
 
-							<Separator className="my-4" />
+							<Separator className="my-4 dark:bg-gray-200" />
 
 							{user?.id !== vehicle.seller_id && (
-								<Button onClick={handleMessageOwner} className="w-full" size="lg">
+								<Button onClick={handleMessageOwner} className="w-full dark:bg-black dark:text-white dark:hover:bg-black/80" size="lg">
 									<MessageSquare className="mr-2 h-5 w-5" />
 									Message Seller
 								</Button>
@@ -218,7 +218,7 @@ function Page({ vehicle }: PageProps) {
 						</CardContent>
 					</Card>
 
-					<Card className="mt-6">
+					<Card className="mt-6 dark:border-gray-200 dark:bg-white dark:text-black">
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<MapPin className="h-5 w-5" />
@@ -236,7 +236,7 @@ function Page({ vehicle }: PageProps) {
 						</CardContent>
 					</Card>
 
-					<Card className="mt-6">
+					<Card className="mt-6 dark:border-gray-200 dark:bg-white dark:text-black">
 						<CardHeader>
 							<CardTitle>Quick Stats</CardTitle>
 						</CardHeader>
@@ -245,14 +245,14 @@ function Page({ vehicle }: PageProps) {
 								<span className="text-muted-foreground text-sm">Condition</span>
 								<span className="text-sm font-medium capitalize">{vehicle.condition.replace("-", " ")}</span>
 							</div>
-							<Separator />
+							<Separator className="dark:bg-gray-200" />
 							<div className="flex justify-between">
 								<span className="text-muted-foreground text-sm">Status</span>
-								<Badge variant={vehicle.status === "active" ? "default" : "secondary"} className="capitalize">
+								<Badge variant={vehicle.status === "active" ? "default" : "secondary"} className="capitalize dark:bg-black dark:text-white">
 									{vehicle.status}
 								</Badge>
 							</div>
-							<Separator />
+							<Separator className="dark:bg-gray-200" />
 							<div className="flex justify-between">
 								<span className="text-muted-foreground text-sm">Listed</span>
 								<span className="text-sm font-medium">{new Date(vehicle.created_at).toLocaleDateString()}</span>

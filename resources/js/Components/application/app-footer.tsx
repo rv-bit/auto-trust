@@ -114,7 +114,7 @@ export const AppFooter = forwardRef<HTMLDivElement, React.ComponentPropsWithoutR
 					</section>
 				</div>
 
-				<div id="footer__smallprint" className="border-border border-t py-8">
+				<div id="footer__smallprint" className="border-gray-200 border-t py-8">
 					<section id="footer-smallprint__legal" className="mb-8 flex flex-wrap justify-between gap-3 text-white md:flex-nowrap md:gap-0">
 						<div id="footer-smallprint__copyright" className="mr-6 w-fit">
 							© 2025 {APP_NAME} Ltd. All rights reserved

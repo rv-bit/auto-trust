@@ -39,20 +39,20 @@ export function VehicleSortDropdown({ value, onChange, hasPostcode = false }: So
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" className="min-w-[200px] justify-between">
+				<Button variant="outline" className="min-w-[200px] justify-between dark:bg-white dark:text-black dark:border-gray-200">
 					{currentLabel}
 					<ChevronDown className="ml-2 h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-[200px]">
+			<DropdownMenuContent align="end" className="w-[200px] dark:bg-white dark:border-gray-200 dark:text-black">
 				<div className="p-2">
 					<h3 className="mb-2 text-sm font-semibold">Sort by</h3>
-					<DropdownMenuRadioGroup value={value} onValueChange={handleChange}>
+					<DropdownMenuRadioGroup value={value} onValueChange={handleChange} className="dark:bg-white dark:text-black">
 						{sortOptions.map((option) => {
 							const isDisabled = option.requiresPostcode && !hasPostcode;
 
 							return (
-								<DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer" disabled={isDisabled}>
+								<DropdownMenuRadioItem key={option.value} value={option.value} className="cursor-pointer dark:hover:bg-gray-100 dark:focus:bg-gray-100 dark:hover:text-black" disabled={isDisabled}>
 									<span className={isDisabled ? "text-muted-foreground" : ""}>
 										{option.label}
 										{isDisabled && <span className="ml-1 text-xs">(set location)</span>}

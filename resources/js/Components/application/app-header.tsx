@@ -12,11 +12,15 @@ import { useIsMobile } from "@/hooks/useMobile";
 
 import { APP_NAME } from "@/resources/app-config";
 
-import { Button } from "@/components/ui/button";
-
 import NotificationsDrawer from "@/components/notifications/notifications-drawer";
 
-import { Menu } from "lucide-react";
+import { UserInfo } from "@/components/pages/settings/user-info";
+import { UserMenuContent } from "@/components/pages/settings/user-menu-content";
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+
+import { ChevronsUpDown, Menu } from "lucide-react";
 import AppLogoIcon from "./app-logo-icon";
 
 interface AppHeaderProps {
@@ -108,6 +112,25 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 			{
 				title: "Menu",
 				icon: <Menu strokeWidth={3} className={cn("mb-1 size-6 fill-white", { "fill-black": currentPath !== "/" || isMobile, "mb-0 size-5 fill-black/60": isMobile })} />,
+				isHidden: user === null,
+				Component: ({ trigger }) => (
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							{trigger || (
+								<Button
+									variant={"link"}
+									className="flex size-auto min-w-fit shrink-0 flex-col items-center justify-center gap-1 rounded-none px-0 py-2 text-sm font-semibold text-black/60 hover:no-underline has-[>svg]:px-1.5 dark:text-black/60"
+								>
+									<Menu strokeWidth={3} className={cn("mb-1 size-6 fill-white", { "fill-black": currentPath !== "/" || isMobile, "mb-0 size-5 fill-black/60": isMobile })} />
+									<span>Menu</span>
+								</Button>
+							)}
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="dark:bg-sidebar-accent w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg" align="end" side={"bottom"}>
+							<UserMenuContent user={user} />
+						</DropdownMenuContent>
+					</DropdownMenu>
+				),
 			},
 		];
 	}, [user, isMobile, currentPath]);

@@ -12,10 +12,15 @@ import { useSidebar, Sidebar, SidebarContent, SidebarFooter, SidebarHeader, Side
 
 import { QuickActions } from "@/components/ui/sidebar-trigger";
 
-import { LayoutGrid, MessageCircleMore } from "lucide-react";
+import { LayoutGrid, MessageCircleMore, Settings } from "lucide-react";
 import AppLogo from "./app-logo";
 
 const mainNavItems: NavItem[] = [
+	{
+		title: "Settings",
+		href: "/settings",
+		icon: Settings,
+	},
 	{
 		title: "Dashboard",
 		href: dashboard(),

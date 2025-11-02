@@ -172,7 +172,7 @@ function VehicleCard({ vehicle, onStatusToggle, onDelete }: VehicleCardProps) {
 	const firstImage = vehicle.images && vehicle.images.length > 0 ? vehicle.images[0] : null;
 
 	return (
-		<Card className="overflow-hidden transition-shadow hover:shadow-lg">
+		<Card className="overflow-hidden bg-white transition-shadow hover:shadow-lg dark:border-gray-200 dark:bg-white">
 			{/* Vehicle Image */}
 			<div className="relative h-48 w-full overflow-hidden bg-gray-200">
 				{firstImage ? (
@@ -183,53 +183,59 @@ function VehicleCard({ vehicle, onStatusToggle, onDelete }: VehicleCardProps) {
 					</div>
 				)}
 				<div className="absolute top-2 right-2">
-					<Badge variant={getStatusBadgeVariant(vehicle.status)}>{vehicle.status}</Badge>
+					<Badge variant={getStatusBadgeVariant(vehicle.status)} className="dark:text-white dark:bg-black">
+						{vehicle.status}
+					</Badge>
 				</div>
 			</div>
 
-			<CardHeader className="pb-3">
+			<CardHeader className="bg-white pb-3 dark:bg-white">
 				<div className="flex items-start justify-between gap-2">
 					<div className="flex-1">
-						<CardTitle className="line-clamp-1 text-base">
+						<CardTitle className="line-clamp-1 text-base text-black dark:text-black">
 							{vehicle.make?.name} {vehicle.model?.name}
 						</CardTitle>
-						<CardDescription className="mt-1 flex items-center gap-1 text-xs">
+						<CardDescription className="mt-1 flex items-center gap-1 text-xs text-black dark:text-black">
 							<Calendar className="h-3 w-3" />
 							{vehicle.year}
 						</CardDescription>
 					</div>
 					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" size="icon" className="h-8 w-8">
+						<DropdownMenuTrigger asChild className="text-black dark:text-black">
+							<Button variant="ghost" size="icon" className="h-8 w-8 text-black dark:bg-white dark:text-black dark:hover:bg-gray-100">
 								<MoreVertical className="h-4 w-4" />
 								<span className="sr-only">Actions</span>
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Actions</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem asChild>
+						<DropdownMenuContent align="end" className="bg-white dark:border-gray-200 dark:bg-white">
+							<DropdownMenuLabel className="text-black dark:text-black">Actions</DropdownMenuLabel>
+							<DropdownMenuSeparator className="dark:bg-gray-200" />
+							<DropdownMenuItem asChild className="text-black hover:bg-gray-100 dark:text-black dark:hover:bg-gray-200">
 								<Link href={`/vehicles/details/${vehicle.id}`} className="flex cursor-pointer items-center">
-									<Eye className="mr-2 h-4 w-4" />
+									<Eye className="h-4 w-4" />
 									View Details
 								</Link>
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => onStatusToggle(vehicle.id, vehicle.status)} disabled={vehicle.status === "sold"}>
+							<DropdownMenuItem
+								onClick={() => onStatusToggle(vehicle.id, vehicle.status)}
+								disabled={vehicle.status === "sold"}
+								className="text-black hover:bg-gray-100 dark:text-black dark:hover:bg-gray-200"
+							>
 								{vehicle.status === "active" ? (
 									<>
-										<Pause className="mr-2 h-4 w-4" />
+										<Pause className="h-4 w-4" />
 										Deactivate
 									</>
 								) : (
 									<>
-										<Play className="mr-2 h-4 w-4" />
+										<Play className="h-4 w-4" />
 										Activate
 									</>
 								)}
 							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem onClick={() => onDelete(vehicle.id)} className="text-destructive focus:text-destructive">
-								<Trash2 className="mr-2 h-4 w-4" />
+							<DropdownMenuSeparator className="dark:bg-gray-200" />
+							<DropdownMenuItem onClick={() => onDelete(vehicle.id)} className="text-destructive focus:text-destructive dark:text-destructive hover:bg-gray-100 dark:hover:bg-gray-200">
+								<Trash2 className="h-4 w-4" />
 								Delete
 							</DropdownMenuItem>
 						</DropdownMenuContent>
@@ -237,7 +243,7 @@ function VehicleCard({ vehicle, onStatusToggle, onDelete }: VehicleCardProps) {
 				</div>
 			</CardHeader>
 
-			<CardContent className="pb-3">
+			<CardContent className="bg-white pb-3 text-black dark:bg-white dark:text-black">
 				<div className="text-muted-foreground mb-3 grid grid-cols-2 gap-2 text-sm">
 					<div className="flex items-center gap-1">
 						<Gauge className="h-4 w-4" />
@@ -251,7 +257,7 @@ function VehicleCard({ vehicle, onStatusToggle, onDelete }: VehicleCardProps) {
 				<div className="text-2xl font-bold">£{vehicle.price.toLocaleString()}</div>
 			</CardContent>
 
-			<CardFooter className="border-t pt-3">
+			<CardFooter className="border-t bg-white pt-3 dark:border-gray-200 dark:bg-white">
 				<p className="text-muted-foreground text-xs">Listed {new Date(vehicle.created_at).toLocaleDateString("en-GB")}</p>
 			</CardFooter>
 		</Card>

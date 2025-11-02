@@ -35,11 +35,11 @@ export default function Welcome() {
 
 				<div className="mt-6 flex h-auto w-full items-start justify-start">
 					<div className="flex w-[calc(33.3333333333%-24px)] flex-col items-start justify-start gap-4">
-						<Button asChild variant="outline" className="h-15 w-full">
+						<Button asChild variant="outline" className="h-15 w-full dark:bg-white dark:text-black">
 							<Link href="/vehicles/stock-cars">Find a car</Link>
 						</Button>
-						<Button disabled asChild variant="secondary" className="h-15 w-full">
-							<Link href="/vehicles/new-cars">Value my car</Link>
+						<Button disabled variant="outline" className="h-15 w-full disabled:pointer-events-auto disabled:cursor-not-allowed dark:bg-white dark:text-black">
+							Value my car
 						</Button>
 					</div>
 

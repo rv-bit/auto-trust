@@ -7,17 +7,21 @@ import { useVehicles } from "@/hooks/vehicles/useVehicles";
 
 import { VehicleImageCarousel } from "@/components/pages/vehicles/vehicle-image-carousel";
 import { VehicleSortDropdown, type SortOption } from "@/components/pages/vehicles/vehicle-sort-dropdown";
+import { VehicleFiltersSidebar } from "@/components/pages/vehicles/vehicle-filters-sidebar";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 import Layout, { useLayoutListings } from "@/layouts/vehicles/listings/layout";
 
-import { Calendar, ChevronLeft, ChevronRight, Fuel, Gauge, MapPin } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Fuel, Gauge, MapPin, Menu, X } from "lucide-react";
 
 function Page() {
 	const { filters, setFilters } = useLayoutListings();
 
+	const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	useEffect(() => {
@@ -74,9 +78,38 @@ function Page() {
 	};
 
 	return (
-		<div className="container mx-auto">
-			<div className="mb-6 flex items-center justify-between">
-				<div>{vehiclesData && <p className="text-muted-foreground mt-2">{vehiclesData.meta.total.toLocaleString()} vehicles found</p>}</div>
+		<div className="container mx-auto pt-10 md:p-0">
+			<div className="mb-6 flex flex-row items-center justify-between gap-2 max-sm:flex-col max-sm:items-start max-sm:gap-4">
+				<div className="flex items-center justify-start gap-2">
+					<Drawer open={filterDrawerOpen} onOpenChange={setFilterDrawerOpen} autoFocus={true} handleOnly={true} direction="right">
+						<DrawerTrigger asChild>
+							<Button asChild className="flex h-fit w-fit cursor-pointer bg-transparent p-0 text-black has-[>svg]:px-0 md:hidden dark:bg-transparent [svg]:px-0">
+								<Menu className="size-10" />
+							</Button>
+						</DrawerTrigger>
+						<DrawerContent className="w-full rounded-none bg-white data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:sm:max-w-5xl dark:bg-white">
+							<DrawerHeader className="flex flex-row items-start justify-between gap-0 border-b border-gray-200">
+								<span className="flex w-fit flex-col items-start justify-start gap-0">
+									<DrawerTitle className="text-left text-lg font-medium text-black dark:text-black">Filters for vehicle</DrawerTitle>
+									<DrawerDescription className="text-left text-sm text-black dark:text-black">Provide filters for the vehicles.</DrawerDescription>
+								</span>
+
+								<Button
+									className="rounded-none border-none bg-transparent p-0 text-black shadow-none ring-0 focus-visible:border-none focus-visible:ring-0 dark:bg-transparent"
+									onClick={() => {
+										setFilterDrawerOpen(false);
+									}}
+								>
+									<X className="size-5 text-black" />
+								</Button>
+							</DrawerHeader>
+							<VehicleFiltersSidebar />
+						</DrawerContent>
+					</Drawer>
+
+					<div>{vehiclesData && <p className="text-muted-foreground md:mt-2">{vehiclesData.meta.total.toLocaleString()} vehicles found</p>}</div>
+				</div>
+
 				<VehicleSortDropdown value={(filters.sort as SortOption) || "recommended"} onChange={handleSortChange} hasPostcode={!!filters.postcode} />
 			</div>
 
@@ -119,7 +152,7 @@ function Page() {
 						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 							{vehiclesData.data.map((vehicle) => (
 								<Link key={vehicle.id} href={`/vehicles/details/${vehicle.id}`}>
-									<Card className="cursor-pointer overflow-hidden transition-shadow hover:shadow-lg">
+									<Card className="cursor-pointer overflow-hidden pt-0 transition-shadow hover:shadow-lg dark:border-gray-200 dark:bg-white dark:text-black">
 										<VehicleImageCarousel images={vehicle.images || []} alt={`${vehicle.make?.name} ${vehicle.model?.name}`} className="h-48" />
 
 										<CardHeader>
@@ -156,7 +189,7 @@ function Page() {
 										</CardContent>
 
 										<CardFooter>
-											<Button className="w-full" variant="outline">
+											<Button variant="outline" className="w-full dark:border-gray-200 dark:bg-white dark:hover:bg-gray-100 dark:hover:text-black">
 												View Details
 											</Button>
 										</CardFooter>

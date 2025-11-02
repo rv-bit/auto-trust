@@ -16,8 +16,8 @@ export default function NotificationsDrawer({ trigger }: NotificationsDrawerProp
 		<Sheet open={notificationsModalOpen} onOpenChange={setNotificationsModalOpen}>
 			{trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
 
-			<SheetContent className="w-full rounded-tl-sm rounded-bl-sm bg-white data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:sm:max-w-5xl dark:bg-white">
-				<SheetHeader className="flex items-start justify-start gap-2 border-b border-gray-200">
+			<SheetContent className="w-full rounded-tl-sm rounded-bl-sm data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:sm:max-w-5xl bg-sidebar-accent dark:bg-sidebar-accent">
+				<SheetHeader className="flex items-start justify-start gap-2 border-b border-white/20">
 					<span className="flex w-full flex-col items-start justify-between">
 						<SheetTitle className="text-left text-lg font-medium text-gray-900 dark:text-gray-100">Notifications</SheetTitle>
 						<SheetDescription className="text-left text-sm text-gray-600 dark:text-gray-400">

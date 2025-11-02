@@ -4,6 +4,7 @@ import React, { createContext, useContext, useMemo, useState } from "react";
 import type { BodyStyle, FuelType, Gearbox, VehicleAge, VehicleColor, VehicleFilters } from "@/types/routes/listings";
 
 import { VehicleFiltersSidebar } from "@/components/pages/vehicles/vehicle-filters-sidebar";
+
 import { Button } from "@/components/ui/button";
 
 import AppLayout from "@/layouts/app/shell-layout";
@@ -235,8 +236,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 				<div className="mx-auto w-full max-w-7xl px-4 py-8 md:px-0">
 					{isListingsOrStockRoute ? (
-						<div className="grid grid-cols-1 gap-6 md:grid-cols-[280px_1fr]">
-							<aside>
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-[280px_1fr] md:px-2">
+							<aside className="hidden md:block">
 								<VehicleFiltersSidebar />
 							</aside>
 

@@ -112,7 +112,7 @@ function VehicleSellListing() {
 					<DrawerTrigger asChild>
 						<Button
 							onClick={() => setNewVehicleListingModal(true)}
-							className="h-80 w-fit shrink-0 bg-white p-0 text-black hover:bg-white/70 has-[>svg]:px-0 md:min-w-[calc(50%-150px)] dark:bg-white hover:dark:bg-white/70"
+							className="h-80 w-full shrink-0 bg-white p-0 text-black hover:bg-white/70 has-[>svg]:px-0 md:w-fit md:min-w-[calc(50%-150px)] dark:bg-white hover:dark:bg-white/70"
 						>
 							<svg className="inline-icon inline-icon--medium inline-icon--white" viewBox="0 0 24 24">
 								<path d="M9.48423 24V14.3828H0V9.53131H9.48423V0H14.5158V9.53131H24V14.3828H14.5158V24H9.48423Z"></path>
