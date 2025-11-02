@@ -1,4 +1,4 @@
-import { useAppearance } from "@/hooks/use-appearance";
+import { useAppearance } from "@/hooks/useAppearance";
 import { Toaster as Sonner, ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {

@@ -5,7 +5,7 @@ import { cva } from "class-variance-authority";
 
 import type { SidebarContext } from "@/types/ui/sidebar";
 
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/useMobile";
 import { cn } from "@/lib/utils";
 
 import { CHAT_SIDEBAR_COOKIE_MAX_AGE, CHAT_SIDEBAR_COOKIE_NAME } from "@/resources/cookie-config";

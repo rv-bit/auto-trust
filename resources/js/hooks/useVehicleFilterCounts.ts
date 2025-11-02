@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import type { VehicleFilters } from "./use-vehicles";
+import type { VehicleFilters } from "./useVehicles";
 import { filterCounts as api_filter_counts_route } from "@/routes/vehicles";
 
 export interface FilterCounts {

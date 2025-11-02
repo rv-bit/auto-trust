@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 
 import type { User } from '@/types';
 
-import { Appearance, useAppearance } from "@/hooks/use-appearance";
-import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+import { Appearance, useAppearance } from "@/hooks/useAppearance";
+import { useMobileNavigation } from '@/hooks/useMobile';
 
 import { UserInfo } from '@/components/pages/settings/user-info';
 

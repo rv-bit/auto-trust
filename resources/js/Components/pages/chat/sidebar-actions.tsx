@@ -11,7 +11,7 @@ import type { Message } from "@/types/routes/chat";
 import { formatMessageDate } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 
-import { useInitials } from "@/hooks/use-initials";
+import { useInitials } from "@/hooks/useInitials";
 
 import { useEventBus } from "@/providers/EventBusProvider";
 import { useOnlineUsers } from "@/providers/OnlineUsersProvider";

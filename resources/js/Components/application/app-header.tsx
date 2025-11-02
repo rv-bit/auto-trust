@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 import type { BreadcrumbItem, NavItem, SharedData } from "@/types";
 
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/useMobile";
 
 import { APP_NAME } from "@/resources/app-config";
 
@@ -134,10 +134,10 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 
 	if (isMobile) {
 		return (
-			<header className={cn("z-9999 flex h-10 items-center bg-transparent px-4", className)}>
+			<header className={cn("z-50 flex h-10 items-center bg-transparent px-4", className)}>
 				<HeaderLogo />
 
-				<div className="fixed inset-x-0 bottom-0 z-9999 flex h-fit items-center justify-around border-t border-neutral-400/20 bg-white px-2 py-1">
+				<div className="fixed inset-x-0 bottom-0 z-50 flex h-fit items-center justify-around border-t border-neutral-400/20 bg-white px-2 py-1">
 					{mainNavItems.map((value, index) => {
 						if (value.isHidden) return null;
 
@@ -163,7 +163,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 	return (
 		<header
 			className={cn(
-				"z-9999 h-auto w-full",
+				"z-50 h-auto w-full",
 				{
 					"flex-row bg-[#252525]": currentPath === "/",
 				},

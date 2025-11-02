@@ -4,7 +4,7 @@ import { VariantProps, cva } from "class-variance-authority"
 
 import type { State, SidebarContext } from "@/types/ui/sidebar";
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/useMobile"
 import { cn } from "@/lib/utils"
 
 import { SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME } from "@/resources/cookie-config"

@@ -6,7 +6,7 @@ import type { Conversation, Conversations } from "@/types/routes/chat";
 
 import { show as index_chat_route } from "@/actions/App/Http/Controllers/Chat/MessageController";
 
-import { useDebounceValue } from "@/hooks/use-debounce-value";
+import { useDebounceValue } from "@/hooks/useDebounce";
 
 import { Input } from "@/components/ui/input";
 import { SidebarGroup, SidebarGroupLabel, SidebarMenuButton } from "@/components/ui/sidebar";

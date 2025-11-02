@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -21,4 +21,11 @@ export function useIsMobile() {
     }, []);
 
     return !!isMobile;
+}
+
+export function useMobileNavigation() {
+    return useCallback(() => {
+        // Remove pointer-events style from body...
+        document.body.style.removeProperty('pointer-events');
+    }, []);
 }
