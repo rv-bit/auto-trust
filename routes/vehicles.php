@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 use Inertia\Inertia;
 
-Route::middleware(['auth', 'verified', HandleVehicleRequests::class])->group(function () {
+Route::middleware(['auth', HandleVehicleRequests::class])->group(function () {
     Route::get('vehicles/dashboard', function () {
         return Inertia::render('vehicles/showroom/page');
     })->name('vehicles.dashboard');
