@@ -107,6 +107,7 @@ export interface Vehicle {
 	id: number;
 	make_id: number;
 	model_id: number;
+	seller_id: number;
 	body_style: BodyStyle;
 	fuel_type: FuelType;
 	gearbox: Gearbox;
@@ -124,13 +125,21 @@ export interface Vehicle {
 	extras?: VehicleExtraFeatures;
 	specification?: VehicleSpecification;
 	safety_rating?: number;
-	image_url?: string;
-	seller_id: number;
+	condition: "new" | "used" | "nearly-new";
+	image_url?: string; // deprecated, use images instead
+	images?: string[];
 	status: "active" | "sold" | "inactive";
 	created_at: string;
 	updated_at: string;
 	make?: VehicleMake;
 	model?: VehicleModel;
+	seller?: {
+		id: number;
+		name: string;
+		email: string;
+		avatar?: string;
+		created_at: string;
+	};
 }
 
 export interface PriceRange {

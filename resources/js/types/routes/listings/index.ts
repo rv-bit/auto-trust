@@ -3,6 +3,24 @@ import { SharedData } from "@/types";
 export interface VehiclePageProps extends SharedData {
 	vehicle_makes: Makes[];
 	vehicle_models: Models[];
+	filter_options?: FilterOptions;
+}
+
+export interface FilterOptions {
+	bodyStyles: FilterOption[];
+	fuelTypes: FilterOption[];
+	gearboxes: FilterOption[];
+	colors: FilterOption[];
+	conditions: FilterOption[];
+	priceRange: { min: number; max: number };
+	yearRange: { min: number; max: number };
+	mileageRange: { min: number; max: number };
+}
+
+export interface FilterOption {
+	value: string;
+	label: string;
+	count: number;
 }
 
 export interface Makes {
@@ -75,6 +93,7 @@ export enum PaymentType {
 export enum VehicleAge {
 	ALL = "all",
 	NEW = "new",
+	NEARLY_NEW = "nearly-new",
 	USED = "used",
 }
 
@@ -126,6 +145,7 @@ export interface Vehicle {
 	id: number;
 	make_id: number;
 	model_id: number;
+	seller_id: number;
 	body_style: BodyStyle;
 	fuel_type: FuelType;
 	gearbox: Gearbox;
@@ -143,13 +163,21 @@ export interface Vehicle {
 	extras?: VehicleExtraFeatures;
 	specification?: VehicleSpecification;
 	safety_rating?: number;
-	image_url?: string;
-	seller_id: number;
+	condition: "new" | "nearly-new" | "used";
+	image_url?: string; // deprecated, use images instead
+	images?: string[];
 	status: "active" | "sold" | "inactive";
 	created_at: string;
 	updated_at: string;
 	make?: VehicleMake;
 	model?: VehicleModel;
+	seller?: {
+		id: number;
+		name: string;
+		email: string;
+		avatar?: string;
+		created_at: string;
+	};
 }
 
 export interface PriceRange {
@@ -184,6 +212,7 @@ export interface BootSpaceRange {
 
 export interface VehicleFilters {
 	postcode?: string;
+	radius?: number;
 	location?: string;
 	make?: string;
 	model?: string;
