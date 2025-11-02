@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Log;
 
 class Vehicle extends Model
 {
@@ -155,37 +156,47 @@ class Vehicle extends Model
         $coordinates = $geocodeService->getCoordinatesFromPostcode($postcode);
         
         if (!$coordinates) {
-            // If geocoding fails, return empty results
+            Log::error('Failed to geocode postcode: ' . $postcode);
             return $query->whereRaw('1 = 0');
         }
-        
-        // Get all vehicles with their postcodes
-        $vehicles = Vehicle::select('id', 'postcode')->get();
-        $nearbyIds = [];
-        
-        foreach ($vehicles as $vehicle) {
-            if (!$vehicle->postcode) {
-                continue;
-            }
-            
-            $vehicleCoords = $geocodeService->getCoordinatesFromPostcode($vehicle->postcode);
-            if (!$vehicleCoords) {
-                continue;
-            }
-            
-            $distance = $geocodeService->calculateDistance(
-                $coordinates['lat'],
-                $coordinates['lng'],
-                $vehicleCoords['lat'],
-                $vehicleCoords['lng']
-            );
-            
-            if ($distance <= $radius) {
-                $nearbyIds[] = $vehicle->id;
-            }
+
+        if (!$coordinates['latitude'] || !$coordinates['longitude']) {
+            Log::error('Invalid coordinates for postcode: ' . $postcode . ', coords: ' . json_encode($coordinates));
+            return $query->whereRaw('1 = 0');
         }
+
+        Log::info('Geocoded search postcode ' . $postcode . ' to coordinates: ' . json_encode($coordinates));
+
+        // Calculate bounding box for better performance
+        $lat = $coordinates['latitude'];
+        $lng = $coordinates['longitude'];
         
-        return $query->whereIn('id', $nearbyIds);
+        // Convert radius to degrees (approximate, works for most of UK)
+        $milesPerDegree = 69;  // rough approximation
+        $degreeDelta = $radius / $milesPerDegree;
+        
+        // Create a square bounding box first (faster than calculating distance for all points)
+        $query->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->whereBetween('latitude', [$lat - $degreeDelta, $lat + $degreeDelta])
+            ->whereBetween('longitude', [$lng - $degreeDelta, $lng + $degreeDelta]);
+
+        // Then apply precise distance calculation
+        // Note: 3959 is Earth's radius in miles
+        $distanceFormula = "
+            (3959 * acos(
+                cos(radians(?)) * 
+                cos(radians(latitude)) * 
+                cos(radians(longitude) - radians(?)) + 
+                sin(radians(?)) * 
+                sin(radians(latitude))
+            ))
+        ";
+        
+        return $query->whereRaw(
+            "{$distanceFormula} <= ?", 
+            [$lat, $lng, $lat, $radius]
+        );
     }
 
     public function scopeWithSpecification($query, array $specs)
