@@ -245,74 +245,92 @@ filterCounts.form = filterCountsForm
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-export const geocode = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: geocode.url(options),
+export const geocode = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: geocode.url(args, options),
     method: 'get',
 })
 
 geocode.definition = {
     methods: ["get","head"],
-    url: '/api/vehicles/geocode',
+    url: '/api/vehicles/geocode/{postcode}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-geocode.url = (options?: RouteQueryOptions) => {
-    return geocode.definition.url + queryParams(options)
+geocode.url = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { postcode: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            postcode: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        postcode: args.postcode,
+    }
+
+    return geocode.definition.url
+            .replace('{postcode}', parsedArgs.postcode.toString())
+            .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-geocode.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: geocode.url(options),
+geocode.get = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: geocode.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-geocode.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: geocode.url(options),
+geocode.head = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: geocode.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-const geocodeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: geocode.url(options),
+const geocodeForm = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: geocode.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-geocodeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: geocode.url(options),
+geocodeForm.get = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: geocode.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Vehicles\VehicleController::geocode
 * @see app/Http/Controllers/Vehicles/VehicleController.php:217
-* @route '/api/vehicles/geocode'
+* @route '/api/vehicles/geocode/{postcode}'
 */
-geocodeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: geocode.url({
+geocodeForm.head = (args: { postcode: string | number } | [postcode: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: geocode.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),

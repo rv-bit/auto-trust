@@ -460,7 +460,7 @@ export function VehiclePostcodeField({ form }: Pick<VehicleFormComponentsProps, 
 		setValidationMessage("");
 
 		try {
-			const response = await axios.get(api_vehicle_geocode_route.url(postcode));
+			const response = await axios.get(api_vehicle_geocode_route.url({ postcode }));
 			const data = response.data;
 
 			if (response.status === 200 && data.latitude && data.longitude) {
