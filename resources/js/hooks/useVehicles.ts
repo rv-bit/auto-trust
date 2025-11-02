@@ -98,13 +98,14 @@ export function useVehicles(filters: VehicleFilters) {
 	return useQuery<VehiclesResponse>({
 		queryKey: ["vehicles", filters],
 		queryFn: async () => {
-			// Build query params object for the route helper
-			const queryParams: Record<string, string | string[]> = {};
+			// Build query params object for axios
+			const queryParams: Record<string, string | string[] | number> = {};
 
 			Object.entries(filters).forEach(([key, value]) => {
 				if (value === undefined || value === null || value === "") return;
 
 				if (Array.isArray(value)) {
+					// For arrays, keep them as arrays - axios will handle encoding
 					queryParams[key] = value;
 				} else if (typeof value === "object") {
 					// For nested objects like specification/extras
@@ -112,14 +113,17 @@ export function useVehicles(filters: VehicleFilters) {
 						if (v) queryParams[`${key}[${k}]`] = String(v);
 					});
 				} else {
-					queryParams[key] = String(value);
+					queryParams[key] = value;
 				}
 			});
 
-			const response = await axios.get<VehiclesResponse>(api_vehicle_route.url(queryParams));
-			console.log("Vehicles response data:", response.data); // Debug log
+			const response = await axios.get<VehiclesResponse>(api_vehicle_route.definition.url, {
+				params: queryParams,
+			});
+
 			return response.data;
 		},
-		staleTime: 1000 * 60 * 2, // 2 minutes
+		staleTime: 1000 * 60 * 5, // 5 minutes - increased from 2 minutes
+		gcTime: 1000 * 60 * 10, // 10 minutes - cache garbage collection time
 	});
 }
