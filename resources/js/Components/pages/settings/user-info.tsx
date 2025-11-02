@@ -1,6 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { User } from "@/types";
+
 import { useInitials } from '@/hooks/useInitials';
-import { type User } from '@/types';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function UserInfo({
     user,

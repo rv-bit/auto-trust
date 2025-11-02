@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { store } from "@/routes/two-factor/login";
 
-import { OTP_MAX_LENGTH } from "@/hooks/use-two-factor-auth";
+import { OTP_MAX_LENGTH } from "@/hooks/useTwoFactorAuth";
 
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";

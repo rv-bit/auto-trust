@@ -9,7 +9,7 @@ import ProfileController from "@/actions/App/Http/Controllers/Settings/ProfileCo
 
 import type { BreadcrumbItem, SharedData } from "@/types";
 
-import { useInitials } from "@/hooks/use-initials";
+import { useInitials } from "@/hooks/useInitials";
 
 import HeadingSmall from "@/components/heading-small";
 import InputError from "@/components/input-error";

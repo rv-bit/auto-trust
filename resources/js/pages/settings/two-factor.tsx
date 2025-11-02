@@ -11,7 +11,7 @@ import TwoFactorSetupModal from "@/components/pages/settings/two-factor-setup-mo
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useTwoFactorAuth } from "@/hooks/use-two-factor-auth";
+import { useTwoFactorAuth } from "@/hooks/useTwoFactorAuth";
 
 import AppLayout from "@/layouts/app-layout";
 import Layout from "@/layouts/settings/layout";
