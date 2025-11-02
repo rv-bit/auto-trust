@@ -131,4 +131,12 @@ class User extends Authenticatable
     {
         return $this->notifications()->latest()->limit($limit)->get();
     }
+
+    /**
+     * The channels the user receives notification broadcasts on.
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'notification.user.' . $this->id;
+    }
 }
