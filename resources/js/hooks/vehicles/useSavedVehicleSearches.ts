@@ -1,6 +1,6 @@
 import type { VehicleFilters } from "@/types/routes/listings";
 import { useCallback } from "react";
-import { useLocalStorage } from "./useLocalStorage";
+import { useLocalStorage } from "../useLocalStorage";
 
 export interface SavedVehicleSearch {
 	id: string; // make-model combination as unique identifier

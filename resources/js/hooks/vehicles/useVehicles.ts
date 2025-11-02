@@ -24,6 +24,7 @@ export interface VehicleFilters {
 	extras?: Record<string, boolean>;
 	page?: number;
 	per_page?: number;
+	sort?: string;
 }
 
 export interface Vehicle {

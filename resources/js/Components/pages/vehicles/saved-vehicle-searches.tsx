@@ -1,10 +1,15 @@
+import { Link } from "@inertiajs/react";
+
+import { stockCars } from "@/routes/vehicles";
+
+import type { VehicleFilters } from "@/types/routes/listings";
+
+import { useSavedVehicleSearches } from "@/hooks/vehicles/useSavedVehicleSearches";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSavedVehicleSearches } from "@/hooks/useSavedVehicleSearches";
-import { stockCars } from "@/routes/vehicles";
-import type { VehicleFilters } from "@/types/routes/listings";
-import { Link } from "@inertiajs/react";
+
 import { Calendar, Fuel, Palette, Search, Settings, X } from "lucide-react";
 
 export function SavedVehicleSearches() {
