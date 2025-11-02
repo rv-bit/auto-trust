@@ -37,6 +37,8 @@ it('transforms user to array', function () {
 });
 
 it('includes avatar url when user has avatar', function () {
+    Storage::fake('public');
+    
     $user = User::factory()->create([
         'name' => 'Jane Doe',
         'avatar' => 'avatars/jane.jpg',
@@ -47,7 +49,7 @@ it('includes avatar url when user has avatar', function () {
     
     expect($array['avatar'])->toBeString();
     expect($array['avatar'])->toContain('avatars/jane.jpg');
-})->skip('Requires S3 storage configuration');
+});
 
 it('correctly casts is_admin to boolean', function () {
     $admin = User::factory()->create(['is_admin' => true]);

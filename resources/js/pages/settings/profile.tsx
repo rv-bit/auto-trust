@@ -1,36 +1,57 @@
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { send } from '@/routes/verification';
-import { type BreadcrumbItem, type SharedData } from '@/types';
-import { Transition } from '@headlessui/react';
-import { Form, Head, Link, usePage } from '@inertiajs/react';
+import { Transition } from "@headlessui/react";
+import { Form, Head, Link, usePage } from "@inertiajs/react";
+import { useRef, useState } from "react";
 
-import HeadingSmall from '@/components/heading-small';
-import InputError from '@/components/input-error';
+import { edit } from "@/routes/profile";
+import { send } from "@/routes/verification";
+
+import ProfileController from "@/actions/App/Http/Controllers/Settings/ProfileController";
+
+import type { BreadcrumbItem, SharedData } from "@/types";
+
+import { useInitials } from "@/hooks/use-initials";
+
+import HeadingSmall from "@/components/heading-small";
+import InputError from "@/components/input-error";
 import DeleteUser from "@/components/pages/settings/delete-user";
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import AppLayout from "@/layouts/app-layout";
 import Layout from "@/layouts/settings/layout";
-import { edit } from '@/routes/profile';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Profile settings',
-        href: edit().url,
-    },
+	{
+		title: "Profile settings",
+		href: edit().url,
+	},
 ];
 
-export default function Profile({
-    mustVerifyEmail,
-    status,
-}: {
-    mustVerifyEmail: boolean;
-    status?: string;
-}) {
-    const { auth } = usePage<SharedData>().props;
+export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
+	const { auth } = usePage<SharedData>().props;
+	const getInitials = useInitials();
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [avatarPreview, setAvatarPreview] = useState<string | null>(auth.user.avatar || null);
 
-    return (
+	const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setAvatarPreview(reader.result as string);
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+
+	const handleAvatarClick = () => {
+		fileInputRef.current?.click();
+	};
+
+	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Profile settings" />
 
@@ -47,6 +68,35 @@ export default function Profile({
 					>
 						{({ processing, recentlySuccessful, errors }) => (
 							<>
+								<div className="grid gap-4">
+									<Label>Profile Picture</Label>
+
+									<div className="flex items-center gap-4">
+										<Avatar className="h-20 w-20 cursor-pointer transition-opacity hover:opacity-80" onClick={handleAvatarClick}>
+											<AvatarImage src={avatarPreview || undefined} alt={auth.user.name} />
+											<AvatarFallback className="bg-neutral-200 text-lg text-black dark:bg-neutral-700 dark:text-white">{getInitials(auth.user.name)}</AvatarFallback>
+										</Avatar>
+
+										<div className="flex flex-col gap-2">
+											<input
+												ref={fileInputRef}
+												type="file"
+												name="avatar"
+												id="avatar"
+												accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+												className="hidden"
+												onChange={handleAvatarChange}
+											/>
+											<Button type="button" variant="outline" size="sm" onClick={handleAvatarClick}>
+												Change Avatar
+											</Button>
+											<p className="text-muted-foreground text-xs">JPG, PNG, GIF or WebP. Max 2MB.</p>
+										</div>
+									</div>
+
+									<InputError className="mt-2" message={errors.avatar} />
+								</div>
+
 								<div className="grid gap-2">
 									<Label htmlFor="name">Name</Label>
 
