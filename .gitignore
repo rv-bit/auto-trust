@@ -34,3 +34,6 @@ yarn-error.log
 /.certs/*.pem
 /.certs/*.key
 /.certs/*.crt
+
+# Others
+test.php
