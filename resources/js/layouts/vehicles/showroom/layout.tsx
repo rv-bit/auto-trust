@@ -6,7 +6,7 @@ import type { VehiclePageProps } from "@/types/routes/listings";
 
 import { cn } from "@/lib/utils";
 
-import AppLayout from "@/layouts/app/app-shell-layout";
+import AppLayout from "@/layouts/app/shell-layout";
 
 import { Button } from "@/components/ui/button";
 
