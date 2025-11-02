@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enum\VehicleListingsEnum;
+use App\Http\Resources\User\UserResource;
 use Inertia\Middleware;
 
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? new UserResource($request->user()) : null,
             ],
             'sidebarOpen' => $sidebar_state,
             'chatSidebarOpen' => $chat_sidebar_state,

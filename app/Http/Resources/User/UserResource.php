@@ -29,8 +29,10 @@ class UserResource extends JsonResource
             'permissions' => $this->getAllPermissions()
                 ->map(function ($permission) {
                     return $permission->name;
-                }),
-            'roles' => $this->getRoleNames(),
+                })
+                ->values()
+                ->toArray(),
+            'roles' => $this->getRoleNames()->toArray(),
             'last_message' => $this->last_message,
             'last_message_date' => $this->last_message_date
         ];
