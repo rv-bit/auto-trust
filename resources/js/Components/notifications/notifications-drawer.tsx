@@ -12,8 +12,6 @@ interface NotificationsDrawerProps {
 export default function NotificationsDrawer({ trigger }: NotificationsDrawerProps) {
 	const { notifications, unreadCount, markSeen, markAllSeen, refresh, notificationsModalOpen, setNotificationsModalOpen } = useNotifications();
 
-	console.log("NotificationsDrawer render - notifications:", notifications, "unreadCount:", unreadCount);
-
 	return (
 		<Sheet open={notificationsModalOpen} onOpenChange={setNotificationsModalOpen}>
 			{trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
