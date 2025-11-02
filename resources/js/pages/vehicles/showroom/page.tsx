@@ -69,12 +69,12 @@ function Page() {
 }
 
 function VehicleSellListing() {
-	const [newVehicleListing, setNewVehicleListing] = useState(false);
+	const [newVehicleListingModal, setNewVehicleListingModal] = useState(false);
 
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-start gap-2 px-4 pb-10">
-				<Button onClick={() => setNewVehicleListing(true)} className="h-30 min-w-full shrink-0 p-0 has-[>svg]:px-0 md:min-w-[calc(50%-24px)]">
+				<Button onClick={() => setNewVehicleListingModal(true)} className="h-30 min-w-full shrink-0 p-0 has-[>svg]:px-0 md:min-w-[calc(50%-24px)]">
 					<svg className="inline-icon inline-icon--medium inline-icon--white" viewBox="0 0 24 24">
 						<path d="M9.48423 24V14.3828H0V9.53131H9.48423V0H14.5158V9.53131H24V14.3828H14.5158V24H9.48423Z"></path>
 					</svg>
@@ -82,13 +82,13 @@ function VehicleSellListing() {
 				</Button>
 			</div>
 
-			<Drawer autoFocus={true} open={newVehicleListing} onOpenChange={setNewVehicleListing} handleOnly={true} direction="right">
+			<Drawer autoFocus={true} open={newVehicleListingModal} onOpenChange={setNewVehicleListingModal} handleOnly={true} direction="right">
 				<DrawerContent className="w-full rounded-tl-sm rounded-bl-sm bg-white data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:sm:max-w-5xl dark:bg-white">
 					<DrawerHeader className="flex flex-col items-start justify-start gap-0 border-b border-gray-200">
 						<DrawerTitle className="text-left text-lg font-medium text-gray-900 dark:text-gray-100">Add a product</DrawerTitle>
 						<DrawerDescription className="text-left text-sm text-gray-600 dark:text-gray-400">Add a new product to your store.</DrawerDescription>
 					</DrawerHeader>
-					<ListVehicleForm />
+					<ListVehicleForm setNewVehicleListingModal={setNewVehicleListingModal} />
 				</DrawerContent>
 			</Drawer>
 		</>

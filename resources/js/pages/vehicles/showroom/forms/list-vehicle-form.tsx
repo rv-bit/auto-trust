@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+
+import { store as api_vehicle_store_route, dashboard as vehicle_dashboard_route } from "@/routes/vehicles";
 
 import { Button } from "@/components/ui/button";
 
@@ -33,7 +36,11 @@ import {
 	VehicleYearField,
 } from "./list-vehicle-form-fields";
 
-export default function ListVehicleForm() {
+interface ListVehicleFormProps {
+	setNewVehicleListingModal: (isOpen: boolean) => void;
+}
+
+export default function ListVehicleForm({ setNewVehicleListingModal }: ListVehicleFormProps) {
 	const page = usePage<VehiclePageProps>();
 
 	const vehicle_makes = page.props.vehicle_makes;
@@ -94,21 +101,53 @@ export default function ListVehicleForm() {
 			return form.setError("images", { type: "manual", message: "Invalid file type. Only JPEG, PNG, and WEBP are allowed." });
 		}
 
-		if (values.images?.some((img: File) => values.images?.some((file: File) => file.size > MAX_FILE_SIZE_BYTES))) {
+		if (values.images?.some((img: File) => img.size > MAX_FILE_SIZE_BYTES)) {
 			return form.setError("images", { type: "manual", message: `File size must be less than ${MAX_FILE_SIZE_BYTES / 1024 / 1024}MB.` });
 		}
 
-		if ((values.images?.length ?? 0) > 8) {
-			return form.setError("images", { type: "manual", message: "Maximum of 8 images allowed." });
+		if ((values.images?.length ?? 0) > 10) {
+			return form.setError("images", { type: "manual", message: "Maximum of 10 images allowed." });
 		}
+
+		setIsSubmitting(true);
 
 		const formData = new FormData();
 
+		// Add all form fields except images
+		Object.entries(values).forEach(([key, value]) => {
+			if (key !== "images" && value !== undefined && value !== null) {
+				if (typeof value === "object") {
+					formData.append(key, JSON.stringify(value));
+				} else {
+					formData.append(key, String(value));
+				}
+			}
+		});
+
+		// Add images
 		if (values.images && values.images.length > 0) {
 			values.images.forEach((image, index) => {
 				formData.append(`images[${index}]`, image);
 			});
 		}
+
+		// Submit to backend
+		axios
+			.post(api_vehicle_store_route.url(), formData)
+			.then((response) => response.data)
+			.then((data) => {
+				if (data.id) {
+					router.visit(vehicle_dashboard_route.url());
+				}
+			})
+			.catch((error) => {
+				console.error("Error submitting vehicle:", error);
+
+				form.setError("images", { type: "manual", message: "Failed to upload vehicle. Please try again." });
+			})
+			.finally(() => {
+				setIsSubmitting(false);
+			});
 	}
 
 	return (
@@ -144,7 +183,15 @@ export default function ListVehicleForm() {
 				</div>
 
 				<span className="sticky bottom-0 left-0 flex h-fit gap-2 border-t border-gray-200 bg-white p-4 max-sm:flex-col sm:flex-row sm:justify-end">
-					<Button variant={"link"}>Close</Button>
+					<Button
+						type="button"
+						variant={"link"}
+						onClick={() => {
+							setNewVehicleListingModal(false);
+						}}
+					>
+						Close
+					</Button>
 					<Button type="submit" disabled={isSubmitting} className="group relative size-auto min-w-30 overflow-hidden rounded-sm bg-black/80 p-2 px-5 disabled:cursor-not-allowed">
 						<div className="absolute -left-16 h-[100px] w-10 -rotate-45 bg-linear-to-r from-white/10 via-white/50 to-white/10 blur-sm duration-700 group-hover:left-[150%] group-hover:delay-200 group-hover:duration-700" />
 						<div className="flex items-center justify-center">
