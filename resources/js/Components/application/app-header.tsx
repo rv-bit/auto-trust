@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
 import { useCallback, useMemo } from "react";
 
-import { dashboard as home_route, chat as chat_route, login as login_route } from "@/routes";
+import { chat as chat_route, login as login_route } from "@/routes";
 import { dashboard as vehicles_dashboard } from "@/routes/vehicles"
 
 import { cn } from "@/lib/utils";

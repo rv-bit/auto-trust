@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 
-import { dashboard } from "@/routes";
-import { type NavItem } from "@/types";
+import { dashboard } from "@/routes/home";
+import type { NavItem } from "@/types";
 
 import { NavFooter } from "@/components/navigation/nav-footer";
 import { NavMain } from "@/components/navigation/nav-main";

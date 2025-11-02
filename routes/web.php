@@ -3,14 +3,20 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('home.auth');
+    }
     return Inertia::render('home/page');
-})->name('home');
-
+})->name('home.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('home', function () {
+        return Inertia::render('home/auth/page');
+    })->name('home.auth');
+
     Route::get('dashboard', function () {
         return Inertia::render('dashboard/page');
-    })->name('dashboard');
+    })->name('home.dashboard');
 });
 
 require __DIR__ . '/settings.php';
