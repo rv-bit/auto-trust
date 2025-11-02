@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Cache;
 
 class GeocodeService
 {
-    protected string $apiKey;
+    protected ?string $apiKey;
 
     public function __construct()
     {
-        $this->apiKey = config('services.google.maps_api_key', '');
+        $this->apiKey = config('services.google.maps_api_key') ?: null;
     }
 
     /**
