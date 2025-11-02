@@ -1,9 +1,9 @@
-import { default as AuthMainLayout } from "./auth/main-layout";
+import Layout from "@/layouts/auth/layout";
 
 export default function AuthLayout({ children, title, description, ...props }: { children: React.ReactNode; title: string; description: string }) {
 	return (
-		<AuthMainLayout title={title} description={description} {...props}>
+		<Layout title={title} description={description} {...props}>
 			{children}
-		</AuthMainLayout>
+		</Layout>
 	);
 }

@@ -13,7 +13,7 @@ interface AuthLayoutProps {
 	description?: string;
 }
 
-export default function AuthLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
+export default function Layout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
 	const { name } = usePage<SharedData>().props;
 
 	return (

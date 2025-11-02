@@ -3,7 +3,7 @@ import { OnlineUsersProvider } from "@/providers/OnlineUsersProvider";
 
 import MessageContainer from "@/pages/chat/components/messages/message-container";
 
-import ChatLayout from "@/layouts/chat/main-layout";
+import Layout from "@/layouts/chat/layout";
 
 function Chat() {
 	return <MessageContainer />;
@@ -12,7 +12,7 @@ function Chat() {
 Chat.layout = (page: React.ReactNode) => (
 	<OnlineUsersProvider>
 		<EventBusProvider>
-			<ChatLayout>{page}</ChatLayout>
+			<Layout>{page}</Layout>
 		</EventBusProvider>
 	</OnlineUsersProvider>
 );

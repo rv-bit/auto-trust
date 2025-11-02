@@ -3,7 +3,7 @@ import React from "react";
 
 import { SharedData } from "@/types";
 
-import AppLayout from "@/layouts/app/app-shell-layout";
+import AppLayout from "@/layouts/app/shell-layout";
 
 export default function Welcome() {
 	const { auth } = usePage<SharedData>().props;

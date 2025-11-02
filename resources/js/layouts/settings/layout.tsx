@@ -16,26 +16,22 @@ const sidebarNavItems: NavItem[] = [
 	{
 		title: "Profile",
 		href: edit(),
-		icon: null,
 	},
 	{
 		title: "Password",
 		href: editPassword(),
-		icon: null,
 	},
 	{
 		title: "Two-Factor Auth",
 		href: show(),
-		icon: null,
 	},
 	{
 		title: "Appearance",
 		href: editAppearance(),
-		icon: null,
 	},
 ];
 
-export default function SettingsLayout({ children }: PropsWithChildren) {
+export default function Layout({ children }: PropsWithChildren) {
 	// When server-side rendering, we only render the layout on the client...
 	if (typeof window === "undefined") {
 		return null;

@@ -13,12 +13,13 @@ import { SidebarInset, SidebarProvider } from "@/pages/chat/components/ui/sideba
 interface SocketMessageEvent {
 	message: Message;
 }
+
 interface SocketMessageDeleteEvent {
 	message: Message;
 	prevMessage: Message;
 }
 
-export default function ChatLayout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
 	const page = usePage<SharedData & Conversations>();
 	const { emit } = useEventBus();
 
