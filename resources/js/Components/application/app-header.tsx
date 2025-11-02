@@ -2,7 +2,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { useCallback, useMemo } from "react";
 
 import { chat as chat_route, login as login_route } from "@/routes";
-import { dashboard as vehicles_dashboard } from "@/routes/vehicles"
+import { dashboard as vehicles_dashboard } from "@/routes/vehicles";
 
 import { cn } from "@/lib/utils";
 
@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 
 import NotificationsDrawer from "@/components/notifications/notifications-drawer";
 
-import {  Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import AppLogoIcon from "./app-logo-icon";
 
 interface AppHeaderProps {
@@ -37,18 +37,18 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 	const vehicleListings = (page.props.vehicleListings || {}) as Record<string, string>;
 
 	const isMobile = useIsMobile();
-	
+
 	const currentPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : "";
 
 	const vehicleListingsItems = useMemo(() => {
 		return Object.entries(vehicleListings).map(([value, label]) => {
 			const href = `/vehicles/${value}`;
-			
+
 			return {
 				title: label,
 				href: href,
 				activePaths: [href],
-				disabled: value === 'new-cars',
+				disabled: value === "new-cars",
 			};
 		});
 	}, [vehicleListings]);
@@ -107,7 +107,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 			},
 			{
 				title: "Menu",
-				icon: <Menu strokeWidth={3} className={cn("size-6 fill-white mb-1", { "fill-black": currentPath !== "/" || isMobile, "size-5 fill-black/60 mb-0": isMobile })} />,
+				icon: <Menu strokeWidth={3} className={cn("mb-1 size-6 fill-white", { "fill-black": currentPath !== "/" || isMobile, "mb-0 size-5 fill-black/60": isMobile })} />,
 			},
 		];
 	}, [user, isMobile, currentPath]);
@@ -148,7 +148,7 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 								<Button
 									variant={"link"}
 									key={`${value.title}-${index}`}
-									className="flex flex-col items-center justify-center size-auto min-w-fit shrink-0 gap-1 rounded-none px-0 py-2 text-sm font-semibold text-black/60 hover:no-underline has-[>svg]:px-1.5 dark:text-black/60"
+									className="flex size-auto min-w-fit shrink-0 flex-col items-center justify-center gap-1 rounded-none px-0 py-2 text-sm font-semibold text-black/60 hover:no-underline has-[>svg]:px-1.5 dark:text-black/60"
 								>
 									{value.icon}
 									{value.title}
@@ -199,33 +199,55 @@ export function AppHeader({ className, breadcrumbs = [] }: AppHeaderProps) {
 					"flex-row bg-[#252525]": currentPath === "/",
 				})}
 			>
-			<div className={cn("flex h-fit w-full items-center px-2", { "h-15": currentPath === "/" })}>
-				{vehicleListingsItems.map(({ href, title }, index) => {
-					return (
-						<Button
-							asChild
-							key={`${href}-${title}`}
-							variant={"link"}
-							data-active={currentPath === href}
-							className={cn(
-								"p-2 text-sm font-extrabold text-white/60 decoration-3 underline-offset-5 hover:text-white data-[active=true]:underline dark:text-white/60 dark:hover:text-white",
-								{
-									"text-white dark:text-white": currentPath === "/",
-									"data-[active=true]:text-white data-[active=true]:dark:text-white": currentPath === href,
-									"text-black/60 hover:text-black data-[active=true]:text-black dark:text-black/60 dark:hover:text-black data-[active=true]:dark:text-black": currentPath !== "/",
-									"pl-0": index === 0,
-								},
-							)}
-						>
-							<Link key={title} href={href}>
-								{title}
-							</Link>
-						</Button>
-					);
-				})}
-			</div>		
-		
-			<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
+				<div className={cn("flex h-fit w-full items-center px-2", { "h-15": currentPath === "/" })}>
+					{vehicleListingsItems.map(({ href, title, disabled }, index) => {
+						if (disabled) {
+							return (
+								<Button
+									disabled
+									key={`${href}-${title}`}
+									data-active={currentPath === href}
+									variant={"link"}
+									className={cn(
+										"p-2 text-sm font-extrabold text-white/60 decoration-3 hover:no-underline hover:text-white disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-50 data-[active=true]:underline dark:text-white/60 dark:hover:text-white",
+										{
+											"text-white dark:text-white": currentPath === "/",
+											"data-[active=true]:text-white data-[active=true]:dark:text-white": currentPath === href,
+											"text-black/60 hover:text-black data-[active=true]:text-black dark:text-black/60 dark:hover:text-black data-[active=true]:dark:text-black": currentPath !== "/",
+											"pl-0": index === 0,
+										},
+									)}
+								>
+									{title}
+								</Button>
+							);
+						}
+
+						return (
+							<Button
+								asChild
+								key={`${href}-${title}`}
+								data-active={currentPath === href}
+								variant={"link"}
+								className={cn(
+									"p-2 text-sm font-extrabold text-white/60 decoration-3 underline-offset-5 hover:text-white data-[active=true]:underline dark:text-white/60 dark:hover:text-white",
+									{
+										"text-white dark:text-white": currentPath === "/",
+										"data-[active=true]:text-white data-[active=true]:dark:text-white": currentPath === href,
+										"text-black/60 hover:text-black data-[active=true]:text-black dark:text-black/60 dark:hover:text-black data-[active=true]:dark:text-black": currentPath !== "/",
+										"pl-0": index === 0,
+									},
+								)}
+							>
+								<Link key={title} href={href}>
+									{title}
+								</Link>
+							</Button>
+						);
+					})}
+				</div>
+
+				<div className={cn("flex w-full items-center justify-between px-4", { "justify-end": currentPath === "/" })}>
 					{currentPath !== "/" && <HeaderLogo />}
 
 					<div className="flex justify-end gap-1">
@@ -299,16 +321,13 @@ const HeaderLogo = () => {
 		<Button
 			asChild
 			variant={"link"}
-			className={cn(
-				"size-auto min-w-fit shrink-0 items-center justify-center rounded-none p-0 font-medium text-white hover:border-white hover:no-underline has-[>svg]:px-0 dark:text-white",
-				{
-					"text-black hover:border-black dark:text-black dark:hover:border-black": currentPath !== "/",
-				},
-			)}
+			className={cn("size-auto min-w-fit shrink-0 items-center justify-center rounded-none p-0 font-medium text-white hover:border-white hover:no-underline has-[>svg]:px-0 dark:text-white", {
+				"text-black hover:border-black dark:text-black dark:hover:border-black": currentPath !== "/",
+			})}
 		>
 			<Link href={"/"}>
 				<AppLogoIcon
-					className={cn("size-5 md:size-8 text-white dark:text-white", {
+					className={cn("size-5 text-white md:size-8 dark:text-white", {
 						"text-black dark:text-black": currentPath !== "/",
 					})}
 				/>
@@ -316,4 +335,4 @@ const HeaderLogo = () => {
 			</Link>
 		</Button>
 	);
-}
+};
