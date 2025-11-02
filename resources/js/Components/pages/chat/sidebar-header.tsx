@@ -5,7 +5,7 @@ import type { Conversations } from "@/types/routes/chat";
 
 import { cn } from "@/lib/utils";
 
-import { TriggerSidebar } from "@/components/pages/components/sidebar-actions";
+import { TriggerSidebar } from "@/components/pages/chat/sidebar-actions";
 
 export function SidebarHeader() {
 	const page = usePage<SharedData & Conversations>();
