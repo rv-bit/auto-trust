@@ -9,6 +9,10 @@ Broadcast::channel('App.Models.User.{id}', function (User $user, int $id) {
     return $user->id === $id;
 });
 
+Broadcast::channel('notification.user.{userId}', function (User $user, int $userId) {
+    return $user->id === $userId;
+});
+
 Broadcast::channel('online', function (User $user) {
     return $user ? new UserResource($user) : null;
 });
