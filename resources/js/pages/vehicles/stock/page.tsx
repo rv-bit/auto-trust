@@ -77,7 +77,7 @@ function Page() {
 		<div className="container mx-auto">
 			<div className="mb-6 flex items-center justify-between">
 				<div>{vehiclesData && <p className="text-muted-foreground mt-2">{vehiclesData.meta.total.toLocaleString()} vehicles found</p>}</div>
-				<VehicleSortDropdown value={(filters.sort as SortOption) || "recommended"} onChange={handleSortChange} />
+				<VehicleSortDropdown value={(filters.sort as SortOption) || "recommended"} onChange={handleSortChange} hasPostcode={!!filters.postcode} />
 			</div>
 
 			<main>
