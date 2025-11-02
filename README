@@ -17,7 +17,15 @@ cd auto-trust
 bun install
 composer install
 
-# Set up your environment variables using .env.example
+# Set up your environment variables
+# Unix/macOS/Linux:
+cp .env.example .env
+
+# Windows (Command Prompt):
+copy .env.example .env
+
+# Windows (PowerShell):
+Copy-Item .env.example .env
 
 # Generate the application key
 php artisan key:generate
@@ -28,70 +36,3 @@ php artisan migrate --seed
 # Start the development server
 composer run dev
 ```
-
-# Local Development Setup (macOS)
-
-These instructions are for running the Laravel app and Reverb WebSocket server locally on a macOS system using Nginx and PHP-FPM.
-
-# Running Laravel with Nginx and Reverb WebSocket
-
-## 1. Nginx Setup
-
-- Place your Nginx config (e.g. `nginx.autotrust.conf`) in your project root or a known location.
-- In your main Nginx config (e.g. `/opt/homebrew/etc/nginx/nginx.conf`), inside the `http { ... }` block, add:
-    ```
-    include /Users/rv/Projects/7CS069/nginx.autotrust.conf;
-    ```
-    (Make sure the path matches your project location.)
-- If running standalone, use the full config and update all `include` paths (e.g. for `mime.types` and `fastcgi_params`).
-
-## 2. Start PHP-FPM
-
-- Make sure PHP-FPM is running (required for Nginx to serve PHP):
-    ```sh
-    brew services start php
-    ```
-
-## 3. Start Nginx
-
-- Run with your local config:
-    ```sh
-    nginx -c /Users/rv/Projects/7CS069/nginx.autotrust.conf
-    ```
-
-## 4. Start the Reverb WebSocket Server
-
-- In your project root, run:
-    ```sh
-    php artisan reverb:start --env=production
-    ```
-    or using Composer script:
-    ```sh
-    composer run websocket -- --env=production
-    ```
-    or using with debug flags:
-    ```sh
-    php artisan websocket --env=production --debug || composer run websocket -- --env=production --debug
-    ```
-
-## 5. Access Your App
-
-- Visit: [http://localhost:8080](http://localhost:8080)
-- WebSocket endpoint: `ws://localhost:8080/reverb/app/{APP_KEY}?protocol=7&client=js&version=4.3.1`
-
-## 6. Notes
-
-- Make sure your Nginx config uses the correct `root` path to your Laravel `public` directory.
-- Update all `include` directives in your Nginx config to use full paths (e.g. `/opt/homebrew/etc/nginx/mime.types`).
-- Only one server block should listen on a given port.
-- For CORS and CSWSH protection, set allowed origins in your Laravel config as a static array.
-- To stop Nginx: `nginx -s stop -c /Users/rv/Projects/7CS069/nginx.autotrust.conf` or kill the master process.
-- To stop Reverb: Press `Ctrl+C` in the terminal where it's running.
-
----
-
-**Troubleshooting:**
-
-- If you see 404s, check your Nginx `root` and server block precedence.
-- If PHP files download instead of execute, PHP-FPM is not running or not configured correctly.
-- If WebSocket connections fail, check your allowed origins and that Reverb is running.
