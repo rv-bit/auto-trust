@@ -1,6 +1,13 @@
-import { Check, ChevronsUpDown, X as XIcon } from "lucide-react";
+import axios from "axios";
+import { Check, CheckCircle2, ChevronsUpDown, Loader2, X as XIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+
+import { cn } from "@/lib/utils";
+import { CreateVehicleInput } from "@/schemas/listings";
+import { BODY_STYLES, COLORS, EQUIPMENT_OPTIONS, EXTRA_FEATURES, FUEL_TYPES, GEARBOX_OPTIONS, Makes, Models } from "@/types/routes/listings";
+
+import { geocode as api_vehicle_geocode_route } from "@/routes/vehicles";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,12 +16,6 @@ import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessa
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-import { cn } from "@/lib/utils";
-import { CreateVehicleInput } from "@/schemas/listings";
-import { BODY_STYLES, COLORS, EQUIPMENT_OPTIONS, EXTRA_FEATURES, FUEL_TYPES, GEARBOX_OPTIONS } from "@/types/routes/listings";
-
-import { Makes, Models } from "../types";
 
 interface VehicleFormComponentsProps {
 	form: UseFormReturn<CreateVehicleInput>;
@@ -443,6 +444,45 @@ export function VehicleEngineField({ form }: Pick<VehicleFormComponentsProps, "f
 
 // Postcode Field
 export function VehiclePostcodeField({ form }: Pick<VehicleFormComponentsProps, "form">) {
+	const [isValidating, setIsValidating] = useState(false);
+	const [isValid, setIsValid] = useState<boolean | null>(null);
+	const [validationMessage, setValidationMessage] = useState<string>("");
+
+	const handlePostcodeBlur = async (postcode: string) => {
+		if (!postcode || postcode.length < 5) {
+			setIsValid(null);
+			setValidationMessage("");
+			return;
+		}
+
+		setIsValidating(true);
+		setIsValid(null);
+		setValidationMessage("");
+
+		try {
+			const response = await axios.get(api_vehicle_geocode_route.url(postcode));
+			const data = response.data;
+
+			if (response.status === 200 && data.latitude && data.longitude) {
+				setIsValid(true);
+				setValidationMessage(`Location verified: ${data.formatted_address || postcode}`);
+
+				if (form.getValues("latitude") !== undefined) {
+					form.setValue("latitude", data.latitude);
+					form.setValue("longitude", data.longitude);
+				}
+			} else {
+				setIsValid(false);
+				setValidationMessage(data.message || "Could not verify postcode");
+			}
+		} catch (error) {
+			setIsValid(false);
+			setValidationMessage("Error validating postcode");
+		} finally {
+			setIsValidating(false);
+		}
+	};
+
 	return (
 		<FormField
 			control={form.control}
@@ -454,8 +494,22 @@ export function VehiclePostcodeField({ form }: Pick<VehicleFormComponentsProps, 
 						<FormDescription className="text-sm text-gray-500">Vehicle location postcode</FormDescription>
 					</span>
 					<FormControl className="flex-1">
-						<Input {...field} className="rounded-sm p-3" />
+						<div className="relative w-full">
+							<Input
+								{...field}
+								className="rounded-sm p-3 pr-10"
+								onBlur={(e) => {
+									field.onBlur();
+									handlePostcodeBlur(e.target.value);
+								}}
+								placeholder="e.g., SW1A 1AA"
+							/>
+							{isValidating && <Loader2 className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 animate-spin text-gray-400" />}
+							{!isValidating && isValid === true && <CheckCircle2 className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-green-600" />}
+							{!isValidating && isValid === false && <XIcon className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-red-600" />}
+						</div>
 					</FormControl>
+					{validationMessage && <p className={cn("text-sm", isValid === true ? "text-green-600" : "text-red-600")}>{validationMessage}</p>}
 					<FormMessage />
 				</FormItem>
 			)}
