@@ -1,30 +1,34 @@
-import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
-import InputError from '@/components/input-error';
-import AppLayout from '@/layouts/app-layout';
-import Layout from "@/layouts/settings/layout";
-import { type BreadcrumbItem } from '@/types';
-import { Transition } from '@headlessui/react';
-import { Form, Head } from '@inertiajs/react';
-import { useRef } from 'react';
+import { Transition } from "@headlessui/react";
+import { Form, Head } from "@inertiajs/react";
+import { useRef } from "react";
 
-import HeadingSmall from '@/components/heading-small';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/password';
+import PasswordController from "@/actions/App/Http/Controllers/Settings/PasswordController";
+import { edit } from "@/routes/password";
+
+import type { BreadcrumbItem } from "@/types";
+
+import HeadingSmall from "@/components/heading-small";
+import InputError from "@/components/input-error";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import AppLayout from "@/layouts/app-layout";
+import Layout from "@/layouts/settings/layout";
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Password settings',
-        href: edit().url,
-    },
+	{
+		title: "Password settings",
+		href: edit().url,
+	},
 ];
 
 export default function Password() {
-    const passwordInput = useRef<HTMLInputElement>(null);
-    const currentPasswordInput = useRef<HTMLInputElement>(null);
+	const passwordInput = useRef<HTMLInputElement>(null);
+	const currentPasswordInput = useRef<HTMLInputElement>(null);
 
-    return (
+	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Password settings" />
 

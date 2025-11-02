@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { type PropsWithChildren } from "react";
+import * as React from "react";
 
 import { edit as editAppearance } from "@/routes/appearance";
 import { edit as editPassword } from "@/routes/password";
@@ -31,8 +31,7 @@ const sidebarNavItems: NavItem[] = [
 	},
 ];
 
-export default function Layout({ children }: PropsWithChildren) {
-	// When server-side rendering, we only render the layout on the client...
+export default function Layout({ children }: React.PropsWithChildren) {
 	if (typeof window === "undefined") {
 		return null;
 	}

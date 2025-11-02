@@ -1,7 +1,8 @@
 import { Link, usePage } from "@inertiajs/react";
-import { type PropsWithChildren } from "react";
+import * as React from "react";
 
 import { home } from "@/routes";
+
 import type { SharedData } from "@/types";
 
 import Squares from "@/components/backgrounds/squares-background";
@@ -13,7 +14,7 @@ interface AuthLayoutProps {
 	description?: string;
 }
 
-export default function Layout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
+export default function Layout({ children, title, description }: React.PropsWithChildren<AuthLayoutProps>) {
 	const { name } = usePage<SharedData>().props;
 
 	return (

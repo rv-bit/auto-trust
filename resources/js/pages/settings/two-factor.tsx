@@ -1,46 +1,40 @@
-import HeadingSmall from '@/components/heading-small';
+import { Form, Head } from "@inertiajs/react";
+import { useState } from "react";
+
+import { disable, enable, show } from "@/routes/two-factor";
+
+import type { BreadcrumbItem } from "@/types";
+
+import HeadingSmall from "@/components/heading-small";
 import TwoFactorRecoveryCodes from "@/components/pages/settings/two-factor-recovery-codes";
 import TwoFactorSetupModal from "@/components/pages/settings/two-factor-setup-modal";
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
-import AppLayout from '@/layouts/app-layout';
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useTwoFactorAuth } from "@/hooks/use-two-factor-auth";
+
+import AppLayout from "@/layouts/app-layout";
 import Layout from "@/layouts/settings/layout";
-import { disable, enable, show } from '@/routes/two-factor';
-import { type BreadcrumbItem } from '@/types';
-import { Form, Head } from '@inertiajs/react';
-import { ShieldBan, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+
+import { ShieldBan, ShieldCheck } from "lucide-react";
 
 interface TwoFactorProps {
-    requiresConfirmation?: boolean;
-    twoFactorEnabled?: boolean;
+	requiresConfirmation?: boolean;
+	twoFactorEnabled?: boolean;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Two-Factor Authentication',
-        href: show.url(),
-    },
+	{
+		title: "Two-Factor Authentication",
+		href: show.url(),
+	},
 ];
 
-export default function TwoFactor({
-    requiresConfirmation = false,
-    twoFactorEnabled = false,
-}: TwoFactorProps) {
-    const {
-        qrCodeSvg,
-        hasSetupData,
-        manualSetupKey,
-        clearSetupData,
-        fetchSetupData,
-        recoveryCodesList,
-        fetchRecoveryCodes,
-        errors,
-    } = useTwoFactorAuth();
-    const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
+export default function TwoFactor({ requiresConfirmation = false, twoFactorEnabled = false }: TwoFactorProps) {
+	const { qrCodeSvg, hasSetupData, manualSetupKey, clearSetupData, fetchSetupData, recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
+	const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
 
-    return (
+	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Two-Factor Authentication" />
 			<Layout>
