@@ -33,6 +33,9 @@ php artisan key:generate
 # Run migrations and seed the database
 php artisan migrate --seed
 
+# Link storage location, in order for local storage public folder to be used in frontend and backend
+php artisan storage:link
+
 # Start the development server
 composer run dev
 ```
